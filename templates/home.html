@@ -1,11 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Tag meta yang diperlukan -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta property="og:title" content="Bucket Tangan Navirins" />
+    <meta property="og:description" content="Apakah kamu mencari bucket tangan hias?" />
+    <meta property="og:image" content="{{ url_for('static', filename='') }}" />
+
+    <!-- Judul halaman web -->
+    <title>Navirins</title>
+
+    <!-- Favicons -->
+    <link href="static/img/navirins.png" rel="icon" />
+    <link href="static/img/apple-touch-icon-navirins.png" rel="apple-touch-icon" />
+
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.bubble.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="static/css/style.css" rel="stylesheet" />
 </head>
+
 <body>
-    
+    <!-- Header -->
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+            <h1 class="logo"><a href="/">Navirins</a></h1>
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="navigasi scrollto" href="/daftar">Daftar</a></li>
+                    <li><a class="navigasi scrollto" href="/masuk">Masuk</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="hero">
+        <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+            <div class="carousel-inner" role="listbox">
+                <!-- Slide 1 -->
+                <div class="carousel-item active" style="background-image: url()">
+                    <div class="carousel-container">
+                        <div class="container">
+                            <h2 class="animate__animated animate__fadeInDown">Selamat datang di <span>Navirins</span></h2>
+                            <p class="animate__animated animate__fadeInUp">Kami menjual rangkaian buket yang berisikan beberapa kategori, terdapat buket bunga, buket uang, dan buket snack.</p>
+                            <a href="#about" class="btn-navigasi animate__animated animate__fadeInUp scrollto">Baca selengkapnya</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carousel-item" style="background-image: url()">
+                    <div class="carousel-container">
+                        <div class="container">
+                            <h2 class="animate__animated animate__fadeInDown">Jadwal operasional Navirins</h2>
+                            <p class="animate__animated animate__fadeInUp">Senin pukul 08.30 - 17.30 WIB dan Sabtu 09.00-12.00 WIB.</p>
+                            <a href="#about" class="btn-navigasi animate__animated animate__fadeInUp scrollto">Baca selengkapnya</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="carousel-item" style="background-image: url()">
+                    <div class="carousel-container">
+                        <div class="container">
+                            <h2 class="animate__animated animate__fadeInDown">Koleksi buket</h2>
+                            <p class="animate__animated animate__fadeInUp">Kami menyediakan koleksi Artificial Full Flower Hand Bouquet, Money Hand Bouquet, dan Hand Bouquet Snack.</p>
+                            <a href="#about" class="btn-navigasi animate__animated animate__fadeInUp scrollto">Baca selengkapnya</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+            </a>
+        </div>
+    </section>
+
+    <main id="main">
+
+        <!-- Pertanyaan yang Sering Diajukan -->
+        <section id="faq" class="faq">
+            <div class="container" data-aos="fade-up">
+                <div class="section-title">
+                    <h2>Pertanyaan dan Jawaban</h2>
+                    <p>Pertanyaan yang Sering Diajukan</p>
+                </div>
+                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-lg-5">
+                        <i class="bx bx-help-circle"></i>
+                        <h4>Kapan saja jadwal operasional Navirins?</h4>
+                    </div>
+                    <div class="col-lg-7">
+                        <p>
+                            Senin pukul 08.30 - 17.30 WIB dan Sabtu 09.00-12.00 WIB.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontak -->
+        <section id="contact" class="contact section-bg">
+            <div class="container" data-aos="fade-up">
+                <div class="section-title">
+                    <h2>Kontak</h2>
+                    <p>Hubungi Kami</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="info-box">
+                                    <i class="bx bx-map"></i>
+                                    <h3>Alamat Kami</h3>
+                                    <p>Halim Perdanakusuma, Jakarta Timur</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box mt-4">
+                                    <i class="bx bx-envelope"></i>
+                                    <h3>Email Us</h3>
+                                    <p>navirins@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box mt-4">
+                                    <i class="bx bx-phone-call"></i>
+                                    <h3>Telepon Kami</h3>
+                                    <p>+62 812-345-6789</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="copyright">
+                &copy; Hak Cipta <strong><span>Navirins</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                Dirancang oleh AMD no yūjin
+            </div>
+        </div>
+    </footer>
+
+    <div id="preloader"></div>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/isotope-layout@3.0.6/dist/isotope.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
+    <script src="static/js/main.js"></script>
 </body>
+
 </html>

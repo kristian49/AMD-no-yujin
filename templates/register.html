@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Tag meta yang diperlukan -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta property="og:title" content="Daftar Navirins" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="{{ url_for('static', filename='') }}" />
+
+    <!-- Judul halaman web -->
+    <title>Daftar</title>
+
+    <!-- Favicons -->
+    <link href="static/img/navirins.png" rel="icon" />
+    <link href="static/img/apple-touch-icon-navirins.png" rel="apple-touch-icon" />
+
+    <!-- Google fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <!-- <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                            <img src="" class="img-fluid" alt="">
+                        </div> -->
+                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                            <div class="d-flex justify-content-center py-4">
+                                <!-- <a href="/daftar" class="logo d-flex align-items-center w-auto">
+                                    <img src="" alt="">
+                                    <span class="d-none d-lg-block">Navirins</span>
+                                </a> -->
+                                <span class="d-none d-lg-block">Navirins</span>
+                            </div>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="pt-4 pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4">Buat sebuah akun</h5>
+                                        <p class="text-center small">Masukkan detail pribadi Anda untuk membuat akun</p>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label for="yourUsername" class="form-label">Nama Pengguna</label>
+                                            <input type="text" class="form-control is-key" id="username">
+                                            <div id="usernameFeedback" class="text-warning"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="yourName" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email">
+                                            <div id="emailFeedback" class="text-warning"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="yourEmail" class="form-label">Kata Sandi</label>
+                                            <input type="password" class="form-control" id="password">
+                                            <div id="passwordFeedback" class="text-warning"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="yourPassword" class="form-label">Konfirmasi Kata Sandi</label>
+                                            <input type="password" class="form-control is-key" id="repeat-password">
+                                            <div id="repeatpasswordFeedback" class=""></div>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-evenly">
+                                            <button class="btn btn-primary w-100" onclick="register()">Buat Akun</button>
+                                            <button class="btn btn-info w-100" onclick="clearInputs()">Kosongkan</button>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="small mb-0">Sudah memiliki akun? <a href="/masuk" class="link-primary">Masuk</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
+    <script>
+        $(document).keypress(function (event) {
+            if (event.key === 'Enter') {
+                register();
+            }
+        })
+
+        function register() {
+            let username = $('#username').val();
+            let useremail = $('#email').val();
+            let password = $('#password').val();
+            let repeat_password = $('#repeat-password').val();
+
+            // Nama pengguna
+            $('#usernameFeedback').removeClass('text-warning');
+            if (username.length === 0 || username === ' ') {
+                $('#usernameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama pengguna Anda masih kosong, silahkan isi kembali');
+                $('#username').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_username(username)) {
+                $('#usernameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama pengguna Anda tidak memenuhi syarat diantaranya 2-10 alfabet, nomor, dan karakter spesial -_.');
+                $('#username').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#usernameFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Username Anda benar');
+                $('#username').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Email
+            $('#emailFeedback').removeClass('text-warning');
+            if (useremail.length === 0 || useremail === ' ') {
+                $('#emailFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Email Anda masih kosong, silahkan isi kembali');
+                $('#email').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_email(useremail)) {
+                $('#emailFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Format email Anda tidak valid');
+                $('#email').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#emailFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Email Anda benar');
+                $('#email').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Kata sandi
+            $('#passwordFeedback').removeClass('text-warning');
+            if (password.length === 0 || password === ' ') {
+                $('#passwordFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Kata sandi Anda kosong');
+                $('#password').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_password(password)) {
+                $('#passwordFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Kata sandi Anda tidak memenuhi syarat diantara 8-20 alfabet, nomor, dan karakter spesial !@#$%^&*');
+                $('#password').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#passwordFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Kata sandi Anda benar');
+                $('#password').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Konfirmasi kata sandi
+            if (repeat_password.length === 0 || password === ' ') {
+                $('#repeatpasswordFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Konfirmasi kata sandi Anda kosong');
+                $('#repeat-password').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (repeat_password !== password) {
+                $('#repeatpasswordFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Antara kata sandi atau konfirmasi kata sandi Anda tidak sama');
+                $('#repeat-password').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#repeatpasswordFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Konfirmasi kata sandi Anda benar');
+                $('#repeat-password').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/daftar/check_email_and_username',
+                data: {
+                    username_give: username,
+                    useremail_give: useremail
+                },
+                success: function (response) {
+                    if (response['exists_username'] && response['exists_useremail']) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Maaf, nama pengguna dan email sudah terpakai'
+                        });
+                    } else if (response['exists_username']) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Maaf, nama pengguna sudah terpakai'
+                        });
+                    } else if (response['exists_useremail']) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Maaf, email sudah terpakai'
+                        });
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/api_daftar/simpan',
+                            data: {
+                                username_give: username,
+                                useremail_give: useremail,
+                                password_give: password
+                            },
+                            success: function (response) {
+                                if (response['result'] === 'success') {
+                                    const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: 'top',
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.onmouseenter = Swal.stopTimer;
+                                            toast.onmouseleave = Swal.resumeTimer;
+                                        }
+                                    });
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil mendaftar'
+                                    });
+                                    setTimeout(function () {
+                                        window.location.href = '/masuk';
+                                    }, 3000);
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+        }
+
+        // cek nama pengguna regex
+        function is_username (asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        // cek email regex
+        function is_email(asValue) {
+            var regExp = /\S+@\S+\.\S+/;
+            return regExp.test(asValue);
+        }
+
+        // cek kata sandi regex
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+        // kosongkan form
+        function clearInputs() {
+            $('#email').val('');
+            $('#username').val('');
+            $('#password').val('');
+            $('#repeat-password').val('');
+        }
+    </script>
+</body>
+
+</html>
