@@ -17,14 +17,19 @@ db = client.TugasBesar
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'mytoken'
 
+### home.html ###
+# menampilkan halaman home
 @app.route('/')
 def home():
     return render_template('home.html')
 
+### register.html ###
+# menampilkan halaman daftar
 @app.route('/daftar')
 def daftar():
     return render_template('register.html')
 
+# menyimpan pendaftaran akun
 @app.route('/api_daftar/simpan', methods = ['POST'])
 def daftar_simpan():
     useremail_receive = request.form['useremail_give']
@@ -46,7 +51,8 @@ def daftar_simpan():
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
 
-@app.route('/daftar/check_email_and_username', methods=['POST'])
+# mengecek email dan nama pengguna yang sudah terdaftar sebelumnya
+@app.route('/daftar/cek-email-dan-nama-pengguna', methods=['POST'])
 def check_email_and_username():
     username_receive = request.form['username_give']
     useremail_receive = request.form['useremail_give']
@@ -54,11 +60,14 @@ def check_email_and_username():
     exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
     return jsonify({'result': 'success', 'exists_username': exists_username, 'exists_useremail': exists_useremail})
 
+### login.html ###
+# menampilkan halaman masuk
 @app.route('/masuk')
 def masuk():
     msg = request.args.get('msg')
     return render_template('login.html', msg = msg)
 
+# menerima masuknya pengguna
 @app.route('/api_masuk', methods = ['POST'])
 def api_masuk():
     useremail_receive = request.form['useremail_give']
@@ -75,6 +84,8 @@ def api_masuk():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
+### dashboard.html ###
+# menampilkan halaman beranda
 @app.route('/main', methods = ['GET'])
 def dashboard():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -87,6 +98,8 @@ def dashboard():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('masuk', msg = 'Ada masalah saat Anda login'))
 
+### profile.html ###
+# menampilkan halaman profil
 @app.route('/profilku/<username>', methods = ['GET'])
 def profil(username):
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -97,6 +110,18 @@ def profil(username):
         return render_template('profilku.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('dashboard'))
+
+### chat.html ###
+
+### purchase_history.html ###
+
+### delivery_status.html ###
+
+### collection.html ###
+
+### order_form.html ###
+
+### payment ###
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
