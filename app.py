@@ -30,7 +30,7 @@ def daftar():
     return render_template('register.html')
 
 # menyimpan pendaftaran akun
-@app.route('/api_daftar/simpan', methods = ['POST'])
+@app.route('/api-daftar/simpan', methods = ['POST'])
 def daftar_simpan():
     useremail_receive = request.form['useremail_give']
     username_receive = request.form['username_give']
@@ -68,7 +68,7 @@ def masuk():
     return render_template('login.html', msg = msg)
 
 # menerima masuknya pengguna
-@app.route('/api_masuk', methods = ['POST'])
+@app.route('/api-masuk', methods = ['POST'])
 def api_masuk():
     useremail_receive = request.form['useremail_give']
     password_receive = request.form['password_give']
@@ -107,7 +107,7 @@ def profil(username):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = useremail == payload.get('id')
         user_info = db.users.find_one({'useremail': useremail}, {'_id': False})
-        return render_template('profilku.html', user_info = user_info, status = status)
+        return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('dashboard'))
 
