@@ -17,20 +17,6 @@ db = client.TugasBesar
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'mytoken'
 
-### dashboard.html ###
-# menampilkan halaman dashboard
-@app.route('/')
-def dashboard():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template("dashboard.html", user_info = user_info)
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('home'))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for('home'))
-
 ### home.html ###
 # menampilkan halaman home
 @app.route('/main')
@@ -38,7 +24,7 @@ def home():
     return render_template('home.html')
 
 ### register.html ###
-# menampilkan halaman daftar
+# menampilkan halaman register
 @app.route('/daftar')
 def register():
     return render_template('register.html')
@@ -75,7 +61,7 @@ def api_register_valid():
     return jsonify({'result': 'success', 'exists_username': exists_username, 'exists_useremail': exists_useremail})
 
 ### login.html ###
-# menampilkan halaman masuk
+# menampilkan halaman login
 @app.route('/masuk')
 def login():
     msg = request.args.get('msg')
@@ -98,10 +84,24 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
+### dashboard.html ###
+# menampilkan halaman dashboard
+@app.route('/')
+def dashboard():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        return render_template("dashboard.html", user_info = user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for('home'))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for('home'))
+
+### profile.html ###
+# menampilkan halaman profile
 @app.route('/profil/<username>', methods = ['GET'])
 def profile(username):
-    # an endpoint for retrieving a user's profile information
-    # and all of their posts
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
