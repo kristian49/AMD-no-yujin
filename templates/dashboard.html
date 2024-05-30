@@ -42,12 +42,12 @@
                 <ul>
                     <li class="dropdown">
                         <a href="#">
-                            <!-- <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" class="rounded-circle"> -->
-                            <span>{{ user_info.username }}</span>
+                            <!-- <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" class="rounded-circle" style="width: 5%"> -->
+                            <span>{{ user_info.profile_name }}</span>
                             <i class="bi bi-chevron-down"></i>
                         </a>
                         <ul>
-                            <li><a href="/profil/{{ user_info.username }}">Profilku</a></li>
+                            <li><a href="/profil/{{ user_info.username }}">Profil</a></li>
                             <li><a href="#">Obrolan</a></li>
                             <li><a href="#">Riwayat Pemesanan</a></li>
                             <li><a href="#">Status Pengiriman</a></li>
