@@ -206,7 +206,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/daftar/cek-email-dan-nama-pengguna',
+                url: '/mengecek-nama-pengguna-dan-email',
                 data: {
                     username_give: username,
                     useremail_give: useremail
@@ -263,7 +263,7 @@
                     } else {
                         $.ajax({
                             type: 'POST',
-                            url: '/api-daftar/simpan',
+                            url: '/mendaftarkan-akun',
                             data: {
                                 username_give: username,
                                 useremail_give: useremail,

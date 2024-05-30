@@ -17,28 +17,42 @@ db = client.TugasBesar
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'mytoken'
 
+### dashboard.html ###
+# menampilkan halaman dashboard
+@app.route('/')
+def dashboard():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        return render_template("dashboard.html", user_info = user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for('home'))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for('home'))
+
 ### home.html ###
 # menampilkan halaman home
-@app.route('/')
+@app.route('/main')
 def home():
     return render_template('home.html')
 
 ### register.html ###
 # menampilkan halaman daftar
 @app.route('/daftar')
-def daftar():
+def register():
     return render_template('register.html')
 
 # menyimpan pendaftaran akun
-@app.route('/api-daftar/simpan', methods = ['POST'])
-def daftar_simpan():
-    useremail_receive = request.form['useremail_give']
+@app.route('/mendaftarkan-akun', methods = ['POST'])
+def api_register():
     username_receive = request.form['username_give']
+    useremail_receive = request.form['useremail_give']
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        'useremail': useremail_receive,
         'username': username_receive,
+        'useremail': useremail_receive,
         'password': password_hash,
         'role': 'Member',
         'profile_name': username_receive,
@@ -52,8 +66,8 @@ def daftar_simpan():
     return jsonify({'result': 'success'})
 
 # mengecek email dan nama pengguna yang sudah terdaftar sebelumnya
-@app.route('/daftar/cek-email-dan-nama-pengguna', methods=['POST'])
-def check_email_and_username():
+@app.route('/mengecek-nama-pengguna-dan-email', methods=['POST'])
+def api_register_valid():
     username_receive = request.form['username_give']
     useremail_receive = request.form['useremail_give']
     exists_username = bool(db.users.find_one({'username': username_receive}))
@@ -63,13 +77,13 @@ def check_email_and_username():
 ### login.html ###
 # menampilkan halaman masuk
 @app.route('/masuk')
-def masuk():
+def login():
     msg = request.args.get('msg')
     return render_template('login.html', msg = msg)
 
 # menerima masuknya pengguna
-@app.route('/api-masuk', methods = ['POST'])
-def api_masuk():
+@app.route('/memasukkan-akun', methods = ['POST'])
+def api_login():
     useremail_receive = request.form['useremail_give']
     password_receive = request.form['password_give']
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
@@ -84,32 +98,20 @@ def api_masuk():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
-### dashboard.html ###
-# menampilkan halaman beranda
-@app.route('/main', methods = ['GET'])
-def dashboard():
+@app.route('/profil/<username>', methods = ['GET'])
+def profile(username):
+    # an endpoint for retrieving a user's profile information
+    # and all of their posts
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template("dashboard.html", user_info = user_info)
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('masuk', msg = 'Token login Anda telah kedaluwarsa'))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for('masuk', msg = 'Ada masalah saat Anda login'))
-
-### profile.html ###
-# menampilkan halaman profil
-@app.route('/profilku/<username>', methods = ['GET'])
-def profil(username):
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        status = useremail == payload.get('id')
-        user_info = db.users.find_one({'useremail': useremail}, {'_id': False})
+        # if this is my own profile, True
+        # if this is somebody else's profile, False
+        status = username == payload.get('id')
+        user_info = db.users.find_one({'username': username}, {'_id': False})
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 ### chat.html ###
 
