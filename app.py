@@ -12,19 +12,18 @@ app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 
 MONGODB_CONNECTION_STRING = 'mongodb+srv://test:sparta@cluster0.6vz5zah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.TugasBesar
+db = client.Hari
 
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'mytoken'
 
 ### home.html ###
-# menampilkan halaman home
 @app.route('/main')
 def home():
     return render_template('home.html')
 
 ### register.html ###
-# menampilkan halaman register
+# menampilkan halaman daftar
 @app.route('/daftar')
 def register():
     return render_template('register.html')
@@ -32,16 +31,20 @@ def register():
 # menyimpan pendaftaran akun
 @app.route('/mendaftarkan-akun', methods = ['POST'])
 def api_register():
-    username_receive = request.form['username_give']
+    first_name_receive = request.form['first_name_give']
+    last_name_receive = request.form['last_name_give']
+    account_name_receive = request.form['account_name_give']
     useremail_receive = request.form['useremail_give']
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
-        'username': username_receive,
+        'first_name': first_name_receive,
+        'last_name': last_name_receive,
+        'account_name': account_name_receive,
         'useremail': useremail_receive,
         'password': password_hash,
         'role': 'Member',
-        'profile_name': username_receive,
+        'profile_name': " ".join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
         'profile_info': '',
@@ -51,17 +54,21 @@ def api_register():
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
 
-# mengecek email dan nama pengguna yang sudah terdaftar sebelumnya
-@app.route('/mengecek-nama-pengguna-dan-email', methods=['POST'])
-def api_register_valid():
-    username_receive = request.form['username_give']
+# mengecek nama akun dan email yang sudah terdaftar sebelumnya
+@app.route('/cek-nama-akun-dan-email', methods=['POST'])
+def check_email_and_account_name():
+    account_name_receive = request.form['account_name_give']
     useremail_receive = request.form['useremail_give']
-    exists_username = bool(db.users.find_one({'username': username_receive}))
+    exists_account_name = bool(db.users.find_one({'account_name': account_name_receive}))
     exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
-    return jsonify({'result': 'success', 'exists_username': exists_username, 'exists_useremail': exists_useremail})
+    return jsonify({
+        'result': 'success',
+        'exists_account_name': exists_account_name,
+        'exists_useremail': exists_useremail
+    })
 
 ### login.html ###
-# menampilkan halaman login
+# menampilkan halaman masuk
 @app.route('/masuk')
 def login():
     msg = request.args.get('msg')
@@ -84,8 +91,6 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
-### dashboard.html ###
-# menampilkan halaman dashboard
 @app.route('/')
 def dashboard():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -98,32 +103,34 @@ def dashboard():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
-### profile.html ###
-# menampilkan halaman profile
-@app.route('/profil/<username>', methods = ['GET'])
-def profile(username):
+@app.route('/profil/<account_name>', methods = ['GET'])
+def profile(account_name):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        # if this is my own profile, True
-        # if this is somebody else's profile, False
-        status = username == payload.get('id')
-        user_info = db.users.find_one({'username': username}, {'_id': False})
+        status = account_name == payload.get('id')
+        user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
 ### chat.html ###
 
+
 ### purchase_history.html ###
+
 
 ### delivery_status.html ###
 
+
 ### collection.html ###
+
 
 ### order_form.html ###
 
+
 ### payment ###
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

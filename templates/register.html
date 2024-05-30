@@ -52,9 +52,22 @@
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label for="yourUsername" class="form-label">Nama Pengguna</label>
-                                            <input type="text" class="form-control is-key" id="username">
-                                            <div id="usernameFeedback" class="text-warning"></div>
+                                            <label for="yourFirstName" class="form-label">Nama Depan</label>
+                                            <input type="text" class="form-control is-key" id="first-name">
+                                            <div id="firstNameFeedback" class="text-warning"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="yourLastName" class="form-label">Nama Belakang</label>
+                                            <input type="text" class="form-control is-key" id="last-name">
+                                            <div id="lastNameFeedback" class="text-warning"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="yourAccountName" class="form-label">Nama Akun</label>
+                                            <div class="input-group has-validation">
+                                                <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                                <input type="text" class="form-control is-key" id="account-name">
+                                                <div id="accountNameFeedback" class="text-warning"></div>
+                                            </div>
                                         </div>
                                         <div class="col-12">
                                             <label for="yourName" class="form-label">Email</label>
@@ -69,7 +82,7 @@
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Konfirmasi Kata Sandi</label>
                                             <input type="password" class="form-control is-key" id="repeat-password">
-                                            <div id="repeatpasswordFeedback" class=""></div>
+                                            <div id="repeatPasswordFeedback" class=""></div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-evenly">
                                             <button class="btn btn-primary w-100" onclick="register()">Buat Akun</button>
@@ -104,33 +117,83 @@
         })
 
         function register() {
-            let username = $('#username').val();
+            let first_name = $('#first-name').val();
+            let last_name = $('#last-name').val();
+            let account_name = $('#account-name').val();
             let useremail = $('#email').val();
             let password = $('#password').val();
             let repeat_password = $('#repeat-password').val();
 
-            // Nama pengguna
-            $('#usernameFeedback').removeClass('text-warning');
-            if (username.length === 0 || username === ' ') {
-                $('#usernameFeedback')
+            // Nama depan
+            $('#firstNameFeedback').removeClass('text-warning');
+            if (first_name.length === 0 || first_name === ' ') {
+                $('#firstNameFeedback')
                     .removeClass('valid-feedback')
                     .addClass('invalid-feedback')
-                    .text('Nama pengguna Anda masih kosong, silahkan isi kembali');
-                $('#username').removeClass('is-valid').addClass('is-invalid').focus();
+                    .text('Nama depan Anda masih kosong, silahkan isi kembali');
+                $('#first-name').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
-            } else if (!is_username(username)) {
-                $('#usernameFeedback')
+            } else if (!is_name(first_name)) {
+                $('#firstNameFeedback')
                     .removeClass('valid-feedback')
                     .addClass('invalid-feedback')
-                    .text('Nama pengguna Anda tidak memenuhi syarat diantaranya 2-10 alfabet, nomor, dan karakter spesial -_.');
-                $('#username').removeClass('is-valid').addClass('is-invalid').focus();
+                    .text('Nama depan Anda tidak memenuhi syarat diantaranya 2-10 alfabet');
+                $('#first-name').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
             } else {
-                $('#usernameFeedback')
+                $('#firstNameFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Username Anda benar');
-                $('#username').removeClass('is-invalid').addClass('is-valid').focus();
+                    .text('Nama depan Anda benar');
+                $('#first-name').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Nama belakang
+            $('#lastNameFeedback').removeClass('text-warning');
+            if (last_name.length === 0 || last_name === ' ') {
+                $('#lastNameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama belakang Anda masih kosong, silahkan isi kembali');
+                $('#last-name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_name(last_name)) {
+                $('#lastNameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama belakang Anda tidak memenuhi syarat diantaranya 2-10 alfabet');
+                $('#last-name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#lastNameFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Nama belakang Anda benar');
+                $('#last-name').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Nama akun
+            $('#accountNameFeedback').removeClass('text-warning');
+            if (account_name.length === 0 || account_name === ' ') {
+                $('#accountNameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama akun Anda masih kosong, silahkan isi kembali');
+                $('#account-name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_name(account_name)) {
+                $('#accountNameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama akun Anda tidak memenuhi syarat diantaranya 2-10 alfabet, nomor, dan karakter spesial -_.');
+                $('#account-name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#accountNameFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Nama akun Anda benar');
+                $('#account-name').removeClass('is-invalid').addClass('is-valid').focus();
             }
 
             // Email
@@ -183,21 +246,21 @@
 
             // Konfirmasi kata sandi
             if (repeat_password.length === 0 || password === ' ') {
-                $('#repeatpasswordFeedback')
+                $('#repeatPasswordFeedback')
                     .removeClass('valid-feedback')
                     .addClass('invalid-feedback')
                     .text('Konfirmasi kata sandi Anda kosong');
                 $('#repeat-password').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
             } else if (repeat_password !== password) {
-                $('#repeatpasswordFeedback')
+                $('#repeatPasswordFeedback')
                     .removeClass('valid-feedback')
                     .addClass('invalid-feedback')
                     .text('Antara kata sandi atau konfirmasi kata sandi Anda tidak sama');
                 $('#repeat-password').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
             } else {
-                $('#repeatpasswordFeedback')
+                $('#repeatPasswordFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
                     .text('Konfirmasi kata sandi Anda benar');
@@ -206,13 +269,13 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/mengecek-nama-pengguna-dan-email',
+                url: '/cek-nama-akun-dan-email',
                 data: {
-                    username_give: username,
+                    account_name_give: account_name,
                     useremail_give: useremail
                 },
                 success: function (response) {
-                    if (response['exists_username'] && response['exists_useremail']) {
+                    if (response['exists_account_name'] && response['exists_useremail']) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -226,9 +289,9 @@
                         });
                         Toast.fire({
                             icon: 'warning',
-                            title: 'Maaf, nama pengguna dan email sudah terpakai'
+                            title: 'Maaf, nama akun dan email sudah terpakai'
                         });
-                    } else if (response['exists_username']) {
+                    } else if (response['exists_account_name']) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -242,7 +305,7 @@
                         });
                         Toast.fire({
                             icon: 'warning',
-                            title: 'Maaf, nama pengguna sudah terpakai'
+                            title: 'Maaf, nama akun sudah terpakai'
                         });
                     } else if (response['exists_useremail']) {
                         const Toast = Swal.mixin({
@@ -265,7 +328,9 @@
                             type: 'POST',
                             url: '/mendaftarkan-akun',
                             data: {
-                                username_give: username,
+                                first_name_give: first_name,
+                                last_name_give: last_name,
+                                account_name_give: account_name,
                                 useremail_give: useremail,
                                 password_give: password
                             },
@@ -297,8 +362,8 @@
             })
         }
 
-        // cek nama pengguna regex
-        function is_username (asValue) {
+        // cek nama (depan, belakang, akun) regex
+        function is_name(asValue) {
             var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
             return regExp.test(asValue);
         }
@@ -317,8 +382,10 @@
 
         // kosongkan form
         function clearInputs() {
+            $('#first-name').val('');
+            $('#last-name').val('');
+            $('#account-name').val('');
             $('#email').val('');
-            $('#username').val('');
             $('#password').val('');
             $('#repeat-password').val('');
         }
