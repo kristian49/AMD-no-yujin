@@ -12,7 +12,7 @@ app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 
 MONGODB_CONNECTION_STRING = 'mongodb+srv://test:sparta@cluster0.6vz5zah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.Hari
+db = client.TugasBesar
 
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'mytoken'
