@@ -51,7 +51,7 @@
                             <li><a href="#">Obrolan</a></li>
                             <li><a href="#">Riwayat Pemesanan</a></li>
                             <li><a href="#">Status Pengiriman</a></li>
-                            <li><a href="#" onclick="return sign_out();">Keluar</a></li>
+                            <li><a href="#" data-bs-toggle="modal" data-bs-target="#signOutModal">Keluar</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -59,6 +59,25 @@
             </nav>
         </div>
     </header>
+
+    <!-- Sign Out Modal -->
+    <div class="modal fade" id="signOutModal" tabindex="-1" aria-labelledby="signOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signOutModalLabel">Konfirmasi Keluar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin keluar?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="sign_out();">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <main id="main">
         <!-- Ambil data -->
@@ -76,7 +95,7 @@
                         <p><small>{{ user_info.useremail }}</small></p>
                     </blockquote>
                     <figcaption class="blockquote-footer">
-                        {{ user_info.profile_name }}
+                        {{ user_info.first_name }} {{ user_info.last_name }}
                     </figcaption>
                 </figure>
                 <div class="text-center mt-3">
@@ -103,7 +122,7 @@
             <!-- Add your form for editing the profile here -->
             <form>
                 <div class="mb-3">
-                    <label for="username" class="form-label">Nama Akun</label>
+                    <label for="nama" class="form-label">Nama Akun</label>
                     <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}">
                 </div>
                 <div class="mb-3">
