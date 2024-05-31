@@ -102,17 +102,21 @@
           <div class="modal-body">
             <!-- Add your form for editing the profile here -->
             <form>
-                <!-- <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nama Akun</label>
                     <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}">
-                </div> -->
+                    <input type="text" class="form-control" id="email" value="{{ user_info.useremail }}">
+                </div>
                 <div class="mb-3">
-                    <label for="nama" class="form-label">Nama</label>
-                    <input type="text" class="form-control" id="nama" value="{{ user_info.profile_name }}">
+                    <label for="depan" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="depan" value="{{ user_info.first_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="belakang" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="belakang" value="{{ user_info.last_name }}">
                 </div>
                 <div class="mb-3">
                     <label for="pic" class="form-label">Foto Profil</label>
