@@ -31,6 +31,34 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../static/css/style.css" rel="stylesheet" />
+    <script>
+        function update_profile() {
+            let name = $("#input-name").val();
+            let file = $("#input-pic")[0].files[0];
+            let about = $("#textarea-about").val();
+            let form_data = new FormData();
+            form_data.append("file_give", file);
+            form_data.append("name_give", name);
+            form_data.append("about_give", about);
+            console.log(name, file, about, form_data);
+
+            $.ajax({
+            type: "POST",
+            url: "/update_profile",
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response["result"] === "success") {
+                alert(response["msg"]);
+                window.location.reload();
+                }
+            },
+            });
+        }
+
+    </script>
 </head>
 
 <body>
@@ -62,8 +90,80 @@
 
     <main id="main">
         <!-- Ambil data -->
-        <h1>ini halaman profil</h1>
+        <div class="card">
+            <div class="card-body">
+                <a class="img" href="#">
+                    <img
+                      class="profile-pic"
+                      src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
+                    />
+                </a>
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                      <p>{{ user_info.useremail }}</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        {{ user_info.profile_name }}
+                    </figcaption>
+                </figure>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        Edit Profile
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#signOutModal">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
     </main>
+    
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Add your form for editing the profile here -->
+            <form>
+              <div class="mb-3">
+                <label for="nama" class="form-label">Nama</label>
+                <input type="text" class="form-control" id="nama" value="{{ user_info.profile_name }}">
+              </div>
+              <div class="mb-3">
+                <label for="pic" class="form-label">Foto Profil</label>
+                <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
+              </div>
+              <!-- Add more fields as necessary -->
+              <button type="submit" class="btn btn-primary" onclick="update_profile()">Update</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sign Out Modal -->
+    <div class="modal fade" id="signOutModal" tabindex="-1" aria-labelledby="signOutModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signOutModalLabel">Sign Out</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Apakah Anda yakin ingin keluar?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="sign_out()">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
     <!-- Footer -->
     <footer id="footer">
@@ -93,6 +193,30 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../static/js/main.js"></script>
     <script>
+        function update_profile() {
+            let name = $("#nama").val();
+            let file = $("#pic")[0].files[0];
+            let form_data = new FormData();
+            form_data.append("file_give", file);
+            form_data.append("name_give", name);
+            console.log(name, file, form_data);
+
+            $.ajax({
+            type: "POST",
+            url: "/update_profile",
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response["result"] === "success") {
+                alert(response["msg"]);
+                window.location.reload();
+                }
+            },
+            });
+        }
+
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('Signed out!');

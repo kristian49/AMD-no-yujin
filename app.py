@@ -113,6 +113,28 @@ def profile(account_name):
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
+    
+# update profile   
+@app.route("/update_profile", methods=["POST"])
+def save_img():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
+        useremail = payload.get('id')
+        name_receive = request.form["name_give"]
+        new_doc = {"profile_name": name_receive}
+        if "file_give" in request.files:
+            file = request.files["file_give"]
+            filename = secure_filename(file.filename)
+            extension = filename.split(".")[-1]
+            file_path = f"profile_pics/{useremail}.{extension}"
+            file.save("./static/" + file_path)
+            new_doc["profile_pic"] = filename
+            new_doc["profile_pic_real"] = file_path
+        db.users.update_one({"useremail": payload["id"]}, {"$set": new_doc})
+        return jsonify({"result": "success", "msg": "Profile updated!"})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 ### chat.html ###
 
