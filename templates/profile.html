@@ -72,7 +72,8 @@
                 </a>
                 <figure class="text-center">
                     <blockquote class="blockquote">
-                      <p>{{ user_info.useremail }}</p>
+                        <p><strong>{{ user_info.account_name }}</strong></p>
+                        <p><small>{{ user_info.useremail }}</small></p>
                     </blockquote>
                     <figcaption class="blockquote-footer">
                         {{ user_info.profile_name }}
@@ -101,14 +102,22 @@
           <div class="modal-body">
             <!-- Add your form for editing the profile here -->
             <form>
-              <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama" value="{{ user_info.profile_name }}">
-              </div>
-              <div class="mb-3">
-                <label for="pic" class="form-label">Foto Profil</label>
-                <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
-              </div>
+                <!-- <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}">
+                </div> -->
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama</label>
+                    <input type="text" class="form-control" id="nama" value="{{ user_info.profile_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="pic" class="form-label">Foto Profil</label>
+                    <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
+                </div>
               <!-- Add more fields as necessary -->
               <button type="submit" class="btn btn-primary" onclick="update_profile()">Update</button>
             </form>
