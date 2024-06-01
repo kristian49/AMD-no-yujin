@@ -5,26 +5,28 @@
     <!-- Tag meta yang diperlukan -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <meta property="og:title" content="Masuk Navirins" />
-    <meta property="og:description" content="" />
+    <meta property="og:title" content="Bucket Tangan Navirins" />
+    <meta property="og:description" content="Apakah kamu mencari bucket tangan hias?" />
     <meta property="og:image" content="{{ url_for('static', filename='') }}" />
 
     <!-- Judul halaman web -->
     <title>Masuk</title>
 
-    <!-- Favicons -->
-    <link href="static/img/navirins.png" rel="icon" />
-    <link href="static/img/apple-touch-icon-navirins.png" rel="apple-touch-icon" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="static/css/style.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.bubble.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
+    <link href="../static/css/style.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -33,16 +35,15 @@
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
-                        <!-- <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                            <img src="" class="img-fluid" alt="">
-                        </div> -->
-                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center mt-5">
+                            <img src="../static/img/1.png" class="img-fluid" alt="">
+                        </div>
+                        <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center">
                             <div class="d-flex justify-content-center py-4">
-                                <!-- <a href="/masuk" class="logo d-flex align-items-center w-auto">
-                                    <img src="" alt="">
-                                    <span class="d-none d-lg-block">Navirins</span>
-                                </a> -->
-                                <span class="d-none d-lg-block">Navirins</span>
+                                <a href="/" class="logo d-flex align-items-center w-auto">
+                                    <img src="../static/img/navirins.png" alt="">
+                                    <span class="d-lg-block">Navirins</span>
+                                </a>
                             </div>
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -51,21 +52,31 @@
                                         <p class="text-center small">Masukkan email & kata sandi Anda untuk masuk</p>
                                     </div>
                                     <div class="row g-3">
-                                        <div class="col-12">
-                                            <label for="userid" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email">
-                                            <div id="emailFeedback" class=""></div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <label for="userid" class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email">
+                                                <div id="emailFeedback" class=""></div>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <label for="userpw" class="form-label">Kata Sandi</label>
-                                            <input type="password" class="form-control is-key" id="password">
-                                            <div id="passwordFeedback" class=""></div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <label for="userpw" class="form-label">Kata Sandi</label>
+                                                <input type="password" class="form-control is-key" id="password">
+                                                <div id="passwordFeedback" class=""></div>
+                                            </div>
                                         </div>
-                                        <div class="col-12 d-flex justify-content-evenly">
-                                            <button class="btn btn-primary w-100" onclick="login()">Masuk</button>
-                                            <button class="btn btn-info w-100" onclick="clearInputs()">Kosongkan</button>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <button class="btn btn-primary w-100" onclick="login()">Masuk</button>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <button class="btn btn-info w-100" onclick="clearInputs()">Kosongkan</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-md-12">
                                             <p class="small mb-0">Tidak punya akun? <a href="/daftar" class="link-primary">Buat sebuah akun</a></p>
                                         </div>
                                     </div>
@@ -77,6 +88,16 @@
             </section>
         </div>
     </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            <a href="https://www.instagram.com/navirins/"><i class="bi bi-instagram"> @navirins</i></a>
+        </div>
+        <div class="credits">
+            &copy; Hak Cipta <strong><span>Navirins</span></strong>. Dirancang oleh Tim Navirins
+        </div>
+    </footer>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
