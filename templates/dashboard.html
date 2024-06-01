@@ -71,7 +71,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#" onclick="return sign_out();">
+                            <a class="dropdown-item d-flex align-items-center" href="#" onclick="return logout();">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Keluar</span>
                             </a>
@@ -401,10 +401,56 @@
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
     <script src="../static/js/main.js"></script>
     <script>
-        function sign_out() {
-            $.removeCookie('bouquet', {path: '/'});
-            alert('Signed out!');
-            window.location.href = '/';
+        function logout() {
+            $.removeCookie('bouquet', { path: '/' })
+            Swal.fire({
+                title: "Keluar",
+                text: "Apakah Anda yakin ingin keluar dari website ini?",
+                icon: "warning",
+                showClass: {
+                    popup: `
+                        animate__animated
+                        animate__fadeInDown
+                    `
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Yakin",
+                cancelButtonText: "Batal",
+                hideClass: {
+                    popup: `
+                        animate__animated
+                        animate__fadeOut
+                    `
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        },
+                        showClass: {
+                            popup: `
+                                animate__animated
+                                animate__zoomIn
+                            `
+                        }
+                    });
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Berhasil keluar'
+                    });
+                    setTimeout(function () {
+                        window.location.href = '/';
+                    }, 3000);
+                }
+            });
         }
     </script>
 </body>
