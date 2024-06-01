@@ -48,9 +48,9 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/profil/{{ user_info.account_name }}">
-                                <i class="bi bi-person-vcard"></i>
-                                <span>Profil</span>
+                            <a class="dropdown-item d-flex align-items-center" href="/">
+                                <i class="bi bi-house"></i>
+                                <span>Dashboard</span>
                             </a>
                         </li>
                         <li>
@@ -101,15 +101,17 @@
                     <figcaption class="blockquote-footer">
                         {{ user_info.first_name }} {{ user_info.last_name }}
                         <br>
-                        {{ user_info.profile_name }}
+                        {{ user_info.account_name }}
                     </figcaption>
                 </figure>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="bi bi-pencil"></i>
                         Edit Profile
                     </button>
-                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#signOutModal">
-                        Sign Out
+                    <button type="button" class="btn btn-danger" onclick="return logout();">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Keluar
                     </button>
                 </div>
             </div>
@@ -137,7 +139,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="nama" class="form-label">Nama Akun</label>
-                    <input type="text" class="form-control" id="nama" value="{{ user_info.profile_name }}">
+                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">E-mail</label>
@@ -148,53 +150,15 @@
                     <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
                 </div>
               <!-- Add more fields as necessary -->
-              <button type="submit" class="btn btn-primary" onclick="update_profile()">Update</button>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" onclick="update_profile()">Update</button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-
-    
-    <!-- Edit Profile Modal -->
-    <!-- <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body"> -->
-            <!-- Add your form for editing the profile here -->
-            <!-- <form method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="depan" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="depan" value="{{ user_info.first_name }}" name="first_name_give">
-                </div>
-                <div class="mb-3">
-                    <label for="belakang" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="belakang" value="{{ user_info.last_name }}" name="last_name_give">
-                </div>
-                <div class="mb-3">
-                    <label for="nama" class="form-label">Nama Akun</label>
-                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}" name="account_name_give">
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="email" value="{{ user_info.useremail }}" name="useremail_give">
-                </div>
-                <div class="mb-3">
-                    <label for="pic" class="form-label">Foto Profil</label>
-                    <input type="file" class="form-control" id="pic" name="file_give">
-                </div> -->
-              <!-- Add more fields as necessary -->
-              <!-- <button type="submit" class="btn btn-success" onclick="update_profile()">Update</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-     -->
 
      <!-- Footer -->
      <footer id="footer" class="footer">
@@ -231,7 +195,7 @@
             form_data.append("file_give", file);
             form_data.append("first_name_give", first_name);
             form_data.append("last_name_give", last_name);
-            form_data.append("name_give", name);
+            form_data.append("account_name_give", name);
             form_data.append("useremail_give", useremail);
             console.log(first_name, last_name, name, useremail, file, form_data);
 
