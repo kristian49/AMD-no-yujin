@@ -15,9 +15,10 @@ client = MongoClient(MONGODB_CONNECTION_STRING)
 db = client.TugasBesar
 
 SECRET_KEY = 'AMDNOYUJIN'
-TOKEN_KEY = 'mytoken'
+TOKEN_KEY = 'bouquet'
 
 ### home.html ###
+# menampilkan halaman depan
 @app.route('/main')
 def home():
     return render_template('home.html')
@@ -91,6 +92,8 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
+### dashboard.html ###
+# menampilkan halaman dashboard
 @app.route('/')
 def dashboard():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -103,6 +106,8 @@ def dashboard():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
+### profile.html ###
+# menampilkan halaman profil
 @app.route('/profil/<account_name>', methods = ['GET'])
 def profile(account_name):
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -113,8 +118,9 @@ def profile(account_name):
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-    
-# update profile   
+
+
+# memperbarui/update profile   
 @app.route("/update_profile", methods=["POST"])
 def save_img():
     token_receive = request.cookies.get(TOKEN_KEY)
