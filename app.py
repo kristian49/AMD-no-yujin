@@ -218,7 +218,18 @@ def get_chats():
 
 
 ### collection.html ###
-
+@app.route('/koleksi')
+def collection():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collections = list(db.collections.find())
+        return render_template('collection.html', collections=collections, user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for('home'))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for('home'))
 
 ### order_form.html ###
 
