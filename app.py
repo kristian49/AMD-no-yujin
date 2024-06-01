@@ -133,7 +133,7 @@ def profile(account_name):
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
+        return redirect(url_for('dashboard'))
 
 # memperbarui/update profile   
 @app.route("/update_profile", methods=["POST"])
@@ -155,7 +155,7 @@ def save_img():
         db.users.update_one({"useremail": payload["id"]}, {"$set": new_doc})
         return jsonify({"result": "success", "msg": "Profile updated!"})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+        return redirect(url_for("dashboard"))
 
 ### chat.html ###
 # menampilkan halaman profil
@@ -168,7 +168,7 @@ def chat(account_name):
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
         return render_template('chat.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
+        return redirect(url_for('dashboard'))
 
 # memasukkan obrolan
 @app.route('/memasukkan-obrolan', methods = ['POST'])
@@ -189,7 +189,24 @@ def enter_chat():
         db.chats.insert_one(doc)
         return jsonify({'result': 'success', 'msg': 'Posting successful!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('chat'))
+        return redirect(url_for('dashboard'))
+
+# mendapatkan obrolan
+@app.route('/mendapatkan-obrolan', methods = ['GET'])
+def get_chats():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        account_name_receive = request.args['account_name_give']
+        if account_name_receive == '':
+            chats = list(db.chats.find({}).sort('date', -1).limit(20))
+        else:
+            chats = list(db.chats.find({'account_name': account_name_receive}).sort('date', -1).limit(20))
+        for post in chats:
+            post['_id'] = str(post['_id'])
+        return jsonify({'result': 'success', 'msg': 'Successfully fetched all chats!', 'chats': chats})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('dashboard'))
 
 ### purchase_history.html ###
 
