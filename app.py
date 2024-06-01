@@ -119,7 +119,6 @@ def profile(account_name):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-
 # memperbarui/update profile   
 @app.route("/update_profile", methods=["POST"])
 def save_img():
