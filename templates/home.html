@@ -321,19 +321,19 @@
                     </div>            
                     <div class="col-xl-6">
                         <div class="card p-4">
-                            <form action="forms/contact.php" method="post" class="php-email-form">
+                            <form action="/bertanya-di-depan" method="POST" class="php-email-form">
                                 <div class="row gy-4">
                                     <div class="col-md-6">
-                                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                                        <input type="text" name="name" id="name" class="form-control" placeholder="Your Name" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                                        <input type="email" name="email" id="email" class="form-control" placeholder="Your Email" required>
                                     </div>
                                     <div class="col-md-12">
-                                        <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                                        <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" required>
                                     </div>
                                     <div class="col-md-12">
-                                        <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                                        <textarea name="message" rows="6" id="message" class="form-control" placeholder="Message" required></textarea>
                                     </div>
                                     <div class="col-md-12 text-center">
                                         <div class="loading">Loading</div>
@@ -374,6 +374,47 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
     <script src="../static/js/main.js"></script>
+    <script>
+        function ask_in_home() {
+            let name = $('#name').val();
+            let email = $('#email').val();
+            let subject = $('#subject').val();
+            let message = $('#message').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/bertanya-di-depan',
+                data: {
+                    name_give: name,
+                    email_give: email,
+                    subject_give: subject,
+                    message_give: message
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Berhasil mengirimkan pesan'
+                        });
+                        setTimeout(function () {
+                            window.location.href = '/main';
+                        }, 3000);
+                    }
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

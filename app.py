@@ -23,6 +23,22 @@ TOKEN_KEY = 'bouquet'
 def home():
     return render_template('home.html')
 
+@app.route('/bertanya-di-depan')
+def ask_in_home():
+    name_receive = request.form['name_give']
+    email_receive = request.form['email_give']
+    subject_receive = request.form['subject_give']
+    message_receive = request.form['message_give']
+
+    doc = {
+        'name': name_receive,
+        'email': email_receive,
+        'subject': subject_receive,
+        'message': message_receive
+    }
+    db.ask_in_home.insert_one(doc)
+    return jsonify({'result': 'success'})
+
 ### register.html ###
 # menampilkan halaman daftar
 @app.route('/daftar')
