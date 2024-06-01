@@ -10,7 +10,7 @@
     <meta property="og:image" content="{{ url_for('static', filename='') }}" />
 
     <!-- Judul halaman web -->
-    <title>Navirin's</title>
+    <title>Obrolan</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
@@ -83,18 +83,55 @@
     </header>
 
     <main id="main" class="main">
-        <section class="section">
-            <div class="container col-xxl-8 px-4 py-4">
-                <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-                    <div class="col-10 col-sm-8 col-lg-6">
-                        <img src="../static/img/5.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="500" loading="lazy">
-                    </div>
-                    <div class="col-lg-6">
-                        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Ini Dashboard</h1>
-                        <p class="lead">.</p>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" href="#koleksi">Memulai</button>
+        <section class="section contact">
+            <div class="row gy-4">      
+                <div class="col-xl-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="info-box card">
+                                <i class="bi bi-geo-alt"></i>
+                                <h3>Address</h3>
+                                <p>A108 Adam Street,<br>New York, NY 535022</p>
+                            </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="info-box card">
+                                <i class="bi bi-telephone"></i>
+                                <h3>Call Us</h3>
+                                <p>+1 5589 55488 55<br>+1 6678 254445 41</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="info-box card">
+                                <i class="bi bi-envelope"></i>
+                                <h3>Email Us</h3>
+                                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b52555d547b5e435a564b575e15585456">[email&#160;protected]</a><br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9af9f5f4eefbf9eedaffe2fbf7eaf6ffb4f9f5f7">[email&#160;protected]</a></p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="info-box card">
+                                <i class="bi bi-clock"></i>
+                                <h3>Open Hours</h3>
+                                <p>Monday - Friday<br>9:00AM - 05:00PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card p-4">
+                        <form action="/memasukkan-obrolan" method="POST" class="php-email-form">
+                            <div class="row gy-4">
+                                <div class="col-md-12">
+                                    <textarea class="form-control" name="message" id="message" rows="6" placeholder="Message" required></textarea>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div class="loading">Loading</div>
+                                    <div class="error-message"></div>
+                                    <div class="sent-message">Your message has been sent. Thank you!</div>
+                                    <button type="submit">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -126,6 +163,46 @@
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
     <script src="../static/js/main.js"></script>
     <script>
+        $(document).keypress(function (event) {
+            if (event.key === 'Enter') {
+                chat();
+            }
+        })
+
+        function chat() {
+            let message = $('#message').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/memasukkan-obrolan',
+                data: {
+                    message_give: message
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Kirim obrolan sukses'
+                        });
+                        setTimeout(function () {
+                            window.location.href = '/';
+                        }, 3000);
+                    }
+                }
+            })
+        }
+
         function logout() {
             $.removeCookie('bouquet', { path: '/' })
             Swal.fire({

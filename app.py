@@ -158,7 +158,38 @@ def save_img():
         return redirect(url_for("home"))
 
 ### chat.html ###
+# menampilkan halaman profil
+@app.route('/obrolan/<account_name>', methods = ['GET'])
+def chat(account_name):
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        status = account_name == payload.get('id')
+        user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
+        return render_template('chat.html', user_info = user_info, status = status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
+# memasukkan obrolan
+@app.route('/memasukkan-obrolan', methods = ['POST'])
+def enter_chat():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'account_name': payload['id']})
+        message_receive = request.form['message_give']
+        date_receive = request.form['date_give']
+        doc = {
+            'account_name': user_info['account_name'],
+            'profile_name': user_info['profile_name'],
+            'profile_pic_real': user_info['profile_pic_real'],
+            'message': message_receive,
+            'date': date_receive
+        }
+        db.chats.insert_one(doc)
+        return jsonify({'result': 'success', 'msg': 'Posting successful!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('chat'))
 
 ### purchase_history.html ###
 
