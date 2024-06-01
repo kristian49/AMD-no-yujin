@@ -6,7 +6,7 @@ Aplikasi Navirin's berbasis Python Flask dengan MongoDB
 
 Navirin's merupakan aplikasi dasar berbasis Flask yang menggambarkan promosi, interaksi, dan penjualan dari Navirin's kepada pelanggan. Aplikasi ini menyediakan beberapa fitur dasar yang dapat digunakan, seperti pemesanan buket, obrolan antar penjual dan pelanggan, histori pembayaran pelanggan, dan status pengiriman buket.
 
-![alt text](https://img.shields.io/badge/Flask-3.0.3-api-ready-blue.svg "navirin's")
+![alt text](https://img.shields.io/badge/Flask-3.0.3--api-ready-blue.svg "navirin's")
 ![alt text](https://img.shields.io/badge/MongoDB-6.5.0-brightgreen.svg "navirin's")
 ![alt text](https://img.shields.io/badge/JWT-Ready-blue.svg "navirin's")
 
