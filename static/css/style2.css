@@ -853,6 +853,7 @@ section {
 }
 
 .card {
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -889,4 +890,22 @@ figure {
     text-align: center;
     margin: 0; /* Reset default margin */
 }
+
+.nav-link {
+    color: black; /* Mengatur warna tautan menjadi hitam */
+}
+
+.fixed-nav {
+    position: fixed;
+    top: 50px; /* Sesuaikan nilai ini jika ada header lain yang fixed di atasnya */
+    width: 100%;
+    border-bottom: 1px solid #ddd; /* Opsional: menambahkan garis bawah untuk pemisahan */
+    padding-top: 10px; /* Menambah jarak di atas navbar */
+    padding-bottom: 10px; /* Menambah jarak di bawah navbar */
+}
+
+.produk {
+    margin-bottom: 20px; /* Opsional: menambahkan margin bawah untuk setiap produk */
+}
+
 
