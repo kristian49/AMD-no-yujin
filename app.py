@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 
-MONGODB_CONNECTION_STRING = 'mongodb+srv://test:sparta@cluster0.6vz5zah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+MONGODB_CONNECTION_STRING = 'mongodb+srv://navirins:finalproject@navirins.hlkacsk.mongodb.net/?retryWrites=true&w=majority&appName=Navirins'
 client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.TugasBesar
+db = client.kelompok3
 
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'bouquet'
