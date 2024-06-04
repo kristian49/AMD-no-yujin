@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
+from bson.objectid import ObjectId
 import jwt
 import hashlib
 import os
@@ -255,7 +256,16 @@ def collection():
 
 ### order_form.html ###
 
-
+@app.route('/order_form/<collection_id>')
+def order_form(collection_id):
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collection = db.collections.find_one({'_id': ObjectId(collection_id)})
+        return render_template('order_form.html', collection=collection, user_info=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('dashboard'))
 ### payment ###
 
 

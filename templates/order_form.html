@@ -92,115 +92,35 @@
         </nav>
     </header>
 
-    <section id="kategori1">
-        <h2>Kategori 1</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori1' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- Konten kategori 2 -->
-    <section id="kategori2">
-        <h2>Kategori 2</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori2' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- Konten kategori 2 -->
-    <section id="kategori3">
-        <h2>Kategori 3</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori3' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-</main>
-    <div class="modal fade" id="tambahKoleksiModal" tabindex="-1" aria-labelledby="tambahKoleksiModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="/tambah-koleksi" method="post" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="tambahKoleksiModalLabel">Tambah Koleksi Buket</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="namaBuket" class="form-label">Nama Buket</label>
-                            <input type="text" class="form-control" id="namaBuket" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="deskripsiBuket" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="deskripsiBuket" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="hargaBuket" class="form-label">Harga</label>
-                            <input type="number" class="form-control" id="hargaBuket" name="price" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kategoriBuket" class="form-label">Kategori</label>
-                            <select class="form-select" id="kategoriBuket" name="category" required>
-                                <option value="kategori1">Kategori 1</option>
-                                <option value="kategori2">Kategori 2</option>
-                                <option value="kategori3">Kategori 3</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="gambarBuket" class="form-label">Gambar</label>
-                            <input type="file" class="form-control" id="gambarBuket" name="image" accept="image/*" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
+    <main>
+        <div class="container">
+            <h1 class="mt-5">Order Form</h1>
+            <div class="card mb-3">
+                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ collection.name }}</h5>
+                    <p class="card-text">{{ collection.description }}</p>
+                    <p class="card-text"><strong>Price: {{ collection.price }}</strong></p>
+                </div>
             </div>
+            <form method="POST" action="/process_order">
+                <input type="hidden" name="collection_id" value="{{ collection._id }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </form>
         </div>
-    </div>
-
-
+    </main>
     <!-- Footer -->
     <footer id="footer" class="footer">
         <div class="copyright">
