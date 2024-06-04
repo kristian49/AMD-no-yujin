@@ -104,56 +104,118 @@
             <li class="nav-item">
                 <a class="nav-link" href="#kategori3">Kategori 3</a>
             </li>
-          </ul>
+        </ul>
+        <section>
+            <div class="text-end mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahKoleksiModal">Tambah Koleksi</button>
+            </div>
+        
+            <section id="kategori1">
+                <h2>Kategori 1</h2>
+                <div class="row">
+                    {% for collection in collections %}
+                        {% if collection.category == 'kategori1' %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ collection.name }}</h5>
+                                        <p class="card-text">{{ collection.description }}</p>
+                                        <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+    
+            <!-- Konten kategori 2 -->
+            <section id="kategori2">
+                <h2>Kategori 2</h2>
+                <div class="row">
+                    {% for collection in collections %}
+                        {% if collection.category == 'kategori2' %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ collection.name }}</h5>
+                                        <p class="card-text">{{ collection.description }}</p>
+                                        <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
 
-        <!-- Konten kategori 1 -->
-        <section id="kategori1">
-            <h2>Kategori 1</h2>
-            <!-- Looping untuk menampilkan produk sesuai kategori 1 -->
-            {% for collection in collections %}
-                {% if collection.category == 'kategori1' %}
-                    <div class="produk">
-                        <img src="{{ collection.image }}" alt="{{ collection.name }}">
-                        <h3>{{ collection.name }}</h3>
-                        <p>{{ collection.description }}</p>
-                        <p>Harga: {{ collection.price }}</p>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </section>
-
-        <!-- Konten kategori 2 -->
-        <section id="kategori2">
-            <h2>Kategori 2</h2>
-            <!-- Looping untuk menampilkan produk sesuai kategori 2 -->
-            {% for collection in collections %}
-                {% if collection.category == 'kategori2' %}
-                    <div class="produk">
-                        <img src="{{ collection.image }}" alt="{{ collection.name }}">
-                        <h3>{{ collection.name }}</h3>
-                        <p>{{ collection.description }}</p>
-                        <p>Harga: {{ collection.price }}</p>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </section>
-
-        <!-- Konten kategori 3 -->
-        <section id="kategori3">
-            <h2>Kategori 3</h2>
-            <!-- Looping untuk menampilkan produk sesuai kategori 3 -->
-            {% for collection in collections %}
-                {% if collection.category == 'kategori3' %}
-                    <div class="produk">
-                        <img src="{{ collection.image }}" alt="{{ collection.name }}">
-                        <h3>{{ collection.name }}</h3>
-                        <p>{{ collection.description }}</p>
-                        <p>Harga: {{ collection.price }}</p>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </section>
+            <!-- Konten kategori 2 -->
+            <section id="kategori3">
+                <h2>Kategori 3</h2>
+                <div class="row">
+                    {% for collection in collections %}
+                        {% if collection.category == 'kategori3' %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ collection.name }}</h5>
+                                        <p class="card-text">{{ collection.description }}</p>
+                                        <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
     </main>
+
+    <div class="modal fade" id="tambahKoleksiModal" tabindex="-1" aria-labelledby="tambahKoleksiModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/tambah-koleksi" method="post" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahKoleksiModalLabel">Tambah Koleksi Buket</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="namaBuket" class="form-label">Nama Buket</label>
+                            <input type="text" class="form-control" id="namaBuket" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deskripsiBuket" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="deskripsiBuket" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hargaBuket" class="form-label">Harga</label>
+                            <input type="number" class="form-control" id="hargaBuket" name="price" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategoriBuket" class="form-label">Kategori</label>
+                            <select class="form-select" id="kategoriBuket" name="category" required>
+                                <option value="kategori1">Kategori 1</option>
+                                <option value="kategori2">Kategori 2</option>
+                                <option value="kategori3">Kategori 3</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gambarBuket" class="form-label">Gambar</label>
+                            <input type="file" class="form-control" id="gambarBuket" name="image" accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Footer -->
     <footer id="footer" class="footer">

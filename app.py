@@ -4,11 +4,13 @@ from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 import jwt
 import hashlib
+import os
 
 app = Flask(__name__)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
+app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
 
 MONGODB_CONNECTION_STRING = 'mongodb+srv://navirins:finalproject@navirins.hlkacsk.mongodb.net/?retryWrites=true&w=majority&appName=Navirins'
 client = MongoClient(MONGODB_CONNECTION_STRING)
@@ -215,7 +217,29 @@ def get_chats():
 ### delivery_status.html ###
 
 
-### collection.html ###
+# tambah koleksi 
+@app.route('/tambah-koleksi', methods=['POST'])
+def tambah_koleksi():
+    name_receive = request.form['name']
+    description_receive = request.form['description']
+    price_receive = request.form['price']
+    category_receive = request.form['category']
+    image = request.files['image']
+    image_filename = secure_filename(image.filename)
+    image_path = os.path.join(app.config['UPLOAD_COLLECTION_FOLDER'], image_filename)
+    image.save(image_path)
+
+    doc = {
+        'name': name_receive,
+        'description': description_receive,
+        'price': price_receive,
+        'category': category_receive,
+        'image': image_path
+    }
+    db.collections.insert_one(doc)
+    return redirect(url_for('collection'))
+
+# Endpoint untuk menampilkan halaman koleksi
 @app.route('/koleksi')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
