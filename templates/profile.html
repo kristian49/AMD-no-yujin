@@ -101,7 +101,7 @@
                     <figcaption class="blockquote-footer">
                         {{ user_info.first_name }} {{ user_info.last_name }}
                         <br>
-                        {{ user_info.account_name }}
+                        {{ user_info.address }}
                     </figcaption>
                 </figure>
                 <div class="text-center mt-3">
@@ -136,6 +136,10 @@
                 <div class="mb-3">
                     <label for="belakang" class="form-label">Nama Belakang</label>
                     <input type="text" class="form-control" id="belakang" value="{{ user_info.last_name }}">
+                </div>
+                <div class="mb-3">
+                    <label for="alamat" class="form-label">Alamat</label>
+                    <input type="text" class="form-control" id="alamat" value="{{ user_info.alamat }}">
                 </div>
                 <div class="mb-3"> 
                     <label for="pic" class="form-label">Foto Profil</label>
@@ -180,12 +184,14 @@
         function update_profile() {
             let first_name = $("#depan").val();
             let last_name = $("#belakang").val();
+            let address = $("#alamat").val();
             let file = $("#pic")[0].files[0];
             let form_data = new FormData();
             form_data.append("file_give", file);
             form_data.append("first_name_give", first_name);
             form_data.append("last_name_give", last_name);
-            console.log(first_name, last_name, file, form_data);
+            form_data.append("address_give", address);
+            console.log(first_name, last_name, address, file, form_data);
 
             $.ajax({
             type: "POST",

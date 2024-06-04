@@ -96,31 +96,51 @@
         <div class="container">
             <h1 class="mt-5">Order Form</h1>
             <div class="card mb-3">
-                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                <img src="{{ url_for('static', filename=collection.image) }}" class="card-img-top" alt="{{ collection.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ collection.name }}</h5>
                     <p class="card-text">{{ collection.description }}</p>
                     <p class="card-text"><strong>Price: {{ collection.price }}</strong></p>
+                    <!-- Bagian kuantitas -->
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
+                            <input type="text" class="form-control" id="quantity" name="quantity" value="1" readonly>
+                            <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div id="total" class="form-control">Total Harga Rp {{ collection.price }}</div>
+                    </div>
+                    <!-- Akhir dari bagian kuantitas -->
                 </div>
             </div>
+    
+            <!-- Tambahkan card lainnya di sini sesuai dengan jumlah produk yang ingin Anda tampilkan -->
+    
             <form method="POST" action="/process_order">
                 <input type="hidden" name="collection_id" value="{{ collection._id }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ user_info.profile_name }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user_info.useremail }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                    <textarea class="form-control" id="address" name="address" rows="3" required>{{ user_info.address }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Place Order</button>
             </form>
+            
+            <!-- Tombol Beli Lagi -->
+            <a href="/koleksi" class="btn btn-secondary mt-3">Beli Lagi</a>
         </div>
     </main>
+    
     <!-- Footer -->
     <footer id="footer" class="footer">
         <div class="copyright">
@@ -146,6 +166,45 @@
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
     <script src="../static/js/main.js"></script>
     <script>
+        // Tambahkan event listener untuk tombol Plus dan Minus
+       // Tambahkan event listener untuk tombol Plus dan Minus
+    document.getElementById("btnPlus").addEventListener("click", function() {
+        incrementValue();
+    });
+
+    document.getElementById("btnMinus").addEventListener("click", function() {
+        decrementValue();
+    });
+
+    // Fungsi untuk menambahkan nilai
+    function incrementValue() {
+        var value = parseInt(document.getElementById("quantity").value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById("quantity").value = value;
+        updateTotalPrice();
+    }
+
+    // Fungsi untuk mengurangi nilai
+    function decrementValue() {
+        var value = parseInt(document.getElementById("quantity").value, 10);
+        value = isNaN(value) ? 0 : value;
+        if (value > 1) {
+            value--;
+            document.getElementById("quantity").value = value;
+            updateTotalPrice();
+        }
+    }
+
+    // Fungsi untuk memperbarui total harga
+    function updateTotalPrice() {
+        var price = parseFloat("{{ collection.price }}");
+        var quantity = parseInt(document.getElementById("quantity").value, 10);
+        var totalPrice = price * quantity;
+        document.getElementById("total").textContent = "Total: Rp " + totalPrice.toFixed(2);
+    }
+
+
         function logout() {
             $.removeCookie('bouquet', { path: '/' })
             Swal.fire({

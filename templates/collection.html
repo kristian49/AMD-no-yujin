@@ -92,14 +92,35 @@
         </nav>
     </header>
 
+
+    <main id="main" class="main">
+        <!-- Navigasi kategori koleksi -->
+        <ul class="nav nav-underline justify-content-center fixed-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#kategori1">Kategori 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#kategori2">Kategori 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#kategori3">Kategori 3</a>
+            </li>
+        </ul>
+        <section>
+            <div class="text-end mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahKoleksiModal">Tambah Koleksi</button>
+            </div>
+
     <section id="kategori1">
         <h2>Kategori 1</h2>
         <div class="row">
             {% for collection in collections %}
                 {% if collection.category == 'kategori1' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="card h-60">
+                            <div class="card-img-container"> <!-- Tambahkan container untuk gambar -->
+                                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+                            </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ collection.name }}</h5>
                                 <p class="card-text">{{ collection.description }}</p>
