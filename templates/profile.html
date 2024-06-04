@@ -137,14 +137,6 @@
                     <label for="belakang" class="form-label">Last Name</label>
                     <input type="text" class="form-control" id="belakang" value="{{ user_info.last_name }}">
                 </div>
-                <div class="mb-3">
-                    <label for="nama" class="form-label">Nama Akun</label>
-                    <input type="text" class="form-control" id="nama" value="{{ user_info.account_name }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="email" value="{{ user_info.useremail }}">
-                </div>
                 <div class="mb-3"> 
                     <label for="pic" class="form-label">Foto Profil</label>
                     <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
@@ -188,16 +180,12 @@
         function update_profile() {
             let first_name = $("#depan").val();
             let last_name = $("#belakang").val();
-            let name = $("#nama").val();
-            let useremail = $("#email").val();
             let file = $("#pic")[0].files[0];
             let form_data = new FormData();
             form_data.append("file_give", file);
             form_data.append("first_name_give", first_name);
             form_data.append("last_name_give", last_name);
-            form_data.append("account_name_give", name);
-            form_data.append("useremail_give", useremail);
-            console.log(first_name, last_name, name, useremail, file, form_data);
+            console.log(first_name, last_name, file, form_data);
 
             $.ajax({
             type: "POST",

@@ -144,9 +144,7 @@ def save_img():
         useremail = payload.get('id')
         first_name_receive = request.form["first_name_give"]
         last_name_receive = request.form["last_name_give"]
-        account_name_receive = request.form["account_name_give"]
-        useremail_receive = request.form["useremail_give"]
-        new_doc = {"first_name": first_name_receive, "last_name": last_name_receive, "account_name": account_name_receive, "useremail": useremail_receive}
+        new_doc = {"first_name": first_name_receive, "last_name": last_name_receive}
         if "file_give" in request.files:
             file = request.files["file_give"]
             filename = secure_filename(file.filename)
