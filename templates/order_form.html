@@ -41,6 +41,9 @@
         </div>
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
+                <li class="nav-item pe-3">
+                    <a class="nav-link me-2" href="/koleksi">Koleksi Buket</a>
+                </li>
                 <li class="nav-item dropdown pe-3">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle">
@@ -51,6 +54,12 @@
                             <a class="dropdown-item d-flex align-items-center" href="/">
                                 <i class="bi bi-house"></i>
                                 <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/profil/{{ user_info.account_name }}">
+                                <i class="bi bi-person-vcard"></i>
+                                <span>Profil</span>
                             </a>
                         </li>
                         <li>
@@ -83,81 +92,58 @@
         </nav>
     </header>
 
-    <main id="main">
-        <!-- Ambil data -->
-        <div class="card">
-            <div class="card-body">
-                <a class="img" href="#">
-                    <img
-                      class="profile-pic"
-                      src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
-                    />
-                </a>
-                <figure class="text-center">
-                    <blockquote class="blockquote">
-                        <p><strong>{{ user_info.account_name }}</strong></p>
-                        <p><small>{{ user_info.useremail }}</small></p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer">
-                        {{ user_info.first_name }} {{ user_info.last_name }}
-                        <br>
-                        {{ user_info.address }}
-                    </figcaption>
-                </figure>
-                <div class="text-center mt-3">
-                    <button type="button" class="btn btn-outline-success wide-button" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="bi bi-pencil"></i>
-                        Edit Profile
-                    </button>
-                    <button type="button" class="btn btn-danger wide-button" onclick="return logout();">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Keluar
-                    </button>
+    <main>
+        <div class="container">
+            <h1 class="mt-5">Order Form</h1>
+            <div class="card mb-3">
+                <img src="{{ url_for('static', filename=collection.image) }}" class="card-img-top" alt="{{ collection.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ collection.name }}</h5>
+                    <p class="card-text">{{ collection.description }}</p>
+                    <p class="card-text"><strong>Price: {{ collection.price }}</strong></p>
+                    <!-- Bagian kuantitas -->
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
+                            <input type="text" class="form-control" id="quantity" name="quantity" value="1" readonly>
+                            <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div id="total" class="form-control">Total Harga Rp {{ collection.price }}</div>
+                    </div>
+                    <!-- Akhir dari bagian kuantitas -->
                 </div>
             </div>
+    
+            <!-- Tambahkan card lainnya di sini sesuai dengan jumlah produk yang ingin Anda tampilkan -->
+    
+            <form method="POST" action="/process_order">
+                <input type="hidden" name="collection_id" value="{{ collection._id }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ user_info.profile_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user_info.useremail }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" required>{{ user_info.address }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Place Order</button>
+            </form>
+            
+            <!-- Tombol Beli Lagi -->
+            <a href="/koleksi" class="btn btn-secondary mt-3">Beli Lagi</a>
         </div>
     </main>
     
-    <!-- Edit Profile Modal -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Add your form for editing the profile here -->
-            <form>
-                <div class="mb-3">
-                    <label for="depan" class="form-label">Nama Depan</label>
-                    <input type="text" class="form-control" id="depan" value="{{ user_info.first_name }}">
-                </div>
-                <div class="mb-3">
-                    <label for="belakang" class="form-label">Nama Belakang</label>
-                    <input type="text" class="form-control" id="belakang" value="{{ user_info.last_name }}">
-                </div>
-                <div class="mb-3">
-                    <label for="alamat" class="form-label">Alamat</label>
-                    <input type="text" class="form-control" id="alamat" value="{{ user_info.alamat }}">
-                </div>
-                <div class="mb-3"> 
-                    <label for="pic" class="form-label">Foto Profil</label>
-                    <input type="file" class="form-control" id="pic" value="{{ user_info.profile_pic }}">
-                </div>
-              <!-- Add more fields as necessary -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" onclick="update_profile()">Update</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     <!-- Footer -->
-     <footer id="footer" class="footer">
+    
+    <!-- Footer -->
+    <footer id="footer" class="footer">
         <div class="copyright">
             <a href="https://www.instagram.com/navirins/"><i class="bi bi-instagram"> @navirins</i></a>
         </div>
@@ -169,45 +155,56 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/isotope-layout@3.0.6/dist/isotope.pkgd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.1/dist/apexcharts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@7.1.1/tinymce.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../static/js/main2.js"></script>
+    <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
+    <script src="../static/js/main.js"></script>
     <script>
-        function update_profile() {
-            let first_name = $("#depan").val();
-            let last_name = $("#belakang").val();
-            let address = $("#alamat").val();
-            let file = $("#pic")[0].files[0];
-            let form_data = new FormData();
-            form_data.append("file_give", file);
-            form_data.append("first_name_give", first_name);
-            form_data.append("last_name_give", last_name);
-            form_data.append("address_give", address);
-            console.log(first_name, last_name, address, file, form_data);
+        // Tambahkan event listener untuk tombol Plus dan Minus
+       // Tambahkan event listener untuk tombol Plus dan Minus
+    document.getElementById("btnPlus").addEventListener("click", function() {
+        incrementValue();
+    });
 
-            $.ajax({
-            type: "POST",
-            url: "/update_profile",
-            data: form_data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                if (response["result"] === "success") {
-                alert(response["msg"]);
-                window.location.reload();
-                }
-            },
-            });
+    document.getElementById("btnMinus").addEventListener("click", function() {
+        decrementValue();
+    });
+
+    // Fungsi untuk menambahkan nilai
+    function incrementValue() {
+        var value = parseInt(document.getElementById("quantity").value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById("quantity").value = value;
+        updateTotalPrice();
+    }
+
+    // Fungsi untuk mengurangi nilai
+    function decrementValue() {
+        var value = parseInt(document.getElementById("quantity").value, 10);
+        value = isNaN(value) ? 0 : value;
+        if (value > 1) {
+            value--;
+            document.getElementById("quantity").value = value;
+            updateTotalPrice();
         }
+    }
+
+    // Fungsi untuk memperbarui total harga
+    function updateTotalPrice() {
+        var price = parseFloat("{{ collection.price }}");
+        var quantity = parseInt(document.getElementById("quantity").value, 10);
+        var totalPrice = price * quantity;
+        document.getElementById("total").textContent = "Total: Rp " + totalPrice.toFixed(2);
+    }
+
 
         function logout() {
             $.removeCookie('bouquet', { path: '/' })

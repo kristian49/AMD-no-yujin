@@ -908,4 +908,15 @@ figure {
     margin-bottom: 20px; /* Opsional: menambahkan margin bawah untuk setiap produk */
 }
 
+.card-img-container {
+    height: 200px; /* Sesuaikan dengan tinggi yang diinginkan */
+    overflow: hidden;
+}
+
+.card-img-container img {
+    width: 100%;
+    object-fit: cover;
+    object-position: top; /* Posisikan gambar ke atas */
+}
+
 

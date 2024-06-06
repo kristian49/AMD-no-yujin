@@ -2,17 +2,20 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
+from bson.objectid import ObjectId
 import jwt
 import hashlib
+import os
 
 app = Flask(__name__)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
+app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
 
-MONGODB_CONNECTION_STRING = 'mongodb+srv://test:sparta@cluster0.6vz5zah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+MONGODB_CONNECTION_STRING = 'mongodb+srv://navirins:finalproject@navirins.hlkacsk.mongodb.net/?retryWrites=true&w=majority&appName=Navirins'
 client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.TugasBesar
+db = client.kelompok3
 
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'bouquet'
@@ -144,9 +147,8 @@ def save_img():
         useremail = payload.get('id')
         first_name_receive = request.form["first_name_give"]
         last_name_receive = request.form["last_name_give"]
-        account_name_receive = request.form["account_name_give"]
-        useremail_receive = request.form["useremail_give"]
-        new_doc = {"first_name": first_name_receive, "last_name": last_name_receive, "account_name": account_name_receive, "useremail": useremail_receive}
+        address_receive = request.form["address_give"]
+        new_doc = {"first_name": first_name_receive, "last_name": last_name_receive, "address": address_receive}
         if "file_give" in request.files:
             file = request.files["file_give"]
             filename = secure_filename(file.filename)
@@ -217,7 +219,29 @@ def get_chats():
 ### delivery_status.html ###
 
 
-### collection.html ###
+# tambah koleksi 
+@app.route('/tambah-koleksi', methods=['POST'])
+def tambah_koleksi():
+    name_receive = request.form['name']
+    description_receive = request.form['description']
+    price_receive = request.form['price']
+    category_receive = request.form['category']
+    image = request.files['image']
+    image_filename = secure_filename(image.filename)
+    image_path = os.path.join(app.config['UPLOAD_COLLECTION_FOLDER'], image_filename)
+    image.save(image_path)
+
+    doc = {
+        'name': name_receive,
+        'description': description_receive,
+        'price': price_receive,
+        'category': category_receive,
+        'image': image_path
+    }
+    db.collections.insert_one(doc)
+    return redirect(url_for('collection'))
+
+# Endpoint untuk menampilkan halaman koleksi
 @app.route('/koleksi')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -233,7 +257,49 @@ def collection():
 
 ### order_form.html ###
 
+# Menampilkan halaman form pemesanan produk
+@app.route('/order_form/<collection_id>')
+def order_form(collection_id):
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collection = db.collections.find_one({'_id': ObjectId(collection_id)})
+        if collection and 'image' in collection:
+            collection['image'] = f'static/{collection["image"]}'
+        return render_template('order_form.html', collection=collection, user_info=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('dashboard'))
 
+# Menyimpan informasi pemesanan produk
+@app.route('/process_order', methods=['POST'])
+def process_order():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collection_id = request.form.get('collection_id')
+        quantity = request.form.get('quantity')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        address = request.form.get('address')
+
+        # Simpan informasi pemesanan produk ke dalam database
+        order_data = {
+            'collection_id': ObjectId(collection_id),
+            'quantity': quantity,
+            'name': name,
+            'email': email,
+            'address': address,
+            'useremail': user_info['useremail']  # Menyimpan email pengguna yang sedang login
+        }
+        db.orders.insert_one(order_data)
+
+        # Redirect ke halaman terima kasih atau halaman lain yang sesuai
+        return redirect(url_for('dashboard'))
+
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('dashboard'))
 ### payment ###
 
 
