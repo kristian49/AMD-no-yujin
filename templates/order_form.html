@@ -95,14 +95,40 @@
     <main>
         <div class="container">
             <h1 class="mt-5">Order Form</h1>
-            <div class="card mb-3">
-                <img src="{{ url_for('static', filename=collection.image) }}" class="card-img-top" alt="{{ collection.name }}">
+            <div class="container h-100 py-5">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-10">
+    
+                        <div class="card rounded-3 mb-4">
+                            <div class="card-body p-4">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <div class="col-md-2 col-lg-2 col-xl-2">
+                                        <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid rounded-3" alt="{{ collection.name }}">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-xl-3">
+                                        <p class="lead fw-normal mb-4 mb-md-0 text-center">{{ collection.name }}</p>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                            <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
+                                            <input type="text" class="form-control" id="quantity" name="quantity" value="1" readonly>
+                                            <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                                    </div>
+                                    <div class="col-md-3 mt-3 mt-md-0 col-lg-2 col-xl-2 offset-lg-1">
+                                        <div id="product-price" style="display: none;">Rp. {{ collection.price }}</div>
+                                        <h5 class="mb-0 text-center total-price">Rp. {{ collection.price }}</h5>
+                                    </div>
+    
+                                </div>
+                            </div>
+                        </div>
+            <!-- <div class="card mb-3">
+                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ collection.name }}</h5>
                     <p class="card-text">{{ collection.description }}</p>
                     <p class="card-text"><strong>Price: {{ collection.price }}</strong></p>
-                    <!-- Bagian kuantitas -->
-                    <div class="mb-3">
+                    Bagian kuantitas -->
+                    <!-- <div class="mb-3">
                         <label for="quantity" class="form-label">Quantity</label>
                         <div class="input-group">
                             <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
@@ -112,7 +138,7 @@
                     </div>
                     <div class="mb-3">
                         <div id="total" class="form-control">Total Harga Rp {{ collection.price }}</div>
-                    </div>
+                    </div> -->
                     <!-- Akhir dari bagian kuantitas -->
                 </div>
             </div>
