@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <!-- Tag meta yang diperlukan -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
@@ -10,431 +11,551 @@
     <meta property="og:image" content="{{ url_for('static', filename='') }}" />
 
     <!-- Judul halaman web -->
-    <title>Navirin</title>
+    <title>Navirin's</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-    <!-- CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.bubble.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
-    <link href="../static/css/style.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+
 </head>
 
 <body>
-    <!-- Header -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="/" class="logo d-flex align-items-center">
-                <img src="../static/img/navirins.png" alt="">
-                <span class="d-lg-block">Navirins</span>
-            </a>
-        </div>
-        <nav class="header-nav ms-auto">
-            <ul class="d-flex align-items-center">
-                <li class="nav-item dropdown pe-3">
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-info-circle"></i>
-                        <span class="d-none d-md-block dropdown-toggle ps-2"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#koleksi">
-                                <i class="bi bi-collection"></i>
-                                <span>Koleksi Buket</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#kontak">
-                                <i class="bi bi-envelope"></i>
-                                <span>Kontak</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/masuk">
-                                <i class="bi bi-box-arrow-in-right"></i>
-                                <span>Masuk</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/daftar">
-                                <i class="bi bi-person-add"></i>
-                                <span>Daftar</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </header>
 
-    <main id="main" class="main">
-        <section class="section">
-            <div class="container col-xxl-8 px-4 py-4">
-                <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-                    <div class="col-10 col-sm-8 col-lg-6">
-                        <img src="../static/img/5.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="500" loading="lazy">
-                    </div>
-                    <div class="col-lg-6">
-                        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Selamat datang di Navirin's</h1>
-                        <p class="lead">Kirimkan hadiah ke orang yang Anda cintai dengan produk Navirin's.</p>
-                        <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2" href="#koleksi">Memulai</button>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-            <div id="koleksi" class="row py-lg-5">
-                <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light">Koleksi Navirin's</h1>
-                    <p class="lead text-body-secondary">Koleksi Navirin's terdiri dari Artificial Full Flower, Money Hand Bouquet, Money Hand Bouquet, dan Hand Bouquet Snack.</p>
-                </div>
-            </div>
-            <div class="album py-5">
+    <!-- Header -->
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+
+        <h1 class="logo"><a href="/">Navirin's</a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="/" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+        <nav id="navbar" class="navbar">
+            <ul>
+            <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+            <li><a class="nav-link scrollto" href="#about">Tentang Kami</a></li>
+            <li><a class="nav-link scrollto" href="#why-us">Why Us</a></li>
+            <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
+            <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+            <li><a class="getstarted scrollto" href="/masuk">Masuk</a></li>
+            <li><a class="getstarted scrollto" href="/daftar">Daftar</a></li>
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+
+        </div>
+    </header><!-- End Header -->
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+        <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+        <div class="carousel-inner" role="listbox">
+
+            <!-- Slide 1 -->
+            <div class="carousel-item active" style="background-image: url(assets/img/slide/slide-1.jpg)">
+            <div class="carousel-container">
                 <div class="container">
-                    <!-- <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"> -->
-                    <!-- <div class="row row-cols-1 row-cols-md-2 g-4"> -->
-                    <div class="container px-4 py-5" id="featured-3">
-                        <h2 class="pb-2 border-bottom">Artificial Full Flower Hand Bouquet</h2>
-                        <p>Bunga artificial adalah bunga yang berbahan sintesis atau plastic. Meskipun tidak hidup, bunga artificial memiliki daya tarik dan kegunaan yang tak kalah indah. Tidak heran kalau bunga artificial ini popular di berbagai macam acara.</p>
-                        <div class="row row-cols-1 row-cols-md-4 g-4">
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/1.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/2.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/3.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/4.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container px-4 py-5" id="featured-3">
-                        <h2 class="pb-2 border-bottom">Money Hand Bouquet</h2>
-                        <p>Buket uang yang terdiri atas artificial flowers dan uang tunai. Merupakan pilihan yang praktis dan tepat untuk diberikan sebagai hadiah atau bentuk penghargaan, sangat cocok di berbagai acara dan kalangan. Kamu bisa memilih pecahan uang berapa saja untuk ditambahkan di Money Bouquet. Harga untuk produk ini sudah termasuk artificial flowers dan belum termasuk uang tunai yang diinginkan.</p>
-                        <div class="row row-cols-1 row-cols-md-4 g-4">
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/1.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/2.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/3.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/4.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container px-4 py-5" id="featured-3">
-                        <h2 class="pb-2 border-bottom">Hand Bouquet Snack</h2>
-                        <p>Buket snack yang berisi aneka macam snack. Isi snack dari buket ini dapat kamu request sesuai dengan keinginan kamu.Harga udah termasuk artificial flowers dan belum termasuk snack dan kartu ucapan.</p>
-                        <div class="row row-cols-1 row-cols-md-4 g-4">
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/1.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/2.png" class="bd-placeholder-img card-img-top" width="10%">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/3.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card shadow-sm">
-                                    <img src="../static/img/4.png" class="bd-placeholder-img card-img-top">
-                                    <div class="card-body">
-                                        <p class="card-text mt-2">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                            </div>
-                                            <small class="text-body-secondary">9 mins</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h2 class="animate__animated animate__fadeInDown">Selamat datang di <span>Navirin's</span></h2>
+                <p class="animate__animated animate__fadeInUp">Kirimkan hadiah ke orang yang Anda cintai dengan produk Navirin's.</p>
+                <a href="/masuk" class="btn-get-started animate__animated animate__fadeInUp scrollto">Masuk</a>
                 </div>
             </div>
-            <div class="container px-4" id="hanging-icons">
-                <h2 class="pb-2 border-bottom">Pertanyaan yang Sering Ditanyakan</h2>
-                <div class="row gy-4 contact">
-                    <div class="col-xl-12">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="info-box card">
-                                    <i class="bi bi-clock"></i>
-                                    <h3>Jam Buka</h3>
-                                    <p>Senin - Jumat<br>08:30 WIB - 17:30 WIB</p>
-                                    <p>Sabtu<br>09:00 WIB - 12:00 WIB</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="info-box card">
-                                    <i class="bi bi-car-front"></i>
-                                    <h3>Opsi Pengiriman</h3>
-                                    <ol>
-                                        <li>Pengiriman dapat dilakukan menggunakan kurir Navirin's, selama lokasi kurang dari 2 km.</li>
-                                        <li>Pengiriman dapat dilakukan dengan ojek online, customer wajib melakukan pemesanan mandiri pada saat hari pengiriman.</li>
-                                    </ol>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="info-box card">
-                                    <i class="bi bi-tags"></i>
-                                    <h3>Permintaan Custom Order</h3>
-                                    <p>Pada pemesanan buket tersebut Anda dapat mengajukan permintaan bouquet seperti apa yang Anda inginkan, dan dapat memberikan ide kreatif yang Anda miliki. Puaskan diri Anda dengan memesan produk sesuai dengan keinginan hati.</p>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item" style="background-image: url(assets/img/slide/slide-2.jpg)">
+            <div class="carousel-container">
+                <div class="container">
+                <h2 class="animate__animated animate__fadeInDown">Tentang Navirin's</h2>
+                <p class="animate__animated animate__fadeInUp">Kami menyediakan opsi pengiriman dan layanan pesanan khusus (custom order) buket.</p>
+                <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Baca selengkapnya</a>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+        </a>
+
+        </div>
+    </section>
+
+    <main id="main">
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Tentang Kami</h2>
+                    <p>Tentang Navirin's</p>
+                </div>
+
+                <div class="row content">
+                    <div class="col-lg-6">
+                        <p>
+                            Pelanggan dapat mengajukan permintaan buket seperti yang Anda inginkan, dan dapat memberikan ide kreatif yang Anda miliki pada layanan pesanan khusus (custom order). Puaskan diri Anda dengan memesan produk sesuai dengan keinginan hati.
+                        </p>
+                        <p>
+                            Syarat dan Ketentuan Custom Order:
+                        </p>
+                        <ul>
+                            <li><i class="ri-check-double-line"></i> Setelah custom form di submit, Navirin's akan menghubungi Anda melalui website Navirin's atau Email untuk konfirmasi pemesanan.</li>
+                            <li><i class="ri-check-double-line"></i> Ketersediaan barang dapat berubah sewaktu-waktu.</li>
+                            <li><i class="ri-check-double-line"></i> Pesanan tidak dapat diubah.</li>
+                            <li><i class="ri-check-double-line"></i> Silahkan hubungi kami lewat chat online untuk pertanyaan lebih lanjut.</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6 pt-4 pt-lg-0">
+                        <h5>Opsi Pengiriman</h5>
+                        <ol>
+                            <li>Pengiriman dapat dilakukan menggunakan kurir Navirin's, selama lokasi kurang dari 2 km.</li>
+                            <li>Pengiriman dapat dilakukan dengan ojek online, customer wajib melakukan pemesanan mandiri pada saat hari pengiriman.</li>
+                        </ol>
+                        <a href="#" class="btn-learn-more">Hubungi Kami</a>
                     </div>
                 </div>
-                <div class="row gy-4 contact">
-                    <div class="col-xl-6">
-                        <iframe class="mb-4 mb-lg-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63455.76354204144!2d106.85236139736183!3d-6.2656733929764306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f2dcb11a7677%3A0xfdfafc879af457f6!2sHalim%20Perdana%20Kusumah%2C%20Kec.%20Makasar%2C%20Kota%20Jakarta%20Timur%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sid!2sid!4v1717217310250!5m2!1sid!2sid" frameborder="0" style="border:0; width: 100%; height: 384px;" allowfullscreen></iframe>
-                    </div>            
-                    <div class="col-xl-6">
-                        <div class="card p-4">
-                            <form action="/bertanya-di-depan" method="POST" class="php-email-form">
-                                <div class="row gy-4">
-                                    <div class="col-md-6">
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="Your Name" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="email" name="email" id="email" class="form-control" placeholder="Your Email" required>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" required>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <textarea name="message" rows="6" id="message" class="form-control" placeholder="Message" required></textarea>
-                                    </div>
-                                    <div class="col-md-12 text-center">
-                                        <div class="loading">Loading</div>
-                                        <div class="error-message"></div>
-                                        <div class="sent-message">Your message has been sent. Thank you!</div>
-                                        <button type="submit">Send Message</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </section>
+
+        <!-- Counts Section -->
+        <section id="counts" class="counts">
+            <div class="container" data-aos="fade-up">
+
+                <div class="row no-gutters justify-content-md-center">
+
+                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
+                        <div class="count-box">
+                            <i class="bi bi-emoji-smile"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+                            <p><strong>Variasi buket</strong> yang disediakan oleh Navirin's</p>
+                            <a href="#">Cari lebih lanjut &raquo;</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
+                        <div class="count-box">
+                            <i class="bi bi-journal-richtext"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+                            <p><strong>Custom order buket</strong> yang telah dikerjakan bersama Navirin's</p>
+                            <a href="#">Cari lebih lanjut &raquo;</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
+                        <div class="count-box">
+                            <i class="bi bi-headset"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
+                            <p><strong>Pelanggan</strong> yang telah kami layani</p>
+                            <a href="#">Cari lebih lanjut &raquo;</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Jenis Koleksi Section -->
+        <section id="why-us" class="why-us section-bg">
+            <div class="container-fluid" data-aos="fade-up">
+
+                <div class="row">
+
+                    <div class="col-lg-5 align-items-stretch video-box" style='background-image: url("../static/assets/img/why-us.jpg");' data-aos="zoom-in" data-aos-delay="100">
+                        <a href="https://www.youtube.com/watch?v=jDDaplaOz7Q" class="venobox play-btn mb-4" data-vbtype="video" data-autoplay="true"></a>
+                    </div>
+
+                    <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch">
+
+                        <div class="content">
+                            <h3>Koleksi <strong>Navirin's</strong></h3>
+                            <p>
+                                Terdapat pilihan menarik yang ditawarkan oleh buket tangan Navirin's
+                            </p>
+                        </div>
+
+                        <div class="accordion-list">
+                            <ul>
+                                <li>
+                                    <a data-bs-toggle="collapse" class="collapse" data-bs-target="#accordion-list-1"><span>01</span> Artificial Full Flower Hand Bouquet <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                                    <div id="accordion-list-1" class="collapse show" data-bs-parent=".accordion-list">
+                                        <p>
+                                            Bunga artificial adalah bunga yang berbahan sintesis atau plastic. Meskipun tidak hidup, bunga artificial memiliki daya tarik dan kegunaan yang tak kalah indah. Tidak heran kalau bunga artificial ini popular di berbagai macam acara.
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <a data-bs-toggle="collapse" data-bs-target="#accordion-list-2" class="collapsed"><span>02</span> Money Hand Bouquet <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                                    <div id="accordion-list-2" class="collapse" data-bs-parent=".accordion-list">
+                                        <p>
+                                            Buket uang yang terdiri atas artificial flowers dan uang tunai. Merupakan pilihan yang praktis dan tepat untuk diberikan sebagai hadiah atau bentuk penghargaan, sangat cocok di berbagai acara dan kalangan. Kamu bisa memilih pecahan uang berapa saja untuk ditambahkan di Money Bouquet. Harga untuk produk ini sudah termasuk artificial flowers dan belum termasuk uang tunai yang diinginkan.
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <a data-bs-toggle="collapse" data-bs-target="#accordion-list-3" class="collapsed"><span>03</span> Hand Bouquet Snack <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                                    <div id="accordion-list-3" class="collapse" data-bs-parent=".accordion-list">
+                                        <p>
+                                            Buket snack yang berisi aneka macam snack. Isi snack dari buket ini dapat kamu request sesuai dengan keinginan kamu.Harga udah termasuk artificial flowers dan belum termasuk snack dan kartu ucapan.
+                                        </p>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="portfolio">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Portfolio</h2>
+                    <p>Check our Portfolio</p>
+                </div>
+
+                <div class="row" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <ul id="portfolio-flters">
+                            <li data-filter="*" class="filter-active">All</li>
+                            <li data-filter=".filter-app">App</li>
+                            <li data-filter=".filter-card">Card</li>
+                            <li data-filter=".filter-web">Web</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <img src="../static/img/portfolio-1.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>App 1</h4>
+                            <p>App</p>
+                            <a href="../static/img/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+                        <img src="../static/img/portfolio-2.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Web 3</h4>
+                            <p>Web</p>
+                            <a href="../static/img/portfolio-2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <img src="../static/img/portfolio-3.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>App 2</h4>
+                            <p>App</p>
+                            <a href="../static/img/portfolio-3.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 2"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+                        <img src="../static/img/portfolio-4.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Card 2</h4>
+                            <p>Card</p>
+                            <a href="../static/img/portfolio-4.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 2"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+                        <img src="../static/img/portfolio-5.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Web 2</h4>
+                            <p>Web</p>
+                            <a href="../static/img/portfolio-5.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 2"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                        <img src="../static/img/portfolio-6.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>App 3</h4>
+                            <p>App</p>
+                            <a href="../static/img/portfolio-6.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 3"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+                        <img src="../static/img/portfolio-7.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Card 1</h4>
+                            <p>Card</p>
+                            <a href="../static/img/portfolio-7.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 1"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+                        <img src="../static/img/portfolio-8.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Card 3</h4>
+                            <p>Card</p>
+                            <a href="../static/img/portfolio-8.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Card 3"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+                        <img src="../static/img/portfolio-9.jpg" class="img-fluid" alt="">
+                        <div class="portfolio-info">
+                            <h4>Web 3</h4>
+                            <p>Web</p>
+                            <a href="../static/img/portfolio-9.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="Web 3"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Frequently Asked Questions Section -->
+        <section id="faq" class="faq">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>F.A.Q</h2>
+                    <p>Frequently Asked Questions</p>
+                </div>
+
+                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                    <div class="col-lg-5">
+                        <i class="bx bx-help-circle"></i>
+                        <h4>Jam Buka?</h4>
+                    </div>
+                    <div class="col-lg-7">
+                        <p>
+                            Senin - Jumat 08:30 WIB - 17:30 WIB.
+                            Sabtu 09:00 WIB - 12:00 WIB.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-lg-5">
+                        <i class="bx bx-help-circle"></i>
+                        <h4>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h4>
+                    </div>
+                    <div class="col-lg-7">
+                        <p>
+                            Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+                    <div class="col-lg-5">
+                        <i class="bx bx-help-circle"></i>
+                        <h4>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi?</h4>
+                    </div>
+                    <div class="col-lg-7">
+                        <p>
+                            Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Kontak Section -->
+        <section id="contact" class="contact section-bg">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Kontak</h2>
+                    <p>Hubungi Kami</p>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="info-box">
+                                    <i class="bx bx-map"></i>
+                                    <h3>Alamat Kami</h3>
+                                    <p>Halim Perdanakusuma, Jakarta</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box mt-4">
+                                    <i class="bx bx-envelope"></i>
+                                    <h3>Email Us</h3>
+                                    <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cda4a3aba28da8b5aca0bda1a8e3aea2a0">[email&#160;protected]</a><br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b3834352f3a382f1b3e233a362b373e75383436">[email&#160;protected]</a></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box mt-4">
+                                    <i class='bx bxl-instagram'></i>
+                                    <h3>Instagram Kami</h3>
+                                    <p>@navirins</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6">
+                        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                            </div>
+                            <div class="my-3">
+                                <div class="loading">Loading</div>
+                                <div class="error-message"></div>
+                                <div class="sent-message">Your message has been sent. Thank you!</div>
+                            </div>
+                            <div class="text-center"><button type="submit">Send Message</button></div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
-    <footer id="footer" class="footer">
-        <div class="copyright">
-            <a href="https://www.instagram.com/navirins/"><i class="bi bi-instagram"> @navirins</i></a>
+    <footer id="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-info">
+                            <h3>Multi</h3>
+                            <p class="pb-3"><em>Qui repudiandae et eum dolores alias sed ea. Qui suscipit veniam excepturi quod.</em></p>
+                            <p>
+                                A108 Adam Street <br>
+                                NY 535022, USA<br><br>
+                                <strong>Phone:</strong> +1 5589 55488 55<br>
+                                <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f29b9c949db2978a939f829e97dc919d9f">[email&#160;protected]</a><br>
+                            </p>
+                            <div class="social-links mt-3">
+                                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 footer-links">
+                        <h4>Useful Links</h4>
+                        <ul>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6 footer-links">
+                        <h4>Our Services</h4>
+                        <ul>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 footer-newsletter">
+                        <h4>Our Newsletter</h4>
+                        <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
+                        <form action="" method="post">
+                            <input type="email" name="email"><input type="submit" value="Subscribe">
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="credits">
-            &copy; Hak Cipta <strong><span>Navirins</span></strong>. Dirancang oleh Tim Navirins
+
+        <div class="container">
+            <div class="copyright">
+                &copy; Hak Cipta <strong><span>Navirin's</span></strong>. All Rights Reserved
+            </div>
         </div>
     </footer>
 
+    <div id="preloader"></div>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.1/dist/apexcharts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@7.1.1/tinymce.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
-    <script src="../static/js/main.js"></script>
-    <script>
-        function ask_in_home() {
-            let name = $('#name').val();
-            let email = $('#email').val();
-            let subject = $('#subject').val();
-            let message = $('#message').val();
+    <!-- JS Files -->
+    <!-- <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/isotope-layout@3.0.6/dist/isotope.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- <script src="../../../assets/vendor/php-email-form/validate.js"></script> -->
+    <script src="../static/js/script.js"></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" integrity="sha512-sDIX0kl85v1Cl5tu4WGLZCpH/dV9OHbA4YlKCuCiMmOQIk4buzoYDZSFj+TvC71mOBLh8CDC/REgE0GX0xcbjA==" data-cf-beacon='{"rayId":"888acaedeb29797c","version":"2024.4.1","token":"68c5ca450bae485a842ff76066d69420"}' crossorigin="anonymous"></script>
 
-            $.ajax({
-                type: 'POST',
-                url: '/bertanya-di-depan',
-                data: {
-                    name_give: name,
-                    email_give: email,
-                    subject_give: subject,
-                    message_give: message
-                },
-                success: function (response) {
-                    if (response['result'] == 'success') {
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Berhasil'
-                        });
-                        setTimeout(function () {
-                            window.location.href = '/main';
-                        }, 3000);
-                    }
-                }
-            })
-        }
-    </script>
 </body>
 
 </html>

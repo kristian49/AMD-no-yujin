@@ -1,46 +1,43 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
-from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
-from bson.objectid import ObjectId
+from datetime import datetime, timedelta
+from bson import ObjectId
+from os.path import join, dirname
+from dotenv import load_dotenv
 import jwt
 import hashlib
 import os
 
 app = Flask(__name__)
 
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
 
-MONGODB_CONNECTION_STRING = 'mongodb+srv://navirins:finalproject@navirins.hlkacsk.mongodb.net/?retryWrites=true&w=majority&appName=Navirins'
-client = MongoClient(MONGODB_CONNECTION_STRING)
-db = client.kelompok3
-
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'bouquet'
 
-### home.html ###
-# menampilkan halaman depan
-@app.route('/main')
+### home.html atau dashboard.html ###
+# menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
+@app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/bertanya-di-depan')
-def ask_in_home():
-    name_receive = request.form['name_give']
-    email_receive = request.form['email_give']
-    subject_receive = request.form['subject_give']
-    message_receive = request.form['message_give']
-
-    doc = {
-        'name': name_receive,
-        'email': email_receive,
-        'subject': subject_receive,
-        'message': message_receive
-    }
-    db.ask_in_home.insert_one(doc)
-    return jsonify({'result': 'success'})
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        return render_template("dashboard.html", user_info = user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('home.html')
 
 ### register.html ###
 # menampilkan halaman daftar
@@ -111,20 +108,6 @@ def api_login():
     else:
         return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
 
-### dashboard.html ###
-# menampilkan halaman dashboard
-@app.route('/')
-def dashboard():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template("dashboard.html", user_info = user_info)
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('home'))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for('home'))
-
 ### profile.html ###
 # menampilkan halaman profil
 @app.route('/profil/<account_name>', methods = ['GET'])
@@ -136,7 +119,7 @@ def profile(account_name):
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
         return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 # memperbarui/update profile   
 @app.route("/update_profile", methods=["POST"])
@@ -160,7 +143,7 @@ def save_img():
         db.users.update_one({"useremail": payload["id"]}, {"$set": new_doc})
         return jsonify({"result": "success", "msg": "Profile updated!"})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("home"))
 
 ### chat.html ###
 # menampilkan halaman profil
@@ -173,7 +156,7 @@ def chat(account_name):
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
         return render_template('chat.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 # memasukkan obrolan
 @app.route('/memasukkan-obrolan', methods = ['POST'])
@@ -194,7 +177,7 @@ def enter_chat():
         db.chats.insert_one(doc)
         return jsonify({'result': 'success', 'msg': 'Posting successful!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 # mendapatkan obrolan
 @app.route('/mendapatkan-obrolan', methods = ['GET'])
@@ -211,7 +194,7 @@ def get_chats():
             post['_id'] = str(post['_id'])
         return jsonify({'result': 'success', 'msg': 'Successfully fetched all chats!', 'chats': chats})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 ### purchase_history.html ###
 
@@ -269,7 +252,7 @@ def order_form(collection_id):
             collection['image'] = f'static/{collection["image"]}'
         return render_template('order_form.html', collection=collection, user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
 # Menyimpan informasi pemesanan produk
 @app.route('/process_order', methods=['POST'])
@@ -296,10 +279,10 @@ def process_order():
         db.orders.insert_one(order_data)
 
         # Redirect ke halaman terima kasih atau halaman lain yang sesuai
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
 ### payment ###
 
 

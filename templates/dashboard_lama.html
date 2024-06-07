@@ -27,7 +27,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.bubble.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
     <link href="../static/css/style_lama.css" rel="stylesheet" />
-    <link href="../static/css/style2.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -50,12 +49,6 @@
                         <span class="d-none d-md-block dropdown-toggle ps-2">{{ user_info.account_name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/">
-                                <i class="bi bi-house"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center" href="/profil/{{ user_info.account_name }}">
                                 <i class="bi bi-person-vcard"></i>
@@ -92,135 +85,33 @@
         </nav>
     </header>
 
-
     <main id="main" class="main">
-        <!-- Navigasi kategori koleksi -->
-        <ul class="nav nav-underline justify-content-center fixed-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="#kategori1">Kategori 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#kategori2">Kategori 2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#kategori3">Kategori 3</a>
-            </li>
-        </ul>
-        <section>
-            <div class="text-end mb-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahKoleksiModal">Tambah Koleksi</button>
-            </div>
-
-    <section id="kategori1">
-        <h2>Kategori 1</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori1' %}
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="card h-60">
-                            <div class="card-img-container"> <!-- Tambahkan container untuk gambar -->
-                                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
+        <section class="section">
+            <div class="container col-xxl-8 px-4 py-4">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+                    <div class="col-10 col-sm-8 col-lg-6">
+                        <img src="../static/img/5.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="500" loading="lazy">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row align-items-center">
+                            <div class="col-4 col-sm-3 col-lg-3">
+                                <a href="/profil/{{ user_info.account_name }}">
+                                    <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile"  class="rounded-circle align-self-center" style="width: 100px; height: 100px; margin-bottom: 20px;">
+                                </a>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
+                            <div class="col-8 col-sm-9 col-lg-9 m">
+                                <p><em>Halo, {{ user_info.first_name }} {{ user_info.last_name }}</em></p>
                             </div>
+                            <p class="lead">Selamat Datang di Navirin's Artificial Bucket !!!!</p>
+                        </div>                                                            
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <a href="/koleksi" class="btn btn-primary btn-lg px-4 me-md-2">Memulai</a>
                         </div>
                     </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- Konten kategori 2 -->
-    <section id="kategori2">
-        <h2>Kategori 2</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori2' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-
-    <!-- Konten kategori 3 -->
-    <section id="kategori3">
-        <h2>Kategori 3</h2>
-        <div class="row">
-            {% for collection in collections %}
-                {% if collection.category == 'kategori3' %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ collection.name }}</h5>
-                                <p class="card-text">{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="btn btn-success">BELI</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
-</main>
-    <div class="modal fade" id="tambahKoleksiModal" tabindex="-1" aria-labelledby="tambahKoleksiModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="/tambah-koleksi" method="post" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="tambahKoleksiModalLabel">Tambah Koleksi Buket</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="namaBuket" class="form-label">Nama Buket</label>
-                            <input type="text" class="form-control" id="namaBuket" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="deskripsiBuket" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="deskripsiBuket" name="description" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="hargaBuket" class="form-label">Harga</label>
-                            <input type="number" class="form-control" id="hargaBuket" name="price" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kategoriBuket" class="form-label">Kategori</label>
-                            <select class="form-select" id="kategoriBuket" name="category" required>
-                                <option value="kategori1">Kategori 1</option>
-                                <option value="kategori2">Kategori 2</option>
-                                <option value="kategori3">Kategori 3</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="gambarBuket" class="form-label">Gambar</label>
-                            <input type="file" class="form-control" id="gambarBuket" name="image" accept="image/*" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+                </div>
+            </div>      
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer id="footer" class="footer">
