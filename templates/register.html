@@ -42,11 +42,7 @@
 
         <nav id="navbar" class="navbar">
             <ul>
-                <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
-                <li><a class="nav-link scrollto" href="#about">Tentang Kami</a></li>
-                <li><a class="nav-link scrollto" href="#why-us">Jenis Koleksi</a></li>
-                <li><a class="nav-link scrollto " href="#portfolio">Koleksi Buket</a></li>
-                <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
+                <li><a class="nav-link scrollto" href="/">Home</a></li>
                 <li><a class="getstarted scrollto" href="/masuk">Masuk</a></li>
                 <li><a class="getstarted scrollto" href="/daftar">Daftar</a></li>
             </ul>
@@ -63,36 +59,16 @@
             <div class="container" data-aos="fade-up">
 
                 <div class="section-title">
-                    <p>Buat sebuah akun</p>
-                    <h2>Masukkan detail pribadi Anda untuk membuat akun</h2>
+                    <h2>Daftar</h2>
+                    <p>Membuat sebuah akun</p>
                 </div>
 
                 <div class="row">
 
                     <div class="col-lg-6">
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="info-box">
-                                    <i class="bx bx-map"></i>
-                                    <h3>Alamat Kami</h3>
-                                    <p>Halim Perdanakusuma, Jakarta</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box mt-4">
-                                    <i class="bx bx-envelope"></i>
-                                    <h3>Email Us</h3>
-                                    <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cda4a3aba28da8b5aca0bda1a8e3aea2a0">[email&#160;protected]</a><br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b3834352f3a382f1b3e233a362b373e75383436">[email&#160;protected]</a></p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box mt-4">
-                                    <i class='bx bxl-instagram'></i>
-                                    <h3>Instagram Kami</h3>
-                                    <p>@navirins</p>
-                                </div>
-                            </div>
+                        <div class="row d-flex flex-column align-items-center justify-content-center">
+                            <img src="../static/img/navirins.png" style="width: 70%;">
                         </div>
 
                     </div>
@@ -103,12 +79,12 @@
                                 <div class="col-md-6 form-group">
                                     <!-- <i class='bx bx-first-page'></i> -->
                                     <label for="yourFirstName" class="form-label">Nama Depan</label>
-                                    <input type="text" class="form-control" id="first-name" placeholder="Masukkan nama depan Anda" autofocus>
+                                    <input type="text" class="form-control" id="first-name" autofocus>
                                     <div id="firstNameFeedback" class="text-warning"></div>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
                                     <label for="yourLastName" class="form-label">Nama Belakang</label>
-                                    <input type="text" class="form-control" id="last-name" placeholder="Masukkan nama belakang Anda">
+                                    <input type="text" class="form-control" id="last-name">
                                     <div id="lastNameFeedback" class="text-warning"></div>
                                 </div>
                             </div>
@@ -117,25 +93,25 @@
                                     <label for="yourAccountName" class="form-label">Nama Akun</label>
                                     <div class="input-group has-validation">
                                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                        <input type="text" class="form-control" id="account-name" placeholder="Masukkan nama untuk akun Anda">
+                                        <input type="text" class="form-control" id="account-name">
                                         <div id="accountNameFeedback" class="text-warning"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
                                     <label for="yourName" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda">
+                                    <input type="email" class="form-control" id="email">
                                     <div id="emailFeedback" class="text-warning"></div>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-6 form-group">
                                     <label for="yourEmail" class="form-label">Kata Sandi</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Masukkan kata sandi pada akun Anda">
+                                    <input type="password" class="form-control" id="password">
                                     <div id="passwordFeedback" class="text-warning"></div>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
                                     <label for="yourPassword" class="form-label">Konfirmasi Kata Sandi</label>
-                                    <input type="password" class="form-control" id="repeat-password" placeholder="Ulangi kata sandi akun Anda">
+                                    <input type="password" class="form-control" id="repeat-password">
                                     <div id="repeatPasswordFeedback" class=""></div>
                                 </div>
                             </div>
@@ -143,8 +119,6 @@
                                 <button type="submit" onclick="register()">Daftar</button>
                                 <button type="submit" onclick="clearInputs()">Bersihkan</button>
                             </div>
-                            <!-- <button type="submit" class="btn btn-success btn-block btn-lg mb-2" onclick="register()">Daftar</button>
-                            <button type="submit" class="btn btn-info btn-block btn-lg mb-2" onclick="clearInputs()">Bersihkan formulir</button> -->
                             <div class="text-center mt-3">
                                 Sudah memiliki akun? <a href="/masuk">Masuk</a>
                             </div>
