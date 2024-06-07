@@ -109,92 +109,183 @@
         <!-- Coba profil -->
         <section class="section profile">
             <div class="row">
-              <div class="col-xl-4">
-      
-                <div class="card">
-                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-      
-                    <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle">
-                    <h2>{{ user_info.account_name }}</h2>
-                    <h3>{{ user_info.profile_name }}</h3>
-                    <div class="social-links mt-2">
-                      <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                      <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                      <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                    </div>
-                  </div>
+                <div class="col-xl-4">
+        
+                    <div class="card">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+            
+                            <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle">
+                            <h2>{{ user_info.account_name }}</h2>
+                            <h3>{{ user_info.profile_name }}</h3>
+                            <div class="social-links mt-2">
+                                <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                            </div>
+                        </div>
 
-                  <div class="text-center mt-3">
-                    <button type="button" class="btn btn-outline-success wide-button" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                        <i class="bi bi-pencil"></i>
-                        Edit Profil
-                    </button>
-                </div>
-                </div>
-      
-              </div>
-      
-              <div class="col-xl-8">
-      
-                <div class="card">
-                  <div class="card-body pt-3">
-                    <!-- Bordered Tabs -->
-                    <div class="tab-content pt-2">
-      
-                      <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                        <h5 class="card-title">About</h5>
-                        <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
-      
-                        <h5 class="card-title">Detail Profile</h5>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label ">Nama Depan</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.first_name }}</div>
+                        <div class="text-center mt-3">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-outline-success wide-button" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="bi bi-pencil"></i>
+                                Edit Profil
+                            </button>
                         </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">Nama Belakang</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.last_name }}</div>
-                        </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">Nama Akun</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.account_name }}</div>
-                        </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">Role</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.role }}</div>
-                        </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">Alamat</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.address }}</div>
-                        </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">No Telepon</div>
-                          <div class="col-lg-9 col-md-8">{{ user_info.phone }}</div>
-                        </div>
-      
-                        <div class="row">
-                          <div class="col-lg-3 col-md-4 label">Email</div>
-                          <div class="col-lg-9 col-md-8"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="462d68272822233435292806233e272b362a236825292b">[email&#160;protected]</a></div>
-                        </div>
-      
-                      </div>
-      
                     </div>
-      
-                  </div>
+        
                 </div>
-      
-              </div>
+        
+                <div class="col-xl-8">
+        
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <div class="tab-content pt-2">
+            
+                                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                    <h5 class="card-title">Bio</h5>
+                                    <p class="small fst-italic">{{ user_info.bio }}</p>
+                
+                                    <h5 class="card-title">Detail Profile</h5>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Nama Depan</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.first_name }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Nama Belakang</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.last_name }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Nama Akun</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.account_name }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Role</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.role }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">RT</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.neighbourhood }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">RW</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.hamlet }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Desa/Kelurahan</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.village_or_urban_village }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Kecamatan</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.sub_district }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Kabupaten/Kota</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.regency_or_town }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Provinsi</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.province }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">No Telepon</div>
+                                        <div class="col-lg-9 col-md-8">{{ user_info.phone }}</div>
+                                    </div>
+                
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                        <div class="col-lg-9 col-md-8"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="462d68272822233435292806233e272b362a236825292b">[email&#160;protected]</a></div>
+                                    </div>
+                
+                                </div>
+            
+                            </div>
+            
+                        </div>
+                    </div>
+        
+                </div>
             </div>
         </section>
 
     </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profile</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">Nama Depan</label>
+                            <input type="text" class="form-control" id="firstName" value="{{ user_info.first_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Nama Belakang</label>
+                            <input type="text" class="form-control" id="lastName" value="{{ user_info.last_name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="neighbourhood" class="form-label">RT</label>
+                            <input type="text" class="form-control" id="neighbourhood" value="{{ user_info.neighbourhood }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hamlet" class="form-label">RW</label>
+                            <input type="text" class="form-control" id="hamlet" value="{{ user_info.hamlet }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="villageOrUrbanVillage" class="form-label">Desa/Kelurahan</label>
+                            <input type="text" class="form-control" id="villageOrUrbanVillage" value="{{ user_info.village_or_urban_village }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="subDistrict" class="form-label">Kecamatan</label>
+                            <input type="text" class="form-control" id="subDistrict" value="{{ user_info.sub_district }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="regencyOrTown" class="form-label">Kota/Kabupaten</label>
+                            <input type="text" class="form-control" id="regencyOrTown" value="{{ user_info.regency_or_town }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="province" class="form-label">Provinsi</label>
+                            <input type="text" class="form-control" id="province" value="{{ user_info.province }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">No Telepon</label>
+                            <input type="text" class="form-control" id="phone" value="{{ user_info.phone }}">
+                        </div>
+                        <div class="mb-3"> 
+                            <label for="profilePicture" class="form-label">Foto Profil</label>
+                            <input type="file" class="form-control" id="profilePicture" value="{{ user_info.profile_pic }}">
+                        </div>
+                        <div class="mb-3"> 
+                            <label for="bio" class="form-label">Bio</label>
+                            <input type="file" class="form-control" id="bio" value="{{ user_info.bio }}">
+                            <textarea class="textarea" id="bio">{{ user_info.bio }}</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="update_profile()">Perbarui</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer id="footer">
@@ -282,6 +373,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function update_profile() {
+            let first_name = $('#firstName').val();
+            let last_name = $('#lastName').val();
+            let neighbourhood = $('#neighbourhood').val();
+            let hamlet = $('#hamlet').val();
+            let village_or_urban_village = $('#villageOrUrbanVillage').val();
+            let sub_district = $('#subDistrict').val();
+            let regency_or_town = $('#regencyOrTown').val();
+            let province = $('#province').val();
+            let phone = $('#phone').val();
+            let profile_picture = $('#profilePicture')[0].files[0];
+            let bio = $('#bio').val();
+            let form_data = new FormData();
+            form_data.append('first_name_give', first_name);
+            form_data.append('last_name_give', last_name);
+            form_data.append('neighbourhood_give', neighbourhood);
+            form_data.append('hamlet_give', hamlet);
+            form_data.append('village_or_urban_village_give', village_or_urban_village);
+            form_data.append('sub_district_give', sub_district);
+            form_data.append('regency_or_town_give', regency_or_town);
+            form_data.append('province_give', province);
+            form_data.append('phone_give', phone);
+            form_data.append('bio_give', bio);
+            $.ajax({
+                type: 'POST',
+                url: '/memperbarui-profil',
+                cache: false,
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response['result'] === 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
+                },
+            });
+        }
+
         function logout() {
             $.removeCookie('bouquet', { path: '/' })
             Swal.fire({

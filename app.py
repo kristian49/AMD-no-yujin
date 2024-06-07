@@ -14,8 +14,8 @@ app = Flask(__name__)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-MONGODB_URI = os.environ.get("MONGODB_URI")
-DB_NAME =  os.environ.get("DB_NAME")
+MONGODB_URI = os.environ.get('MONGODB_URI')
+DB_NAME =  os.environ.get('DB_NAME')
 
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
@@ -35,9 +35,25 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template("dashboard.html", user_info = user_info)
+        return render_template('dashboard.html', user_info = user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
+    
+# menyimpan pesan pada hubungi kami
+@app.route('/hubungi-kami', methods = ['POST'])
+def contact_us():
+    name_receive = request.form['name_give']
+    email_receive = request.form['email_give']
+    subject_receive = request.form['subject_give']
+    message_receive = request.form['message_give']
+    doc = {
+        'name': name_receive,
+        'email': email_receive,
+        'subject': subject_receive,
+        'message': message_receive
+    }
+    db.contactUs.insert_one(doc)
+    return jsonify({'result': 'success'})
 
 ### register.html ###
 # menampilkan halaman daftar
@@ -61,12 +77,17 @@ def api_register():
         'useremail': useremail_receive,
         'password': password_hash,
         'role': 'Member',
-        'profile_name': " ".join([first_name_receive, last_name_receive]),
+        'profile_name': ' '.join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
-        'profile_info': '',
-        'full_name': '',
-        'address': ''
+        'neighbourhood': neighbourhood_receive,
+        'hamlet': hamlet_receive,
+        'village_or_urban_village': village_or_urban_village_receive,
+        'sub_district': sub_district_receive,
+        'regency_or_town': regency_or_town_receive,
+        'province': province_receive,
+        'phone': phone_receive,
+        'bio': bio_receive
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -117,33 +138,82 @@ def profile(account_name):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload.get('id')
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
+        # return render_template('profile.html', user_info = user_info, status = status)
         return render_template('profile_coba.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-# memperbarui/update profile   
-@app.route("/update_profile", methods=["POST"])
-def save_img():
+# # memperbarui profil
+# @app.route('/update_profile', methods=['POST'])
+# def save_img():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         useremail = payload.get('id')
+#         first_name_receive = request.form['first_name_give']
+#         last_name_receive = request.form['last_name_give']
+#         address_receive = request.form['address_give']
+#         new_doc = {'first_name': first_name_receive, 'last_name': last_name_receive, 'address': address_receive}
+#         if 'file_give' in request.files:
+#             file = request.files['file_give']
+#             filename = secure_filename(file.filename)
+#             extension = filename.split('.')[-1]
+#             mungkin pakai account_name aja, agar alamat email lebih privat
+#             file_path = f'profile_pics/{useremail}.{extension}'
+#             file.save('./static/' + file_path)
+#             new_doc['profile_pic'] = filename
+#             new_doc['profile_pic_real'] = file_path
+#         db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
+#         return jsonify({'result': 'success', 'msg': 'Profile updated!'})
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return redirect(url_for('home'))
+
+# memperbarui profil_coba
+@app.route('/memperbarui-profil', methods=['POST'])
+def update_profile():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        useremail = payload.get('id')
-        first_name_receive = request.form["first_name_give"]
-        last_name_receive = request.form["last_name_give"]
-        address_receive = request.form["address_give"]
-        new_doc = {"first_name": first_name_receive, "last_name": last_name_receive, "address": address_receive}
-        if "file_give" in request.files:
-            file = request.files["file_give"]
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        account_name = payload.get('id')
+
+        first_name_receive = request.form['first_name_give']
+        last_name_receive = request.form['last_name_give']
+        neighbourhood_receive = request.form['neighbourhood_give']
+        hamlet_receive = request.form['hamlet_give']
+        village_or_urban_village_receive = request.form['village_or_urban_village_give']
+        sub_district_receive = request.form['sub_district_give']
+        regency_or_town_receive = request.form['regency_or_town_give']
+        province_receive = request.form['province_give']
+        phone_receive = request.form['phone_give']
+        bio_receive = request.form['bio_give']
+
+        new_doc = {
+            'first_name': first_name_receive,
+            'last_name': last_name_receive,
+            'neighbourhood': neighbourhood_receive,
+            'hamlet': hamlet_receive,
+            'village/urban_village': village/urban_village_receive,
+            'sub-district': sub-district_receive,
+            'regency/town': regency/town_receive,
+            'province': province_receive,
+            'phone': phone_receive,
+            'bio': bio_receive
+        }
+
+        if 'file_give' in request.files:
+            file = request.files['file_give']
             filename = secure_filename(file.filename)
-            extension = filename.split(".")[-1]
-            file_path = f"profile_pics/{useremail}.{extension}"
-            file.save("./static/" + file_path)
-            new_doc["profile_pic"] = filename
-            new_doc["profile_pic_real"] = file_path
-        db.users.update_one({"useremail": payload["id"]}, {"$set": new_doc})
-        return jsonify({"result": "success", "msg": "Profile updated!"})
+            extension = filename.split('.')[-1]
+            file_path = f'profile_pics/{account_name}.{extension}'
+            file.save('./static/' + file_path)
+            new_doc['profile_pic'] = filename
+            new_doc['profile_pic_real'] = file_path
+        
+        db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
+        # Kita update profil user disini
+        return jsonify({'result': 'success', 'msg': 'Profil Anda telah diperbarui!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+        return redirect(url_for('home'))
 
 ### chat.html ###
 # menampilkan halaman profil
@@ -249,7 +319,7 @@ def order_form(collection_id):
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collection = db.collections.find_one({'_id': ObjectId(collection_id)})
         if collection and 'image' in collection:
-            collection['image'] = f'static/{collection["image"]}'
+            collection['image'] = f'static/{collection['image']}'
         return render_template('order_form.html', collection=collection, user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))

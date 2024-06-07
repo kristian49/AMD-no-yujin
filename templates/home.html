@@ -11,7 +11,7 @@
     <meta property="og:image" content="{{ url_for('static', filename='') }}" />
 
     <!-- Judul Halaman Web -->
-    <title>Navirin's</title>
+    <title>{{ title }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
@@ -414,18 +414,26 @@
                     <div class="col-lg-6">
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="info-box">
+                            <div class="col-md-12">
+                                <!-- <div class="info-box">
                                     <i class="bx bx-map"></i>
-                                    <h3>Alamat Kami</h3>
-                                    <p>Halim Perdanakusuma, Jakarta</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-box">
-                                    <i class='bx bxl-instagram'></i>
-                                    <h3>Instagram Kami</h3>
-                                    <p>@navirins</p>
+                                    <h3>Our Address</h3>
+                                    <p>A108 Adam Street, New York, NY 535022</p>
+                                </div> -->
+                                <div class="container-left">
+                                    <div class="contact-info">
+                                        <h3>Multi</h3>
+                                        <p class="pb-3"><em>Qui repudiandae et eum dolores alias sed ea. Qui suscipit veniam excepturi quod.</em></p>
+                                        <p>
+                                            A108 Adam Street <br>
+                                            NY 535022, USA<br><br>
+                                            <strong>Phone:</strong> +1 5589 55488 55<br>
+                                            <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f29b9c949db2978a939f829e97dc919d9f">[email&#160;protected]</a><br>
+                                        </p>
+                                        <div class="social-links mt-3">
+                                            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -433,27 +441,26 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <form action="" method="post" role="form" class="php-email-form">
+                        <div role="form" class="contact-form">
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Nama Anda">
+                                    <div id="nameFeedback" class="text-warning"></div>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="Email Anda">
+                                    <div id="emailFeedback" class="text-warning"></div>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
-                                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                                <input type="text" class="form-control" name="subject" id="subject" placeholder="Judul">
+                                <div id="subjectFeedback" class="text-warning"></div>
                             </div>
                             <div class="form-group mt-3">
-                                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                                <textarea class="form-control" name="message" id="message" rows="5" placeholder="Pesan"></textarea>
+                                <div id="messageFeedback" class=""></div>
                             </div>
-                            <div class="my-3">
-                                <div class="loading">Loading</div>
-                                <div class="error-message"></div>
-                                <div class="sent-message">Your message has been sent. Thank you!</div>
-                            </div>
-                            <div class="text-center"><button type="submit">Send Message</button></div>
+                            <div class="text-center my-3"><button type="submit" onclick="sendMessage()">Kirim Pesan</button></div>
                         </form>
                     </div>
 
@@ -546,6 +553,181 @@
     <!-- <script src="../../../assets/vendor/php-email-form/validate.js"></script> -->
     <script src="../static/js/script.js"></script>
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function sendMessage() {
+            let name = $('#name').val();
+            let email = $('#email').val();
+            let subject = $('#subject').val();
+            let message = $('#message').val();
+
+            // Nama
+            $('#nameFeedback').removeClass('text-warning');
+            if (name.length === 0 || name === ' ') {
+                $('#nameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama Anda masih kosong, silahkan isi kembali');
+                $('#name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_text(name)) {
+                $('#nameFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Nama Anda tidak memenuhi syarat diantaranya 2-10 alfabet');
+                $('#name').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#nameFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Nama Anda benar');
+                $('#name').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Email
+            $('#emailFeedback').removeClass('text-warning');
+            if (email.length === 0 || email === ' ') {
+                $('#emailFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Email Anda masih kosong, silahkan isi kembali');
+                $('#email').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_email(email)) {
+                $('#emailFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Format email Anda tidak valid');
+                $('#email').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#emailFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Email Anda benar');
+                $('#email').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Judul
+            $('#subjectFeedback').removeClass('text-warning');
+            if (subject.length === 0 || subject === ' ') {
+                $('#subjectFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Judul pesan Anda masih kosong, silahkan isi kembali');
+                $('#subject').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_text(subject)) {
+                $('#subjectFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Judul pesan Anda tidak memenuhi syarat diantaranya lebih dari 2 alfabet');
+                $('#subject').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#subjectFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Judul pesan Anda benar');
+                $('#subject').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            // Pesan
+            if (message.length === 0 || message === ' ') {
+                $('#messageFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Pesan Anda kosong');
+                $('#message').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else if (!is_text(message)) {
+                $('#messageFeedback')
+                    .removeClass('valid-feedback')
+                    .addClass('invalid-feedback')
+                    .text('Pesan Anda tidak memenuhi syarat diantaranya lebih dari 2 alfabet');
+                $('#message').removeClass('is-valid').addClass('is-invalid').focus();
+                return;
+            } else {
+                $('#messageFeedback')
+                    .removeClass('invalid-feedback')
+                    .addClass('valid-feedback')
+                    .text('Pesan Anda benar');
+                $('#message').removeClass('is-invalid').addClass('is-valid').focus();
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/hubungi-kami',
+                data: {
+                    nama_give: name,
+                    email_give: email,
+                    subject_give: subject,
+                    message_give: message
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Pesan berhasil dikirim'
+                        });
+                        setTimeout(function () {
+                            window.location.href = '/';
+                        }, 3000);
+                    } else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'warning',
+                            title: 'Maaf, pesan Anda belum terkirim'
+                        });
+                    }
+                }
+            })
+        }
+
+        // cek teks (nama, judul, pesan) regex
+        function is_text(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        // cek email regex
+        function is_email(asValue) {
+            var regExp = /\S+@\S+\.\S+/;
+            return regExp.test(asValue);
+        }
+
+        // kosongkan form
+        function clearInputs() {
+            $('#name').val('');
+            $('#email').val('');
+            $('#subject').val('');
+            $('#message').val('');
+        }
+    </script>
 
 </body>
 
