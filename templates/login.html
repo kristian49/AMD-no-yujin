@@ -104,14 +104,14 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <!-- <i class='bx bx-first-page'></i> -->
-                                    <label for="userid" class="form-label">Email</label>
+                                    <label for="yourEmail" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda" autofocus>
-                                    <div id="emailFeedback" class=""></div>
+                                    <div id="emailFeedback" class="text-warning"></div>
                                 </div>
                                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <label for="yourEmail" class="form-label">Kata Sandi</label>
+                                    <label for="yourPassword" class="form-label">Kata Sandi</label>
                                     <input type="password" class="form-control" id="password" placeholder="Masukkan kata sandi pada akun Anda">
-                                    <div id="passwordFeedback" class="text-warning"></div>
+                                    <div id="passwordFeedback" class=""></div>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
@@ -258,14 +258,14 @@
                 $('#passwordFeedback')
                     .removeClass('valid-feedback')
                     .addClass('invalid-feedback')
-                    .text('Kata sandi Anda kosong');
+                    .text('Kata sandi Anda Kosong');
                 $('#password').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
             } else {
                 $('#passwordFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Kata sandi Anda benar');
+                    .text('');
                 $('#password').removeClass('is-invalid').addClass('is-valid').focus();
             }
 

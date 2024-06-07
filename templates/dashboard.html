@@ -38,32 +38,38 @@
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center justify-content-between">
 
-        <h1 class="logo"><a href="/">Navirin's</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="/" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            <h1 class="logo"><a href="/">Navirin's</a></h1>
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="/" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
-        <nav id="navbar" class="navbar">
-            <ul>
-            <li><a class="nav-link scrollto" href="/main">Home</a></li>
-            <li><a class="nav-link scrollto" href="#about">Tentang Kami</a></li>
-            <li><a class="nav-link scrollto" href="#why-us">Why Us</a></li>
-            <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
-            <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-            <li class="dropdown"><a href="#"><span>{{ user_info.profile_name }}</span> <i class="bi bi-chevron-down"></i></a>
+            <nav id="navbar" class="navbar">
                 <ul>
-                  <li><a href="#">Profil</a></li>
-                  <li><a href="#">Obrolan</a></li>
-                  <li><a href="#">Histori Pembayaran</a></li>
-                  <li><a href="#">Status Pengiriman</a></li>
-                  <li><a href="#" onclick="logout()">Keluar</a></li>
+                    <li><a class="nav-link scrollto" href="/">Home</a></li>
+                    <li><a class="nav-link scrollto" href="#about">Tentang Kami</a></li>
+                    <li><a class="nav-link scrollto" href="#why-us">Why Us</a></li>
+                    <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
+                    <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+                    <li class="dropdown"><a href="#"><span>{{ user_info.profile_name }}</span> <i class="bi bi-chevron-down"></i></a>
+                        <ul>
+                            <li><a href="/profil/{{ user_info.account_name }}">Profil</a></li>
+                            <!-- <li>
+                                <a class= "d-flex align-items-center" href="/obrolan/{{ user_info.account_name }}">
+                                    <i class="bi bi-chat-left-dots"></i>
+                                    <span class="text-start">Obrolan</span>
+                                </a>
+                            </li> -->
+                            <li><a href="/obrolan/{{ user_info.account_name }}">Obrolan</a></li>
+                            <li><a href="/histori-pembayaran/{{ user_info.account_name }}">Histori Pembayaran</a></li>
+                            <li><a href="/status-pengiriman/{{ user_info.account_name }}">Status Pengiriman</a></li>
+                            <li><a href="#" onclick="logout()">Keluar</a></li>
+                        </ul>
+                    </li>
                 </ul>
-              </li>
-            </ul>
-            <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav><!-- .navbar -->
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
 
         </div>
-    </header><!-- End Header -->
+    </header>
 
     <main id="main" class="mt-5">
 
