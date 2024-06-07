@@ -302,7 +302,7 @@ def collection():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collections = list(db.collections.find())
-        return render_template('collection.html', collections=collections, user_info=user_info)
+        return render_template('collection_baru.html', collections=collections, user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for('home'))
     except jwt.exceptions.DecodeError:
@@ -310,6 +310,18 @@ def collection():
 
 ### order_form.html ###
 
+@app.route('/order_form')
+def order():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collection = db.collections.find_one()
+        if collection and 'image' in collection:
+            collection['image'] = f'static/{collection["image"]}'
+        return render_template('order_form.html', collection=collection, user_info=user_info)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 # Menampilkan halaman form pemesanan produk
 @app.route('/order_form/<collection_id>')
 def order_form(collection_id):
