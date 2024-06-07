@@ -117,7 +117,7 @@ def profile(account_name):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload.get('id')
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        return render_template('profile.html', user_info = user_info, status = status)
+        return render_template('profile_coba.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
