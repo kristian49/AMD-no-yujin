@@ -1836,3 +1836,17 @@ body {
       margin: -20px 0 30px 0;
     }
   }
+
+  .profile-pic {
+    width: 20px; /* Atur lebar sesuai kebutuhan Anda */
+    height: 20px; /* Atur tinggi sesuai kebutuhan Anda */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Memastikan gambar tetap proporsional */
+}
+
+.picture-profile {
+  width: 100px; /* Atur lebar sesuai kebutuhan Anda */
+  height: 100px; /* Atur tinggi sesuai kebutuhan Anda */
+  border-radius: 50%; /* Membuat gambar menjadi bulat */
+  object-fit: cover; /* Memastikan gambar tetap proporsional */
+}
