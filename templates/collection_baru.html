@@ -104,8 +104,8 @@
                                 <p>{{ collection.description }}</p>
                                 <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
                                 <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
-                                <!-- <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a> -->
-                                <a href="#" class="details-link edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal" data-id="{{ collection._id }}" data-name="{{ collection.name }}" data-description="{{ collection.description }}" data-price="{{ collection.price }}" data-category="{{ collection.category }}"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
+                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
+                                <!-- <a href="#" class="details-link edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal" data-id="{{ collection._id }}" data-name="{{ collection.name }}" data-description="{{ collection.description }}" data-price="{{ collection.price }}" data-category="{{ collection.category }}"><i class="bx bx-edit" style="margin-left: 10px;"></i></a> -->
                                 <!-- <a href="#" class="details-link delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal" data-id="{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
                             </div>
                         </div>
