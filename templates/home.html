@@ -423,7 +423,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <form action="/memperbarui-profil" method="POST" role="form" class="fill-the-form">
+                        <div class="fill-the-form">
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Nama Anda">
@@ -443,7 +443,7 @@
                                 <div id="messageFeedback" class=""></div>
                             </div>
                             <div class="text-center my-3"><button type="submit" onclick="sendMessage()">Kirim Pesan</button></div>
-                        </form>
+                        </div>
                     </div>
 
                 </div>
@@ -500,18 +500,11 @@
                     .text('Nama Anda masih kosong, silahkan isi kembali');
                 $('#name').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
-            } else if (!is_text(name)) {
-                $('#nameFeedback')
-                    .removeClass('valid-feedback')
-                    .addClass('invalid-feedback')
-                    .text('Nama Anda tidak memenuhi syarat diantaranya 2-10 alfabet');
-                $('#name').removeClass('is-valid').addClass('is-invalid').focus();
-                return;
             } else {
                 $('#nameFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Nama Anda benar');
+                    .text('Nama Anda sudah terisi di formulir ini');
                 $('#name').removeClass('is-invalid').addClass('is-valid').focus();
             }
 
@@ -535,7 +528,7 @@
                 $('#emailFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Email Anda benar');
+                    .text('Email Anda sudah terisi di formulir ini');
                 $('#email').removeClass('is-invalid').addClass('is-valid').focus();
             }
 
@@ -548,18 +541,11 @@
                     .text('Judul pesan Anda masih kosong, silahkan isi kembali');
                 $('#subject').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
-            } else if (!is_text(subject)) {
-                $('#subjectFeedback')
-                    .removeClass('valid-feedback')
-                    .addClass('invalid-feedback')
-                    .text('Judul pesan Anda tidak memenuhi syarat diantaranya lebih dari 2 alfabet');
-                $('#subject').removeClass('is-valid').addClass('is-invalid').focus();
-                return;
             } else {
                 $('#subjectFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Judul pesan Anda benar');
+                    .text('Judul pesan Anda sudah terisi di formulir ini');
                 $('#subject').removeClass('is-invalid').addClass('is-valid').focus();
             }
 
@@ -571,18 +557,11 @@
                     .text('Pesan Anda kosong');
                 $('#message').removeClass('is-valid').addClass('is-invalid').focus();
                 return;
-            } else if (!is_text(message)) {
-                $('#messageFeedback')
-                    .removeClass('valid-feedback')
-                    .addClass('invalid-feedback')
-                    .text('Pesan Anda tidak memenuhi syarat diantaranya lebih dari 2 alfabet');
-                $('#message').removeClass('is-valid').addClass('is-invalid').focus();
-                return;
             } else {
                 $('#messageFeedback')
                     .removeClass('invalid-feedback')
                     .addClass('valid-feedback')
-                    .text('Pesan Anda benar');
+                    .text('Pesan Anda sudah terisi di formulir ini');
                 $('#message').removeClass('is-invalid').addClass('is-valid').focus();
             }
 
@@ -590,44 +569,34 @@
                 type: 'POST',
                 url: '/hubungi-kami',
                 data: {
-                    nama_give: name,
+                    name_give: name,
                     email_give: email,
                     subject_give: subject,
                     message_give: message
                 },
                 success: function (response) {
                     if (response['result'] === 'success') {
-                        alert(response('msg'));
-                        window.location.href = '/';
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Pesan berhasil dikirim'
+                        });
+                        setTimeout(function () {
+                            window.location.href = '/';
+                        }, 3000);
                     }
-                    // if (response['result'] === 'success') {
-                    //     const Toast = Swal.mixin({
-                    //         toast: true,
-                    //         position: 'top',
-                    //         showConfirmButton: false,
-                    //         timer: 3000,
-                    //         timerProgressBar: true,
-                    //         didOpen: (toast) => {
-                    //             toast.onmouseenter = Swal.stopTimer;
-                    //             toast.onmouseleave = Swal.resumeTimer;
-                    //         }
-                    //     });
-                    //     Toast.fire({
-                    //         icon: 'success',
-                    //         title: 'Pesan berhasil dikirim'
-                    //     });
-                    //     setTimeout(function () {
-                    //         window.location.href = '/';
-                    //     }, 3000);
-                    // }
                 }
             })
-        }
-
-        // cek teks (nama, judul, pesan) regex
-        function is_text(asValue) {
-            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
-            return regExp.test(asValue);
         }
 
         // cek email regex
