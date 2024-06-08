@@ -423,7 +423,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div role="form" class="fill-the-form">
+                        <form action="/memperbarui-profil" method="POST" role="form" class="fill-the-form">
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Nama Anda">
@@ -443,7 +443,7 @@
                                 <div id="messageFeedback" class=""></div>
                             </div>
                             <div class="text-center my-3"><button type="submit" onclick="sendMessage()">Kirim Pesan</button></div>
-                        </div>
+                        </form>
                     </div>
 
                 </div>
@@ -458,7 +458,7 @@
         <div class="container">
             <div class="credits">
                 <div class="social-links">
-                    <a href="https://www.instagram.com/navirins/" class="instagram"><i class="bx bxl-instagram"></i></a>
+                    <a href="https://www.instagram.com/navirins/" target="_blank" class="instagram"><i class="bx bxl-instagram"></i></a>
                 </div>
             </div>
             <div class="copyright">
@@ -596,26 +596,30 @@
                     message_give: message
                 },
                 success: function (response) {
-                    if (response['result'] == 'success') {
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Pesan berhasil dikirim'
-                        });
-                        setTimeout(function () {
-                            window.location.href = '/';
-                        }, 3000);
+                    if (response['result'] === 'success') {
+                        alert(response('msg'));
+                        window.location.href = '/';
                     }
+                    // if (response['result'] === 'success') {
+                    //     const Toast = Swal.mixin({
+                    //         toast: true,
+                    //         position: 'top',
+                    //         showConfirmButton: false,
+                    //         timer: 3000,
+                    //         timerProgressBar: true,
+                    //         didOpen: (toast) => {
+                    //             toast.onmouseenter = Swal.stopTimer;
+                    //             toast.onmouseleave = Swal.resumeTimer;
+                    //         }
+                    //     });
+                    //     Toast.fire({
+                    //         icon: 'success',
+                    //         title: 'Pesan berhasil dikirim'
+                    //     });
+                    //     setTimeout(function () {
+                    //         window.location.href = '/';
+                    //     }, 3000);
+                    // }
                 }
             })
         }
