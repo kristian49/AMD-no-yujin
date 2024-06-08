@@ -1517,9 +1517,9 @@ body {
   --------------------------------------------------------------*/
   .contact .info-box {
     color: #0b2341;
-    text-align: center;
+    text-align: start;
     box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
-    padding: 20px 0 30px 0;
+    padding: 20px 30px 30px 30px;
     background: #fff;
   }
   
@@ -1545,13 +1545,13 @@ body {
     margin-bottom: 0;
   }
   
-  .contact .contact-form {
+  .contact .fill-the-form {
     box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
     padding: 30px;
     background: #fff;
   }
   
-  .contact .contact-form .error-message {
+  .contact .fill-the-form .error-message {
     display: none;
     color: #fff;
     background: #ed3c0d;
@@ -1560,11 +1560,11 @@ body {
     font-weight: 600;
   }
   
-  .contact .contact-form .error-message br+br {
+  .contact .fill-the-form .error-message br+br {
     margin-top: 25px;
   }
   
-  .contact .contact-form .sent-message {
+  .contact .fill-the-form .sent-message {
     display: none;
     color: #fff;
     background: #18d26e;
@@ -1573,14 +1573,14 @@ body {
     font-weight: 600;
   }
   
-  .contact .contact-form .loading {
+  .contact .fill-the-form .loading {
     display: none;
     background: #fff;
     text-align: center;
     padding: 15px;
   }
   
-  .contact .contact-form .loading:before {
+  .contact .fill-the-form .loading:before {
     content: "";
     display: inline-block;
     border-radius: 50%;
@@ -1592,28 +1592,28 @@ body {
     animation: animate-loading 1s linear infinite;
   }
   
-  .contact .contact-form input,
-  .contact .contact-form textarea {
+  .contact .fill-the-form input,
+  .contact .fill-the-form textarea {
     border-radius: 0;
     box-shadow: none;
     font-size: 14px;
     border-radius: 4px;
   }
   
-  .contact .contact-form input:focus,
-  .contact .contact-form textarea:focus {
+  .contact .fill-the-form input:focus,
+  .contact .fill-the-form textarea:focus {
     border-color: #ed502e;
   }
   
-  .contact .contact-form input {
+  .contact .fill-the-form input {
     padding: 10px 15px;
   }
   
-  .contact .contact-form textarea {
+  .contact .fill-the-form textarea {
     padding: 12px 15px;
   }
   
-  .contact .contact-form button[type=submit] {
+  .contact .fill-the-form button[type=submit] {
     background: #ed502e;
     border: 0;
     padding: 10px 30px;
@@ -1622,7 +1622,7 @@ body {
     transition: 0.4s;
   }
   
-  .contact .contact-form button[type=submit]:hover {
+  .contact .fill-the-form button[type=submit]:hover {
     background: #ef6445;
   }
   
@@ -1688,38 +1688,13 @@ body {
     font-size: 14px;
   }
   
-  #footer .footer-top {
-    padding: 60px 0 30px 0;
+  #footer .credits {
+    border-top: 1px solid #0f2f57;
+    text-align: center;
+    padding-top: 30px;
   }
 
-  #contact .container .container-left {
-    padding: 60px 0 30px 0;
-  }
-  
-  #contact .container .container-left .contact-info {
-    margin-bottom: 15px;
-    background: #05101e;
-    border-top: 4px solid #ed502e;
-    text-align: center;
-    padding: 30px 20px;
-  }
-  
-  #contact .container .container-left .contact-info h3 {
-    font-size: 24px;
-    margin: 0 0 20px 0;
-    padding: 2px 0 2px 0;
-    line-height: 1;
-    font-weight: 700;
-  }
-  
-  #contact .container .container-left .contact-info p {
-    font-size: 14px;
-    line-height: 24px;
-    margin-bottom: 0;
-    font-family: "Raleway", sans-serif;
-  }
-  
-  #footer .footer-top .social-links a {
+  #footer .credits .social-links a {
     font-size: 18px;
     display: inline-block;
     color: #fff;
@@ -1734,108 +1709,17 @@ body {
     background: #0a1e38;
   }
   
-  #footer .footer-top .social-links a:hover {
+  #footer .credits .social-links a:hover {
     color: #fff;
     background: #ed502e;
     text-decoration: none;
   }
   
-  #footer .footer-top h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #fff;
-    position: relative;
-    padding-bottom: 12px;
-  }
-  
-  #footer .footer-top .footer-links {
-    margin-bottom: 30px;
-  }
-  
-  #footer .footer-top .footer-links ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  #footer .footer-top .footer-links ul i {
-    padding-right: 2px;
-    color: #ef6445;
-    font-size: 18px;
-    line-height: 1;
-  }
-  
-  #footer .footer-top .footer-links ul li {
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
-  }
-  
-  #footer .footer-top .footer-links ul li:first-child {
-    padding-top: 0;
-  }
-  
-  #footer .footer-top .footer-links ul a {
-    color: #fff;
-    transition: 0.3s;
-    display: inline-block;
-    line-height: 1;
-  }
-  
-  #footer .footer-top .footer-links ul a:hover {
-    color: #ef6445;
-  }
-  
-  #footer .footer-top .footer-newsletter form {
-    margin-top: 30px;
-    background: #fff;
-    padding: 6px 10px;
-    position: relative;
-    border-radius: 4px;
-  }
-  
-  #footer .footer-top .footer-newsletter form input[type=email] {
-    border: 0;
-    padding: 4px;
-    width: calc(100% - 110px);
-  }
-  
-  #footer .footer-top .footer-newsletter form input[type=submit] {
-    position: absolute;
-    top: 0;
-    right: -2px;
-    bottom: 0;
-    border: 0;
-    background: none;
-    font-size: 16px;
-    padding: 0 20px 2px 20px;
-    background: #ed502e;
-    color: #fff;
-    transition: 0.3s;
-    border-radius: 0 4px 4px 0;
-  }
-  
-  #footer .footer-top .footer-newsletter form input[type=submit]:hover {
-    background: #ef6445;
-  }
-  
   #footer .copyright {
-    border-top: 1px solid #0f2f57;
-    text-align: center;
-    padding-top: 30px;
-  }
-  
-  #footer .credits {
     padding-top: 10px;
     text-align: center;
     font-size: 13px;
     color: #fff;
-  }
-  
-  @media (max-width: 575px) {
-    #contact .container .container-left .contact-info {
-      margin: -20px 0 30px 0;
-    }
   }
 
   .profile-pic {
@@ -1843,11 +1727,11 @@ body {
     height: 20px; /* Atur tinggi sesuai kebutuhan Anda */
     border-radius: 50%; /* Membuat gambar menjadi bulat */
     object-fit: cover; /* Memastikan gambar tetap proporsional */
-}
+  }
 
-.picture-profile {
-  width: 100px; /* Atur lebar sesuai kebutuhan Anda */
-  height: 100px; /* Atur tinggi sesuai kebutuhan Anda */
-  border-radius: 50%; /* Membuat gambar menjadi bulat */
-  object-fit: cover; /* Memastikan gambar tetap proporsional */
-}
+  .picture-profile {
+    width: 100px; /* Atur lebar sesuai kebutuhan Anda */
+    height: 100px; /* Atur tinggi sesuai kebutuhan Anda */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Memastikan gambar tetap proporsional */
+  }
