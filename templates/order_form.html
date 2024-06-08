@@ -98,74 +98,62 @@
             <div class="container h-100 py-5">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12 col-md-10">
-    
                         <div class="card rounded-3 mb-4">
                             <div class="card-body p-4">
                                 <div class="row d-flex justify-content-between align-items-center">
                                     <div class="col-md-2 col-lg-2 col-xl-2">
-                                        <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid rounded-3" alt="{{ collection.name }}">
+                                        {% if collection.image %}
+                                        <img src="{{ collection.image }}" class="img-fluid rounded-3" alt="{{ collection.name }}">
+                                        {% else %}
+                                        <p>No image available</p>
+                                        {% endif %}
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-xl-3">
                                         <p class="lead fw-normal mb-4 mb-md-0 text-center">{{ collection.name }}</p>
                                     </div>
+                                    <!-- <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
+                                        <input type="number" class="form-control" id="quantityInput" name="quantity" value="1" min="1" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                                    </div> -->
                                     <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                            <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
-                                            <input type="text" class="form-control" id="quantity" name="quantity" value="1" readonly>
-                                            <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
+                                        <input type="number" class="form-control" id="quantityInput" name="quantity" value="1" min="1" onchange="updateTotalPrice()">
                                     </div>
                                     <div class="col-md-3 mt-3 mt-md-0 col-lg-2 col-xl-2 offset-lg-1">
                                         <div id="product-price" style="display: none;">Rp. {{ collection.price }}</div>
-                                        <h5 class="mb-0 text-center total-price">Rp. {{ collection.price }}</h5>
+                                        <h5 id="total" class="mb-0 text-center total-price">Rp. {{ collection.price }}</h5>
                                     </div>
-    
                                 </div>
                             </div>
                         </div>
-            <!-- <div class="card mb-3">
-                <img src="{{ collection.image }}" class="card-img-top" alt="{{ collection.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ collection.name }}</h5>
-                    <p class="card-text">{{ collection.description }}</p>
-                    <p class="card-text"><strong>Price: {{ collection.price }}</strong></p>
-                    Bagian kuantitas -->
-                    <!-- <div class="mb-3">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <div class="input-group">
-                            <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
-                            <input type="text" class="form-control" id="quantity" name="quantity" value="1" readonly>
-                            <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
-                        </div>
+                    </div>
+                </div>
+    
+                <form method="POST" action="/process_order">
+                    <input type="hidden" name="collection_id" value="{{ collection._id }}">
+                    <input type="hidden" id="quantity" name="quantity" value="3"> <!-- Ubah nilai default ke 1 -->
+                    <input type="hidden" id="total_price" name="total_price" value="{{ collection.price }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ user_info.profile_name }}" required>
                     </div>
                     <div class="mb-3">
-                        <div id="total" class="form-control">Total Harga Rp {{ collection.price }}</div>
-                    </div> -->
-                    <!-- Akhir dari bagian kuantitas -->
-                </div>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user_info.useremail }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="3" required>{{ user_info.address }}</textarea>
+                    </div>
+    
+                    <button type="submit" class="form-control btn btn-primary">Place Order</button>
+                </form>
+    
+                <a href="/koleksi" class="form-control btn btn-secondary mt-3">Beli Lagi</a>
             </div>
-    
-            <!-- Tambahkan card lainnya di sini sesuai dengan jumlah produk yang ingin Anda tampilkan -->
-    
-            <form method="POST" action="/process_order">
-                <input type="hidden" name="collection_id" value="{{ collection._id }}">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ user_info.profile_name }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ user_info.useremail }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="3" required>{{ user_info.address }}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Place Order</button>
-            </form>
-            
-            <!-- Tombol Beli Lagi -->
-            <a href="/koleksi" class="btn btn-secondary mt-3">Beli Lagi</a>
         </div>
     </main>
+    
     
     
     <!-- Footer -->
@@ -193,43 +181,14 @@
     <script src="https://static.cloudflareinsights.com/beacon.min.js/vef91dfe02fce4ee0ad053f6de4f175db1715022073587" defer></script>
     <script src="../static/js/main_lama.js"></script>
     <script>
-        // Tambahkan event listener untuk tombol Plus dan Minus
-       // Tambahkan event listener untuk tombol Plus dan Minus
-    document.getElementById("btnPlus").addEventListener("click", function() {
-        incrementValue();
-    });
-
-    document.getElementById("btnMinus").addEventListener("click", function() {
-        decrementValue();
-    });
-
-    // Fungsi untuk menambahkan nilai
-    function incrementValue() {
-        var value = parseInt(document.getElementById("quantity").value, 10);
-        value = isNaN(value) ? 0 : value;
-        value++;
-        document.getElementById("quantity").value = value;
-        updateTotalPrice();
-    }
-
-    // Fungsi untuk mengurangi nilai
-    function decrementValue() {
-        var value = parseInt(document.getElementById("quantity").value, 10);
-        value = isNaN(value) ? 0 : value;
-        if (value > 1) {
-            value--;
-            document.getElementById("quantity").value = value;
-            updateTotalPrice();
+         function updateTotalPrice() {
+            var price = parseFloat("{{ collection.price }}");
+            var quantity = parseInt(document.getElementById("quantityInput").value, 10);
+            var totalPrice = price * quantity;
+            document.getElementById("total").textContent = "Rp " + totalPrice.toFixed(0);
+            document.getElementById("quantity").value = quantity; // Simpan nilai quantity
+            document.getElementById("total_price").value = totalPrice.toFixed(0); // Simpan nilai total harga
         }
-    }
-
-    // Fungsi untuk memperbarui total harga
-    function updateTotalPrice() {
-        var price = parseFloat("{{ collection.price }}");
-        var quantity = parseInt(document.getElementById("quantity").value, 10);
-        var totalPrice = price * quantity;
-        document.getElementById("total").textContent = "Total: Rp " + totalPrice.toFixed(2);
-    }
 
 
         function logout() {

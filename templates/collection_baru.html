@@ -98,12 +98,12 @@
                     {% for collection in collections %}
                         {% if collection.category == 'filter-artificial' %}
                         <div class="col-lg-4 col-md-6 portfolio-item filter-atificial">
-                            <img src="{{ collection.image }}" class="img-fluid" alt="{{ collection.name }}">
+                            <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
                             <div class="portfolio-info">
                                 <h4>{{ collection.name }}</h4>
                                 <p>{{ collection.description }}</p>
                                 <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                <a href="{{ collection.image }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
+                                <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                 <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
                                 <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
                                 <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
@@ -112,12 +112,12 @@
                         
                         {% elif collection.category == 'filter-money' %}
                             <div class="col-lg-4 col-md-6 portfolio-item filter-money">
-                                <img src="{{ collection.image }}" class="img-fluid" alt="{{ collection.name }}">
+                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
                                 <div class="portfolio-info">
                                     <h4>{{ collection.name }}</h4>
                                     <p>{{ collection.description }}</p>
                                     <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                    <a href="{{ collection.image }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
+                                    <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                     <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
                                     <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
                                     <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
@@ -125,12 +125,12 @@
                             </div>
                         {% elif collection.category == 'filter-hand' %}
                             <div class="col-lg-4 col-md-6 portfolio-item filter-hand">
-                                <img src="{{ collection.image }}" class="img-fluid" alt="{{ collection.name }}">
+                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
                                 <div class="portfolio-info">
                                     <h4>{{ collection.name }}</h4>
                                     <p>{{ collection.description }}</p>
                                     <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
-                                    <a href="{{ collection.image }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
+                                    <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                     <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
                                     <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
                                     <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
