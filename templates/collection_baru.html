@@ -104,9 +104,9 @@
                                 <p>{{ collection.description }}</p>
                                 <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
                                 <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
-                                <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
-                                <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
-                                <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
+                                <!-- <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a> -->
+                                <a href="#" class="details-link edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal" data-id="{{ collection._id }}" data-name="{{ collection.name }}" data-description="{{ collection.description }}" data-price="{{ collection.price }}" data-category="{{ collection.category }}"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
+                                <!-- <a href="#" class="details-link delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal" data-id="{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
                             </div>
                         </div>
                         
@@ -143,6 +143,86 @@
             </div>
         </section>
     </main>
+    <!-- Modal Edit Bucket -->
+<div class="modal fade" id="editBucketModal" tabindex="-1" aria-labelledby="editBucketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBucketModalLabel">Edit Bucket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('edit_bucket') }}" method="post" enctype="multipart/form-data">
+                {% for collection in collections %}
+                <div class="modal-body">
+                    <input type="hidden" id="editBucketId" name="bucketId">
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="editName" name="name" value="{{ collection.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="editDescription" name="description" rows="3" required>{{ collection.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPrice" class="form-label">Harga</label>
+                        <input type="number" class="form-control" id="editPrice" name="price" value="{{ collection.price }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategory" class="form-label">Kategori</label>
+                        <select class="form-control" id="editCategory" name="category" required>
+                            {% if collection.category == 'filter-artificial' %}
+                                <option value="filter-artificial" selected>Artificial Full Flower Hand Bouquet</option>
+                                <option value="filter-money">Money Hand Bouquet</option>
+                                <option value="filter-hand">Hand Bouquet Snack</option>
+                            {% elif collection.category == 'filter-money' %}
+                                <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
+                                <option value="filter-money" selected>Money Hand Bouquet</option>
+                                <option value="filter-hand">Hand Bouquet Snack</option>
+                            {% elif collection.category == 'filter-hand' %}
+                                <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
+                                <option value="filter-money">Money Hand Bouquet</option>
+                                <option value="filter-hand" selected>Hand Bouquet Snack</option>
+                            {% endif %}
+                        </select>
+                    </div>  
+                    <div class="mb-3">
+                        <label for="editImage" class="form-label">Gambar</label>
+                        <input type="file" class="form-control" id="editImage" name="image" value="{{ collection.image }}">
+                        <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah gambar.</small>
+                    </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus Bucket -->
+<div class="modal fade" id="deleteBucketModal" tabindex="-1" aria-labelledby="deleteBucketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteBucketModalLabel">Hapus Bucket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/delete_bucket" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="deleteBucketId" name="bucketId">
+                    <p>Apakah Anda yakin ingin menghapus bucket ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
     <!-- Tambah Bucket Modal -->
     <div class="modal fade" id="tambahBucketModal" tabindex="-1" aria-labelledby="tambahBucketModalLabel" aria-hidden="true">
@@ -152,7 +232,7 @@
                     <h5 class="modal-title" id="tambahBucketModalLabel">Tambah Bucket</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ url_for('tambah_koleksi') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('edit_bucket') }}" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
@@ -189,70 +269,17 @@
     </div>
 
     <!-- Footer -->
+    <!-- Footer -->
     <footer id="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="footer-info">
-                            <h3>Multi</h3>
-                            <p class="pb-3"><em>Qui repudiandae et eum dolores alias sed ea. Qui suscipit veniam excepturi quod.</em></p>
-                            <p>
-                                A108 Adam Street <br>
-                                NY 535022, USA<br><br>
-                                <strong>Phone:</strong> +1 5589 55488 55<br>
-                                <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f29b9c949db2978a939f829e97dc919d9f">[email&#160;protected]</a><br>
-                            </p>
-                            <div class="social-links mt-3">
-                                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Useful Links</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-2 col-md-6 footer-links">
-                        <h4>Our Services</h4>
-                        <ul>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                            <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 footer-newsletter">
-                        <h4>Our Newsletter</h4>
-                        <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-                        <form action="" method="post">
-                            <input type="email" name="email"><input type="submit" value="Subscribe">
-                        </form>
-
-                    </div>
-
+        <div class="container">
+            <div class="credits">
+                <div class="social-links">
+                    <a href="https://www.instagram.com/navirins/" class="instagram"><i class="bx bxl-instagram"></i></a>
                 </div>
             </div>
-        </div>
-
-        <div class="container">
             <div class="copyright">
                 &copy; Hak Cipta <strong><span>Navirin's</span></strong>. All Rights Reserved
-            </div>
+              </div>
         </div>
     </footer>
 
