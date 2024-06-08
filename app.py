@@ -254,7 +254,6 @@ def get_chats():
 
 ### delivery_status.html ###
 
-
 # tambah koleksi 
 @app.route('/tambah-koleksi', methods=['POST'])
 def tambah_koleksi():
@@ -262,17 +261,23 @@ def tambah_koleksi():
     description_receive = request.form['description']
     price_receive = request.form['price']
     category_receive = request.form['category']
-    image = request.files['image']
-    image_filename = secure_filename(image.filename)
-    image_path = os.path.join(app.config['UPLOAD_COLLECTION_FOLDER'], image_filename)
-    image.save(image_path)
+
+    # Mengatur penyimpanan gambar koleksi
+    if 'image' in request.files:
+        image = request.files['image']
+        filename = secure_filename(image.filename)
+        extension = filename.split('.')[-1]
+        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
+        image.save('./static/' + file_path)
+    else:
+        file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
 
     doc = {
         'name': name_receive,
         'description': description_receive,
         'price': price_receive,
         'category': category_receive,
-        'image': image_path
+        'image': file_path
     }
     db.collections.insert_one(doc)
     return redirect(url_for('collection'))
@@ -291,6 +296,64 @@ def collection():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
+# Simpan hasil edit bucket
+@app.route('/edit_bucket', methods=['POST'])
+def edit_bucket():
+    bucket_id = request.form['bucketId']
+    name_receive = request.form['name']
+    description_receive = request.form['description']
+    price_receive = request.form['price']
+    category_receive = request.form['category']
+
+    # Pengecekan apakah bucket_id adalah ObjectId yang valid
+    try:
+        ObjectId(bucket_id)
+    except:
+        # Jika bucket_id tidak valid, kembalikan pengguna ke halaman koleksi
+        return redirect(url_for('collection'))
+
+    # Mengatur penyimpanan gambar koleksi yang diedit
+    if 'editImage' in request.files:
+        image = request.files['editImage']
+        filename = secure_filename(image.filename)
+        extension = filename.split('.')[-1]
+        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
+        image.save('./static/' + file_path)
+    else:
+        # Jika tidak ada gambar yang diunggah, gunakan gambar yang sudah ada
+        current_bucket = db.collections.find_one({"_id": ObjectId(bucket_id)})
+        if current_bucket:
+            file_path = current_bucket['image']
+        else:
+            # Jika bucket_id tidak ditemukan, kembalikan pengguna ke halaman koleksi
+            return redirect(url_for('collection'))
+
+    # Perbarui data di database
+    db.collections.update_one(
+        {"_id": ObjectId(bucket_id)},
+        {
+            "$set": {
+                "name": name_receive,
+                "description": description_receive,
+                "price": price_receive,
+                "category": category_receive,
+                "image": file_path 
+            }
+        }
+    )
+
+    return redirect(url_for('collection'))
+
+# Hapus bucket
+@app.route('/delete_bucket', methods=['POST'])
+def delete_bucket():
+    bucket_id = request.form['bucketId']
+
+    # Hapus data dari database
+    db.collections.delete_one({"_id": ObjectId(bucket_id)})
+
+    return redirect(url_for('collection'))
+
 ### order_form.html ###
 
 @app.route('/order_form')
@@ -305,6 +368,7 @@ def order():
         return render_template('order_form.html', collection=collection, user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
+    
 # Menampilkan halaman form pemesanan produk
 @app.route('/order_form/<collection_id>')
 def order_form(collection_id):
@@ -314,7 +378,7 @@ def order_form(collection_id):
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collection = db.collections.find_one({'_id': ObjectId(collection_id)})
         if collection and 'image' in collection:
-            collection['image'] = f'static/{collection['image']}'
+            collection['image'] = f'/static/{collection["image"]}'
         return render_template('order_form.html', collection=collection, user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
@@ -327,27 +391,54 @@ def process_order():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collection_id = request.form.get('collection_id')
-        quantity = request.form.get('quantity')
+        quantity = request.form.get('quantity')  # Mengambil nilai quantity dari formulir
+        total_price = request.form.get('total_price')  # Mengambil total harga dari formulir
         name = request.form.get('name')
         email = request.form.get('email')
+        phone = request.form.get('phone')
         address = request.form.get('address')
 
-        # Simpan informasi pemesanan produk ke dalam database
-        order_data = {
-            'collection_id': ObjectId(collection_id),
-            'quantity': quantity,
-            'name': name,
-            'email': email,
-            'address': address,
-            'useremail': user_info['useremail']  # Menyimpan email pengguna yang sedang login
-        }
-        db.orders.insert_one(order_data)
+        # Periksa apakah quantity ada dan tidak kosong
+        if quantity and quantity.isdigit():
+            quantity = int(quantity)  # Konversi quantity menjadi integer jika valid
+        else:
+            # Quantity tidak valid, kembalikan ke halaman sebelumnya atau lakukan penanganan yang sesuai
+            return redirect(url_for('home'))
 
-        # Redirect ke halaman terima kasih atau halaman lain yang sesuai
-        return redirect(url_for('home'))
+        # Periksa apakah total_price ada dan tidak kosong
+        if total_price:
+            total_price = float(total_price)  # Konversi total_price menjadi float jika valid
+        else:
+            # Jika total_price tidak valid, atur ke nilai default atau lakukan penanganan yang sesuai
+            total_price = 0.0  # Atur ke nilai default
+
+        # Ambil harga produk dari database
+        collection = db.collections.find_one({'_id': ObjectId(collection_id)})
+        if collection:
+            # Simpan informasi pemesanan produk ke dalam database
+            order_data = {
+                'collection_id': ObjectId(collection_id),
+                'quantity': quantity,
+                'total_price': total_price,
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'address': address,
+                'status_order': 'pending',
+                'useremail': user_info['useremail']
+            }
+            db.orders.insert_one(order_data)
+
+            # Redirect ke halaman terima kasih atau halaman lain yang sesuai
+            return redirect(url_for('home'))
+        else:
+            # Produk tidak ditemukan, redirect ke halaman yang sesuai
+            return redirect(url_for('home'))
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
+
+    
 ### payment ###
 
 
