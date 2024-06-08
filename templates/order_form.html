@@ -107,6 +107,8 @@
                     <input type="hidden" name="collection_id" value="{{ collection._id }}">
                     <input type="hidden" id="quantity" name="quantity" value="3"> <!-- Ubah nilai default ke 1 -->
                     <input type="hidden" id="total_price" name="total_price" value="{{ collection.price }}">
+                    <input type="hidden" id="bucket_name" name="bucket_name" value="{{ collection.name }}">
+
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ user_info.profile_name }}" required>
@@ -124,10 +126,10 @@
                         <textarea class="form-control" id="address" name="address" rows="3" value="{{ user_info.address }}" required>{{ user_info.address }}</textarea>
                     </div>
     
-                    <button type="submit" class="form-control btn btn-primary">Place Order</button>
+                    <button type="submit" class="form-control btn btn-success">Pesan</button>
                 </form>
     
-                <a href="/koleksi" class="form-control btn btn-secondary mt-3">Beli Lagi</a>
+                <a href="/koleksi" class="form-control btn btn-secondary mt-3">Batal</a>
             </div>
         </div>
     </main>
@@ -174,6 +176,7 @@
             document.getElementById("total").textContent = "Rp " + totalPrice.toFixed(0);
             document.getElementById("quantity").value = quantity; // Simpan nilai quantity
             document.getElementById("total_price").value = totalPrice.toFixed(0); // Simpan nilai total harga
+            
         }
 
 
