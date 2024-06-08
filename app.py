@@ -53,7 +53,7 @@ def contact_us():
         'message': message_receive
     }
     db.contactUs.insert_one(doc)
-    return jsonify({'result': 'success'})
+    return jsonify({'result': 'success', 'msg': 'Pesan berhasil dikirim'})
 
 ### register.html ###
 # menampilkan halaman daftar
@@ -254,6 +254,36 @@ def get_chats():
 
 ### delivery_status.html ###
 
+
+# ### collection.html ###
+# # Endpoint untuk menampilkan halaman koleksi
+# @app.route('/koleksi')
+# def collection():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({'useremail': payload.get('id')})
+#         collections = list(db.collections.find())
+#         return render_template('collection_baru.html', collections=collections, user_info=user_info)
+#     except jwt.ExpiredSignatureError:
+#         return redirect(url_for('home'))
+#     except jwt.exceptions.DecodeError:
+#         return redirect(url_for('home'))
+
+# koleksi coba
+@app.route('/koleksi')
+def collection_coba():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        collection = list(db.collection.find())
+        return render_template('collection_fransiscus.html', collection=collection, user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for('home'))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for('home'))
+
 # tambah koleksi 
 @app.route('/tambah-koleksi', methods=['POST'])
 def tambah_koleksi():
@@ -281,20 +311,6 @@ def tambah_koleksi():
     }
     db.collections.insert_one(doc)
     return redirect(url_for('collection'))
-
-# Endpoint untuk menampilkan halaman koleksi
-@app.route('/koleksi')
-def collection():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        collections = list(db.collections.find())
-        return render_template('collection_baru.html', collections=collections, user_info=user_info)
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('home'))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for('home'))
 
 # Simpan hasil edit bucket
 @app.route('/edit_bucket', methods=['POST'])
@@ -355,7 +371,7 @@ def delete_bucket():
     return redirect(url_for('collection'))
 
 ### order_form.html ###
-
+# menampilkan halaman formulir pemesanan
 @app.route('/order_form')
 def order():
     token_receive = request.cookies.get(TOKEN_KEY)
