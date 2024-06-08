@@ -80,12 +80,7 @@ def api_register():
         'profile_name': ' '.join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
-        'neighbourhood': neighbourhood_receive,
-        'hamlet': hamlet_receive,
-        'village_or_urban_village': village_or_urban_village_receive,
-        'sub_district': sub_district_receive,
-        'regency_or_town': regency_or_town_receive,
-        'province': province_receive,
+        'address': address_receive,
         'phone': phone_receive,
         'bio': bio_receive
     }
@@ -158,7 +153,6 @@ def profile(account_name):
 #             file = request.files['file_give']
 #             filename = secure_filename(file.filename)
 #             extension = filename.split('.')[-1]
-#             mungkin pakai account_name aja, agar alamat email lebih privat
 #             file_path = f'profile_pics/{useremail}.{extension}'
 #             file.save('./static/' + file_path)
 #             new_doc['profile_pic'] = filename
@@ -178,30 +172,20 @@ def update_profile():
 
         first_name_receive = request.form['first_name_give']
         last_name_receive = request.form['last_name_give']
-        neighbourhood_receive = request.form['neighbourhood_give']
-        hamlet_receive = request.form['hamlet_give']
-        village_or_urban_village_receive = request.form['village_or_urban_village_give']
-        sub_district_receive = request.form['sub_district_give']
-        regency_or_town_receive = request.form['regency_or_town_give']
-        province_receive = request.form['province_give']
+        address_receive = request.form['address_give']
         phone_receive = request.form['phone_give']
         bio_receive = request.form['bio_give']
 
         new_doc = {
             'first_name': first_name_receive,
             'last_name': last_name_receive,
-            'neighbourhood': neighbourhood_receive,
-            'hamlet': hamlet_receive,
-            'village/urban_village': village/urban_village_receive,
-            'sub-district': sub-district_receive,
-            'regency/town': regency/town_receive,
-            'province': province_receive,
+            'address': address_receive,
             'phone': phone_receive,
             'bio': bio_receive
         }
 
-        if 'file_give' in request.files:
-            file = request.files['file_give']
+        if 'profile_picture_give' in request.files:
+            file = request.files['profile_picture_give']
             filename = secure_filename(file.filename)
             extension = filename.split('.')[-1]
             file_path = f'profile_pics/{account_name}.{extension}'
@@ -210,8 +194,7 @@ def update_profile():
             new_doc['profile_pic_real'] = file_path
         
         db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
-        # Kita update profil user disini
-        return jsonify({'result': 'success', 'msg': 'Profil Anda telah diperbarui!'})
+        return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
