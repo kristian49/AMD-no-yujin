@@ -40,7 +40,7 @@ def home():
         return render_template('home.html')
     
 # menyimpan pesan pada hubungi kami
-@app.route('/hubungi-kami', methods = ['POST'])
+@app.route('/hubungi-kami', methods=['POST'])
 def contact_us():
     name_receive = request.form['name_give']
     email_receive = request.form['email_give']
@@ -53,7 +53,7 @@ def contact_us():
         'message': message_receive
     }
     db.contactUs.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': 'Pesan berhasil dikirim'})
+    return jsonify({'result': 'success'})
 
 ### register.html ###
 # menampilkan halaman daftar
@@ -94,18 +94,13 @@ def check_email_and_account_name():
     useremail_receive = request.form['useremail_give']
     exists_account_name = bool(db.users.find_one({'account_name': account_name_receive}))
     exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
-    return jsonify({
-        'result': 'success',
-        'exists_account_name': exists_account_name,
-        'exists_useremail': exists_useremail
-    })
+    return jsonify({'result': 'success'})
 
 ### login.html ###
 # menampilkan halaman masuk
 @app.route('/masuk')
 def login():
-    msg = request.args.get('msg')
-    return render_template('login.html', msg = msg)
+    return render_template('login.html')
 
 # menerima masuknya pengguna
 @app.route('/memasukkan-akun', methods = ['POST'])
@@ -122,7 +117,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
         return jsonify({'result': 'success', 'token': token})
     else:
-        return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
+        return jsonify({'result': 'fail'})
 
 ### profile.html ###
 # menampilkan halaman profil
