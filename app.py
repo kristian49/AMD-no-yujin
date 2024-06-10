@@ -293,63 +293,45 @@ def tambah_koleksi():
     db.collections.insert_one(doc)
     return redirect(url_for('collection'))
 
-# Simpan hasil edit bucket
-@app.route('/edit_bucket', methods=['POST'])
+@app.route('/ubah-bucket', methods=['POST'])
 def edit_bucket():
-    bucket_id = request.form['bucketId']
-    name_receive = request.form['name']
-    description_receive = request.form['description']
-    price_receive = request.form['price']
-    category_receive = request.form['category']
-
-    # Pengecekan apakah bucket_id adalah ObjectId yang valid
+    token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        ObjectId(bucket_id)
-    except:
-        # Jika bucket_id tidak valid, kembalikan pengguna ke halaman koleksi
-        return redirect(url_for('collection'))
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        bucket_id = request.form['bucketId']
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        category = request.form['category']
 
-    # Mengatur penyimpanan gambar koleksi yang diedit
-    if 'editImage' in request.files:
-        image = request.files['editImage']
-        filename = secure_filename(image.filename)
-        extension = filename.split('.')[-1]
-        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
-        image.save('./static/' + file_path)
-    else:
-        # Jika tidak ada gambar yang diunggah, gunakan gambar yang sudah ada
-        current_bucket = db.collections.find_one({"_id": ObjectId(bucket_id)})
-        if current_bucket:
-            file_path = current_bucket['image']
-        else:
-            # Jika bucket_id tidak ditemukan, kembalikan pengguna ke halaman koleksi
-            return redirect(url_for('collection'))
-
-    # Perbarui data di database
-    db.collections.update_one(
-        {"_id": ObjectId(bucket_id)},
-        {
-            "$set": {
-                "name": name_receive,
-                "description": description_receive,
-                "price": price_receive,
-                "category": category_receive,
-                "image": file_path 
-            }
+        bucket_data = {
+            "name": name,
+            "description": description,
+            "price": price,
+            "category": category,
         }
-    )
 
-    return redirect(url_for('collection'))
+        if 'image' in request.files:
+                image = request.files['image']
+                filename = secure_filename(image.filename)
+                extension = filename.split('.')[-1]
+                file_path = f'collection_pics/{name}.{extension}'
+                image.save('./static/' + file_path)
+                bucket_data['image'] = file_path
+        else:
+                file_path = ''
 
-# Hapus bucket
-@app.route('/delete_bucket', methods=['POST'])
+        db.collections.update_one({'_id': ObjectId(bucket_id)}, {'$set': bucket_data})
+        return redirect(url_for('collection'))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+
+
+@app.route('/hapus-bucket', methods=['POST'])
 def delete_bucket():
     bucket_id = request.form['bucketId']
-
-    # Hapus data dari database
-    db.collections.delete_one({"_id": ObjectId(bucket_id)})
-
-    # return redirect(url_for('collection'))
+    db.collections.delete_one({'_id': ObjectId(bucket_id)})
+    return redirect(url_for('collection'))
 
 ### order_form.html ###
 # menampilkan halaman formulir pemesanan
