@@ -81,9 +81,9 @@ def api_register():
         'profile_name': ' '.join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
-        'address': address_receive,
-        'phone': phone_receive,
-        'bio': bio_receive
+        'address': '',
+        'phone': '',
+        'bio': ''
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
