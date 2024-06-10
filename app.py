@@ -23,6 +23,7 @@ db = client[DB_NAME]
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
+app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 
 SECRET_KEY = 'AMDNOYUJIN'
 TOKEN_KEY = 'bouquet'
@@ -40,7 +41,7 @@ def home():
         return render_template('home.html')
     
 # menyimpan pesan pada hubungi kami
-@app.route('/hubungi-kami', methods = ['POST'])
+@app.route('/hubungi-kami', methods=['POST'])
 def contact_us():
     name_receive = request.form['name_give']
     email_receive = request.form['email_give']
@@ -53,7 +54,7 @@ def contact_us():
         'message': message_receive
     }
     db.contactUs.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': 'Pesan berhasil dikirim'})
+    return jsonify({'result': 'success'})
 
 ### register.html ###
 # menampilkan halaman daftar
@@ -94,18 +95,13 @@ def check_email_and_account_name():
     useremail_receive = request.form['useremail_give']
     exists_account_name = bool(db.users.find_one({'account_name': account_name_receive}))
     exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
-    return jsonify({
-        'result': 'success',
-        'exists_account_name': exists_account_name,
-        'exists_useremail': exists_useremail
-    })
+    return jsonify({'result': 'success'})
 
 ### login.html ###
 # menampilkan halaman masuk
 @app.route('/masuk')
 def login():
-    msg = request.args.get('msg')
-    return render_template('login.html', msg = msg)
+    return render_template('login.html')
 
 # menerima masuknya pengguna
 @app.route('/memasukkan-akun', methods = ['POST'])
@@ -122,7 +118,7 @@ def api_login():
         token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
         return jsonify({'result': 'success', 'token': token})
     else:
-        return jsonify({'result': 'fail', 'msg': 'We could not find a user with that id/password combination'})
+        return jsonify({'result': 'fail'})
 
 ### profile.html ###
 # menampilkan halaman profil
@@ -179,6 +175,7 @@ def update_profile():
         new_doc = {
             'first_name': first_name_receive,
             'last_name': last_name_receive,
+            'profile_name': ' '.join([first_name_receive, last_name_receive]),
             'address': address_receive,
             'phone': phone_receive,
             'bio': bio_receive
@@ -257,32 +254,32 @@ def get_chats():
 
 # ### collection.html ###
 # # Endpoint untuk menampilkan halaman koleksi
-# @app.route('/koleksi')
-# def collection():
-#     token_receive = request.cookies.get(TOKEN_KEY)
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({'useremail': payload.get('id')})
-#         collections = list(db.collections.find())
-#         return render_template('collection_baru.html', collections=collections, user_info=user_info)
-#     except jwt.ExpiredSignatureError:
-#         return redirect(url_for('home'))
-#     except jwt.exceptions.DecodeError:
-#         return redirect(url_for('home'))
-
-# koleksi coba
 @app.route('/koleksi')
-def collection_coba():
+def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        collection = list(db.collection.find())
-        return render_template('collection_fransiscus.html', collection=collection, user_info=user_info)
+        collections = list(db.collections.find())
+        return render_template('collection_baru.html', collections=collections, user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for('home'))
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
+
+# koleksi coba
+# @app.route('/koleksi')
+# def collection_coba():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({'useremail': payload.get('id')})
+#         collection = list(db.collection.find())
+#         return render_template('collection_fransiscus.html', collection=collection, user_info=user_info)
+#     except jwt.ExpiredSignatureError:
+#         return redirect(url_for('home'))
+#     except jwt.exceptions.DecodeError:
+#         return redirect(url_for('home'))
 
 # tambah koleksi 
 @app.route('/tambah-koleksi', methods=['POST'])
@@ -434,7 +431,6 @@ def process_order():
         if collection:
             # Simpan informasi pemesanan produk ke dalam database
             order_data = {
-                'collection_id': ObjectId(collection_id),
                 'bucket_name': bucket_name,
                 'quantity': quantity,
                 'total_price': total_price,
@@ -476,41 +472,59 @@ def purchase_form(order_id):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-@app.route('/submit_purchase', methods=['POST'])
+@app.route('/pembayaran', methods=['POST'])
 def submit_purchase():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
+
+        # Mengambil data dari formulir
         order_id = request.form.get('order_id')
         shipping_method = request.form.get('shippingMethod')
         payment_method = request.form.get('paymentMethod')
-        payment_proof = request.files.get('paymentProof')
 
-        if payment_proof:
+        # Mengambil data lain dari database
+        order = db.orders.find_one({'_id': ObjectId(order_id)})
+        bucket_name = order['bucket_name']
+        quantity = order['quantity']
+        total_price = order['total_price']
+        name = order['name']
+        email = order['email']
+        phone = order['phone']
+        address = order['address']
+
+        # Menyimpan bukti pembayaran jika ada
+        if 'paymentProof' in request.files:
+            payment_proof = request.files['paymentProof']
             filename = secure_filename(payment_proof.filename)
-            payment_proof.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            # Simpan detail pesanan dan bukti pembayaran ke database
-            db.orders.update_one(
-                {'_id': ObjectId(order_id)},
-                {'$set': {
-                    'shipping_method': shipping_method,
-                    'payment_method': payment_method,
-                    'payment_proof': filename,
-                    'status_order': 'processing'
-                }}
-            )
-
-            # flash('Pembelian berhasil dikirim!', 'success')
-            return redirect(url_for('home'))
+            extension = filename.split('.')[-1]
+            file_path = f'payment/{order_id}.{extension}'  
+            payment_proof.save('./static/' + file_path)
         else:
-            # flash('Bukti pembayaran tidak valid!', 'danger')
-            return redirect(url_for('purchase_form', order_id=order_id))
+            file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
 
+        # Simpan detail pesanan dan bukti pembayaran ke database
+        doc = {
+            'order_id': order_id,
+            'bucket_name': bucket_name,
+            'quantity': quantity,
+            'total_price': total_price,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'address': address,
+            'shipping_method': shipping_method,
+            'payment_method': payment_method,
+            'payment_proof': file_path,
+            'status_order': 'processing'
+        }
+        db.payment.insert_one(doc)
+
+        # Mengirim respons JSON yang berisi pesan pembayaran berhasil
+        return jsonify({'message': 'Pembayaran berhasil!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
