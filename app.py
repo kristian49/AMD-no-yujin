@@ -267,21 +267,6 @@ def collection():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
-# koleksi coba
-# @app.route('/koleksi')
-# def collection_coba():
-#     token_receive = request.cookies.get(TOKEN_KEY)
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({'useremail': payload.get('id')})
-#         collection = list(db.collection.find())
-#         return render_template('collection_fransiscus.html', collection=collection, user_info=user_info)
-#     except jwt.ExpiredSignatureError:
-#         return redirect(url_for('home'))
-#     except jwt.exceptions.DecodeError:
-#         return redirect(url_for('home'))
-
-# tambah koleksi 
 @app.route('/tambah-koleksi', methods=['POST'])
 def tambah_koleksi():
     name_receive = request.form['name']
@@ -289,15 +274,14 @@ def tambah_koleksi():
     price_receive = request.form['price']
     category_receive = request.form['category']
 
-    # Mengatur penyimpanan gambar koleksi
     if 'image' in request.files:
         image = request.files['image']
         filename = secure_filename(image.filename)
         extension = filename.split('.')[-1]
-        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
+        file_path = f'collection_pics/{name_receive}.{extension}'
         image.save('./static/' + file_path)
     else:
-        file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
+        file_path = ''
 
     doc = {
         'name': name_receive,
@@ -365,7 +349,7 @@ def delete_bucket():
     # Hapus data dari database
     db.collections.delete_one({"_id": ObjectId(bucket_id)})
 
-    return redirect(url_for('collection'))
+    # return redirect(url_for('collection'))
 
 ### order_form.html ###
 # menampilkan halaman formulir pemesanan
