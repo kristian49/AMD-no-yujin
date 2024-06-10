@@ -71,6 +71,50 @@
     </header>
 
     <main id="main" class="mt-5">
+        <!-- Carousel -->
+        <section id="hero">
+            <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+                <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+                <div class="carousel-inner" role="listbox">
+
+                    <!-- Bagian 1 -->
+                    <div class="carousel-item active" style="background-image: url(../static/img/slide-1.jpg)">
+                        <div class="carousel-container">
+                            <div class="container">
+                                <h2 class="animate__animated animate__fadeInDown"><a href="/profil/{{ user_info.account_name }}">
+                                    <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt=""  class="rounded-circle align-self-center" style="width: 100px; height: 100px; margin-bottom: 20px;">
+                                    </a><span>Halo, {{ user_info.profile_name }}</span></h2>
+                                <p class="animate__animated animate__fadeInUp" style="color: whitesmoke; font-weight: bold; font-style: italic; font-size: large;">Selamat Datang di Navirin's</p>
+                                <!-- <a href="/masuk" class="btn-get-started animate__animated animate__fadeInUp scrollto">Masuk</a> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bagian 2 -->
+                    <div class="carousel-item" style="background-image: url(../static/img/slide-2.jpg)">
+                        <div class="carousel-container">
+                            <div class="container">
+                                <h2 class="animate__animated animate__fadeInDown">Koleksi Bucket Navirin's</h2>
+                                <p class="animate__animated animate__fadeInUp">Kami menyediakan berbagai bucket untuk semua acara</p>
+                                <a href="/koleksi" class="btn-get-started animate__animated animate__fadeInUp scrollto">Koleksi Kami</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+                </a>
+
+                <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+                </a>
+
+            </div>
+        </section>
 
         <!-- About Section -->
         <section id="about" class="about">
