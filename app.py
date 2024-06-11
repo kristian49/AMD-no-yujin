@@ -30,15 +30,40 @@ TOKEN_KEY = 'bouquet'
 
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
+# @app.route('/')
+# def home():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+#         user_info = db.users.find_one({'useremail': payload.get('id')})
+#         return render_template('dashboard.html', user_info = user_info)
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return render_template('home.html')
+
+def format_rupiah(value):
+    return f"Rp {value:,.0f}".replace(",", ".")
+
 @app.route('/')
 def home():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template('dashboard.html', user_info = user_info)
+
+        account_name = user_info['account_name']
+
+        # Menghitung total pembelian dan total bucket
+        payments = list(db.payment.find({'account_name': account_name}))
+
+        total_pembelian = sum(payment['total_price'] for payment in payments)
+        total_bucket = sum(payment['quantity'] for payment in payments)
+
+        total_pembelian_rupiah = format_rupiah(total_pembelian)
+
+        return render_template('dashboard.html', user_info=user_info, total_pembelian=total_pembelian, total_bucket=total_bucket, total_pembelian_rupiah=total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
+
     
 # menyimpan pesan pada hubungi kami
 @app.route('/hubungi-kami', methods=['POST'])
@@ -401,11 +426,11 @@ def process_order():
                 'quantity': quantity,
                 'total_price': total_price,
                 'name': name,
-                'email': email,
+                'useremail': email,
                 'phone': phone,
                 'address': address,
                 'status_order': 'pending',
-                'useremail': user_info['useremail']
+                'account_name': user_info['account_name']
             }
             # db.orders.insert_one(order_data)
             result = db.orders.insert_one(order_data)
@@ -456,7 +481,7 @@ def submit_purchase():
         quantity = order['quantity']
         total_price = order['total_price']
         name = order['name']
-        email = order['email']
+        email = order['useremail']
         phone = order['phone']
         address = order['address']
 
@@ -477,13 +502,14 @@ def submit_purchase():
             'quantity': quantity,
             'total_price': total_price,
             'name': name,
-            'email': email,
+            'useremail': email,
             'phone': phone,
             'address': address,
             'shipping_method': shipping_method,
             'payment_method': payment_method,
             'payment_proof': file_path,
-            'status_order': 'processing'
+            'status_order': 'processing',
+            'account_name': user_info['account_name']
         }
         db.payment.insert_one(doc)
 

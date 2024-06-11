@@ -44,7 +44,6 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Beranda</a></li>
                     <li><a class="nav-link scrollto " href="/koleksi">Koleksi Buket</a></li>
-                    <li><a class="nav-link scrollto " href="/order_form">Order Form</a></li>
                     <li class="dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                             <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle profile-pic">
@@ -71,61 +70,79 @@
         </div>
     </header>
 
-    <main id="main" class="mt-5">
-        <div class="container py-5">
-            <h2>Formulir Pembelian</h2>
-            <hr class="md-5">
-            <form method="POST" action="{{ url_for('submit_purchase') }}" enctype="multipart/form-data">
-                <input type="hidden" name="order_id" value="{{ order._id }}">
-                <div class="mb-3">
-                    <label for="bucket_name" class="form-label">Nama Buket</label>
-                    <input type="text" class="form-control" id="bucket_name" value="{{ order.bucket_name }}" readonly>
+    <main id="main" class="py-5">
+        <div class="container py-5 d-flex justify-content-center">
+            <div class="container mt-5" data-aos="fade-down">
+                <div class="section-title">
+                    <h2>Pembayaran</h2>
+                    <p>Form Pembayaran</p>
                 </div>
-                <div class="mb-3">
-                    <label for="quantity" class="form-label">Kuantitas</label>
-                    <input type="number" class="form-control" id="quantity" value="{{ order.quantity }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="total_price" class="form-label">Total Harga</label>
-                    <input type="text" class="form-control" id="total_price" value="Rp {{ order.total_price }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Nama</label>
-                    <input type="text" class="form-control" id="name" value="{{ order.name }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" value="{{ order.email }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">No Telepon</label>
-                    <input type="text" class="form-control" id="phone" value="{{ order.phone }}" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Alamat</label>
-                    <textarea class="form-control" id="address" rows="3" readonly>{{ order.address }}</textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="shippingMethod" class="form-label">Metode Pengiriman</label>
-                    <select class="form-select" id="shippingMethod" name="shippingMethod" required>
-                        <option value="kurir">Kurir</option>
-                        <option value="ojek_online">Ojek Online</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="paymentMethod" class="form-label">Metode Pembayaran</label>
-                    <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                        <option value="dana">Dana</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="paymentProof" class="form-label">Upload Bukti Pembayaran</label>
-                    <input type="file" class="form-control" id="paymentProof" name="paymentProof" required>
-                </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Bayar</button>
-                </div>
-            </form>
+                <hr class="mb-5">
+                <form method="POST" action="{{ url_for('submit_purchase') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="order_id" value="{{ order._id }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="bucket_name" class="form-label">Nama Buket</label>
+                            <input type="text" class="form-control" id="bucket_name" value="{{ order.bucket_name }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="quantity" class="form-label">Kuantitas</label>
+                            <input type="number" class="form-control" id="quantity" value="{{ order.quantity }}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="total_price" class="form-label">Total Harga</label>
+                            <input type="text" class="form-control" id="total_price" value="Rp {{ order.total_price }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="name" value="{{ order.name }}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="{{ order.useremail }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">No Telepon</label>
+                            <input type="text" class="form-control" id="phone" value="{{ order.phone }}" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Alamat</label>
+                        <textarea class="form-control" id="address" rows="3" readonly>{{ order.address }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="shippingMethod" class="form-label">Metode Pengiriman</label>
+                            <select class="form-select" id="shippingMethod" name="shippingMethod" required>
+                                <option value="kurir">Kurir</option>
+                                <option value="ojek_online">Ojek Online</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="paymentMethod" class="form-label">Metode Pembayaran</label>
+                            <select class="form-select" id="paymentMethod" name="paymentMethod" required>
+                                <option value="dana">Dana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paymentProof" class="form-label">Upload Bukti Pembayaran</label>
+                        <input type="file" class="form-control" id="paymentProof" name="paymentProof" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button type="submit" class="form-control btn btn-outline-success">Bayar</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="/koleksi" class="form-control btn btn-outline-dark">Batal</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
     <!-- Footer -->
