@@ -11,7 +11,7 @@
     <meta property="og:image" content="{{ url_for('static', filename='') }}" />
 
     <!-- Judul Halaman Web -->
-    <title>Navirin's</title>
+    <title>Profil</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../static/img/favicon.ico" />
@@ -165,7 +165,7 @@
 
     </main>
 
-    <!-- Modal -->
+    <!-- Modal Edit Profil -->
     <div class="modal fade" id="editProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -193,7 +193,7 @@
                         </div>
                         <div class="mb-3"> 
                             <label for="profilePicture" class="form-label">Foto Profil</label>
-                            <input type="file" class="form-control" accept=".png,.jpg,.jpeg" name="profilePicture" id="profilePicture" value="{{ user_info.profile_pic }}">
+                            <input type="file" class="form-control" accept=".png,.jpg,.jpeg" id="profilePicture" value="{{ user_info.profile_pic }}">
                         </div>
                         <div class="mb-3"> 
                             <label for="bio" class="form-label">Bio</label>

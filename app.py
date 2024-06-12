@@ -36,6 +36,7 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
+        # user_role = user_info['role']
 
         account_name = user_info['account_name']
 
@@ -180,7 +181,7 @@ def update_profile():
             new_doc['profile_pic'] = filename
             new_doc['profile_pic_real'] = file_path
         
-        db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
+        db.users.update_one({'account_name': payload['id']}, {'$set': new_doc})
         return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))

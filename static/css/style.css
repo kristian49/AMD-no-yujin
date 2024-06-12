@@ -1522,7 +1522,7 @@ body {
 .profile .profile-card h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #2c384e;
+  color: #ed502e;
   margin: 10px 0 0 0;
 }
 
@@ -1533,14 +1533,14 @@ body {
 .profile .profile-card .social-links a {
   font-size: 20px;
   display: inline-block;
-  color: rgba(1, 41, 112, 0.5);
+  color: rgba(247, 52, 14, 0.6);
   line-height: 0;
   margin-right: 10px;
   transition: 0.3s;
 }
 
 .profile .profile-card .social-links a:hover {
-  color: #012970;
+  color: #ed502e;
 }
 
 .profile .profile-overview .row {
@@ -1549,17 +1549,17 @@ body {
 }
 
 .profile .profile-overview .card-title {
-  color: #012970;
+  color: #ed502e;
 }
 
 .profile .profile-overview .label {
   font-weight: 600;
-  color: rgba(1, 41, 112, 0.6);
+  color: rgba(247, 52, 14, 0.6);
 }
 
 .profile .profile-edit label {
   font-weight: 600;
-  color: rgba(1, 41, 112, 0.6);
+  color: rgba(247, 52, 14, 0.6);
 }
 
 .profile .profile-edit img {
