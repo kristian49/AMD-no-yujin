@@ -30,19 +30,6 @@ TOKEN_KEY = 'bouquet'
 
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
-# @app.route('/')
-# def home():
-#     token_receive = request.cookies.get(TOKEN_KEY)
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-#         user_info = db.users.find_one({'useremail': payload.get('id')})
-#         return render_template('dashboard.html', user_info = user_info)
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return render_template('home.html')
-
-def format_rupiah(value):
-    return f"Rp {value:,.0f}".replace(",", ".")
-
 @app.route('/')
 def home():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -64,6 +51,9 @@ def home():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
 
+# untuk menampilkan format rupiah
+def format_rupiah(value):
+    return f'Rp {value:,.0f}'.replace(',', '.')
     
 # menyimpan pesan pada hubungi kami
 @app.route('/hubungi-kami', methods=['POST'])
@@ -154,36 +144,11 @@ def profile(account_name):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload.get('id')
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        # return render_template('profile.html', user_info = user_info, status = status)
-        return render_template('profile_coba.html', user_info = user_info, status = status)
+        return render_template('profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-# # memperbarui profil
-# @app.route('/update_profile', methods=['POST'])
-# def save_img():
-#     token_receive = request.cookies.get(TOKEN_KEY)
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         useremail = payload.get('id')
-#         first_name_receive = request.form['first_name_give']
-#         last_name_receive = request.form['last_name_give']
-#         address_receive = request.form['address_give']
-#         new_doc = {'first_name': first_name_receive, 'last_name': last_name_receive, 'address': address_receive}
-#         if 'file_give' in request.files:
-#             file = request.files['file_give']
-#             filename = secure_filename(file.filename)
-#             extension = filename.split('.')[-1]
-#             file_path = f'profile_pics/{useremail}.{extension}'
-#             file.save('./static/' + file_path)
-#             new_doc['profile_pic'] = filename
-#             new_doc['profile_pic_real'] = file_path
-#         db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
-#         return jsonify({'result': 'success', 'msg': 'Profile updated!'})
-#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-#         return redirect(url_for('home'))
-
-# memperbarui profil_coba
+# memperbarui profil
 @app.route('/memperbarui-profil', methods=['POST'])
 def update_profile():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -221,55 +186,8 @@ def update_profile():
         return redirect(url_for('home'))
 
 ### chat.html ###
-# menampilkan halaman profil
-@app.route('/obrolan/<account_name>', methods = ['GET'])
-def chat(account_name):
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        status = account_name == payload.get('id')
-        user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        return render_template('chat.html', user_info = user_info, status = status)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
+# menampilkan halaman chat
 
-# memasukkan obrolan
-@app.route('/memasukkan-obrolan', methods = ['POST'])
-def enter_chat():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'account_name': payload['id']})
-        message_receive = request.form['message_give']
-        date_receive = request.form['date_give']
-        doc = {
-            'account_name': user_info['account_name'],
-            'profile_name': user_info['profile_name'],
-            'profile_pic_real': user_info['profile_pic_real'],
-            'message': message_receive,
-            'date': date_receive
-        }
-        db.chats.insert_one(doc)
-        return jsonify({'result': 'success', 'msg': 'Posting successful!'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-# mendapatkan obrolan
-@app.route('/mendapatkan-obrolan', methods = ['GET'])
-def get_chats():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        account_name_receive = request.args['account_name_give']
-        if account_name_receive == '':
-            chats = list(db.chats.find({}).sort('date', -1).limit(20))
-        else:
-            chats = list(db.chats.find({'account_name': account_name_receive}).sort('date', -1).limit(20))
-        for post in chats:
-            post['_id'] = str(post['_id'])
-        return jsonify({'result': 'success', 'msg': 'Successfully fetched all chats!', 'chats': chats})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
 
 ### purchase_history.html ###
 
@@ -277,8 +195,8 @@ def get_chats():
 ### delivery_status.html ###
 
 
-# ### collection.html ###
-# # Endpoint untuk menampilkan halaman koleksi
+### collection.html ###
+# Endpoint untuk menampilkan halaman koleksi
 @app.route('/koleksi')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -286,12 +204,13 @@ def collection():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collections = list(db.collections.find())
-        return render_template('collection_baru.html', collections=collections, user_info=user_info)
+        return render_template('collection.html', collections=collections, user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for('home'))
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
+# untuk menambahkan koleksi
 @app.route('/tambah-koleksi', methods=['POST'])
 def tambah_koleksi():
     name_receive = request.form['name']
@@ -318,6 +237,7 @@ def tambah_koleksi():
     db.collections.insert_one(doc)
     return redirect(url_for('collection'))
 
+# untuk mengubah koleksi buket
 @app.route('/ubah-bucket', methods=['POST'])
 def edit_bucket():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -351,7 +271,7 @@ def edit_bucket():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-
+# menghapus bucket
 @app.route('/hapus-bucket', methods=['POST'])
 def delete_bucket():
     bucket_id = request.form['bucketId']
@@ -447,8 +367,8 @@ def process_order():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-    
-### payment ###
+### payment.html ###
+# menampilkan formulir pembayaran
 @app.route('/purchase_form/<order_id>')
 def purchase_form(order_id):
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -463,6 +383,7 @@ def purchase_form(order_id):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+# proses pembayaran
 @app.route('/pembayaran', methods=['POST'])
 def submit_purchase():
     token_receive = request.cookies.get(TOKEN_KEY)
