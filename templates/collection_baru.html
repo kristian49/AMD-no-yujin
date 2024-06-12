@@ -29,6 +29,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../static/css/style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -44,8 +45,11 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Beranda</a></li>
                     <li><a class="nav-link scrollto " href="/koleksi">Koleksi Buket</a></li>
-                    <li><a class="nav-link scrollto " href="/order_form">Order Form</a></li>
-                    <li class="dropdown"><a href="#"><span>{{ user_info.profile_name }}</span> <i class="bi bi-chevron-down"></i></a>
+                    <li class="dropdown">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                            <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle profile-pic">
+                            <span class="d-none d-md-block dropdown-toggle ps-2">{{ user_info.profile_name }}</span>
+                        </a>
                         <ul>
                             <li><a href="/profil/{{ user_info.account_name }}">Profil</a></li>
                             <!-- <li>
@@ -94,46 +98,76 @@
                     </div>
                 </div>
 
-                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+                <!-- Deskripsi Filter -->
+                <div class="row" data-aos="fade-up" data-aos-delay="150">
+                    <div class="col-md-12 md-5 d-flex justify-content-center">
+                        <div id="filter-descriptions">
+                            <div class="filter-description" id="filter-atificial-description">
+                                <p>
+                                    <small> Bunga artificial adalah bunga yang berbahan sintesis atau plastic.
+                                    Meskipun tidak hidup, bunga artificial memiliki daya tarik dan kegunaan yang tak kalah indah.Tidak heran kalau bunga artificial ini popular di berbagai macam acara.</small>
+                                </p>
+                                <hr>
+                            </div>
+                            <div class="filter-description" id="filter-money-description">
+                                <p>
+                                    <small>Bunga uang yang terdiri atas artificial flowers dan uang tunai. Merupakan pilihan yang praktis dan tepat untuk diberikan sebagai hadiah atau bentuk penghargaan, sangat cocok di berbagai acara dan kalangan.
+                                    Kamu bisa memilih pecahan uang berapa saja untuk ditambahkan di Money Bouquet. Harga untuk produk ini sudah termasuk artificial flowers dan belum termasuk uang tunai yang diinginkan.</small>
+                                </p>
+                                <hr>
+                            </div>
+                            <div class="filter-description" id="filter-hand-description">
+                                <p>
+                                    <small>Bunga snack yang berisi aneka macam snack. Isi snack dari buket ini dapat kamu request sesuai dengan keinginan kamu. 
+                                    Harga udah termasuk artificial flowers dan belum termasuk snack dan kartu ucapan.</small>
+                                </p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row portfolio-container mt-3" data-aos="fade-up" data-aos-delay="200">
                     {% for collection in collections %}
                         {% if collection.category == 'filter-artificial' %}
                         <div class="col-lg-4 col-md-6 portfolio-item filter-atificial">
-                            <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
+                            <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid portfolio-img" alt="{{ collection.name }}">
                             <div class="portfolio-info">
                                 <h4>{{ collection.name }}</h4>
                                 <p>{{ collection.description }}</p>
-                                <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                <p class="card-text"><strong>Rp. {{ collection.price }}</strong></p><br>
                                 <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                 <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
-                                <!-- <a href="#" class="details-link edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal" data-id="{{ collection._id }}" data-name="{{ collection.name }}" data-description="{{ collection.description }}" data-price="{{ collection.price }}" data-category="{{ collection.category }}"><i class="bx bx-edit" style="margin-left: 10px;"></i></a> -->
-                                <!-- <a href="#" class="details-link delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal" data-id="{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
+                                <a href="#" class="card-text edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal{{ collection._id }}"><i class="bx bx-edit" style="margin-left: 10px; font-size: 20px;"></i></a>
+                                <a href="#" class="card-text delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px; font-size: 20px;"></i></a>
                             </div>
                         </div>
                         
                         {% elif collection.category == 'filter-money' %}
                             <div class="col-lg-4 col-md-6 portfolio-item filter-money">
-                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
+                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid portfolio-img" alt="{{ collection.name }}">
                                 <div class="portfolio-info">
                                     <h4>{{ collection.name }}</h4>
                                     <p>{{ collection.description }}</p>
-                                    <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                    <p class="card-text"><strong>Rp. {{ collection.price }}</strong></p><br>
                                     <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                     <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
-                                    <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
-                                    <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
+                                    <a href="#" class="card-text edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal{{ collection._id }}"><i class="bx bx-edit" style="margin-left: 10px; font-size: 20px;"></i></a>
+                                    <a href="#" class="card-text delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px; font-size: 20px;"></i></a>
                                 </div>
                             </div>
                         {% elif collection.category == 'filter-hand' %}
                             <div class="col-lg-4 col-md-6 portfolio-item filter-hand">
-                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid" alt="{{ collection.name }}">
+                                <img src="{{ url_for('static', filename=collection.image) }}" class="img-fluid portfolio-img" alt="{{ collection.name }}">
                                 <div class="portfolio-info">
                                     <h4>{{ collection.name }}</h4>
                                     <p>{{ collection.description }}</p>
-                                    <p class="card-text"><strong>Harga: {{ collection.price }}</strong></p>
+                                    <p class="card-text"><strong>Rp. {{ collection.price }}</strong></p><br>
                                     <a href="{{ url_for('static', filename=collection.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{ collection.name }}"><i class="bx bx-plus"></i></a>
                                     <a href="{{ url_for('order_form', collection_id=collection._id) }}" class="details-link" title="More Details"><i class="bx bx-cart" style="margin-left: 10px;"></i></a>
-                                    <!-- <a href="#" class="details-link" title="Edit"><i class="bx bx-edit" style="margin-left: 10px;"></i></a>
-                                    <a href="#" class="details-link" title="Delete"><i class="bx bx-trash" style="margin-left: 10px;"></i></a> -->
+                                    <a href="#" class="card-text edit-btn" title="Edit" data-bs-toggle="modal" data-bs-target="#editBucketModal{{ collection._id }}"><i class="bx bx-edit" style="margin-left: 10px; font-size: 20px;"></i></a>
+                                    <a href="#" class="card-text delete-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteBucketModal{{ collection._id }}"><i class="bx bx-trash" style="margin-left: 10px; font-size: 20px;"></i></a>
                                 </div>
                             </div>
                         {% endif %}
@@ -143,88 +177,93 @@
             </div>
         </section>
     </main>
+
+
     <!-- Modal Edit Bucket -->
-<div class="modal fade" id="editBucketModal" tabindex="-1" aria-labelledby="editBucketModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editBucketModalLabel">Edit Bucket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    {% for collection in collections %}
+    <div class="modal fade" id="editBucketModal{{ collection._id }}" tabindex="-1" aria-labelledby="editBucketModalLabel{{ collection._id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBucketModalLabel{{ collection._id }}">Edit Bucket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ url_for('edit_bucket') }}" method="post" enctype="multipart/form-data">
+                    
+                        <div class="modal-body">
+                            <input type="hidden" id="editBucketId" name="bucketId" value="{{ collection._id }}">
+                            <div class="mb-3">
+                                <label for="editName" class="form-label">Nama</label>
+                                <input type="text" class="form-control" id="editName" name="name" value="{{ collection.name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Deskripsi</label>
+                                <textarea class="form-control" id="editDescription" name="description" rows="3" required>{{ collection.description }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrice" class="form-label">Harga</label>
+                                <input type="number" class="form-control" id="editPrice" name="price" value="{{ collection.price }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategory" class="form-label">Kategori</label>
+                                <select class="form-control" id="editCategory" name="category" required>
+                                    {% if collection.category == 'filter-artificial' %}
+                                        <option value="filter-artificial" selected>Artificial Full Flower Hand Bouquet</option>
+                                        <option value="filter-money">Money Hand Bouquet</option>
+                                        <option value="filter-hand">Hand Bouquet Snack</option>
+                                    {% elif collection.category == 'filter-money' %}
+                                        <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
+                                        <option value="filter-money" selected>Money Hand Bouquet</option>
+                                        <option value="filter-hand">Hand Bouquet Snack</option>
+                                    {% elif collection.category == 'filter-hand' %}
+                                        <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
+                                        <option value="filter-money">Money Hand Bouquet</option>
+                                        <option value="filter-hand" selected>Hand Bouquet Snack</option>
+                                    {% endif %}
+                                </select>
+                            </div>  
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Gambar</label>
+                                <input type="file" class="form-control" id="image" name="image" value="{{ collection.image }}">
+                                <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah gambar.</small>
+                            </div> 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                </form>
             </div>
-            <form action="{{ url_for('edit_bucket') }}" method="post" enctype="multipart/form-data">
-                {% for collection in collections %}
-                <div class="modal-body">
-                    <input type="hidden" id="editBucketId" name="bucketId">
-                    <div class="mb-3">
-                        <label for="editName" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="editName" name="name" value="{{ collection.name }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editDescription" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="editDescription" name="description" rows="3" required>{{ collection.description }}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editPrice" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="editPrice" name="price" value="{{ collection.price }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editCategory" class="form-label">Kategori</label>
-                        <select class="form-control" id="editCategory" name="category" required>
-                            {% if collection.category == 'filter-artificial' %}
-                                <option value="filter-artificial" selected>Artificial Full Flower Hand Bouquet</option>
-                                <option value="filter-money">Money Hand Bouquet</option>
-                                <option value="filter-hand">Hand Bouquet Snack</option>
-                            {% elif collection.category == 'filter-money' %}
-                                <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
-                                <option value="filter-money" selected>Money Hand Bouquet</option>
-                                <option value="filter-hand">Hand Bouquet Snack</option>
-                            {% elif collection.category == 'filter-hand' %}
-                                <option value="filter-artificial">Artificial Full Flower Hand Bouquet</option>
-                                <option value="filter-money">Money Hand Bouquet</option>
-                                <option value="filter-hand" selected>Hand Bouquet Snack</option>
-                            {% endif %}
-                        </select>
-                    </div>  
-                    <div class="mb-3">
-                        <label for="editImage" class="form-label">Gambar</label>
-                        <input type="file" class="form-control" id="editImage" name="image" value="{{ collection.image }}">
-                        <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah gambar.</small>
-                    </div> 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-                {% endfor %}
-            </form>
         </div>
     </div>
-</div>
+    {% endfor %}
 
-<!-- Modal Hapus Bucket -->
-<div class="modal fade" id="deleteBucketModal" tabindex="-1" aria-labelledby="deleteBucketModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteBucketModalLabel">Hapus Bucket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal Hapus Bucket -->
+    {% for collection in collections %}
+    <div class="modal fade" id="deleteBucketModal{{ collection._id }}" tabindex="-1" aria-labelledby="deleteBucketModalLabel{{ collection._id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteBucketModalLabel{{ collection._id }}">Hapus Bucket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ url_for('delete_bucket') }}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" id="deleteBucketId" name="bucketId" value="{{ collection._id }}">
+                        <p>Apakah Anda yakin ingin menghapus bucket ini?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">Hapus</button>
+                    </div>
+                </form>
             </div>
-            <form action="/delete_bucket" method="post">
-                <div class="modal-body">
-                    <input type="hidden" id="deleteBucketId" name="bucketId">
-                    <p>Apakah Anda yakin ingin menghapus bucket ini?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+    {% endfor %}
 
 
-    <!-- Tambah Bucket Modal -->
+        <!-- Tambah Bucket Modal -->
     <div class="modal fade" id="tambahBucketModal" tabindex="-1" aria-labelledby="tambahBucketModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -232,7 +271,7 @@
                     <h5 class="modal-title" id="tambahBucketModalLabel">Tambah Bucket</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ url_for('edit_bucket') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('tambah_koleksi') }}" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
@@ -300,6 +339,119 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const filters = document.querySelectorAll('#portfolio-flters li');
+        const descriptions = document.querySelectorAll('.filter-description');
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                descriptions.forEach(description => {
+                    description.style.display = 'none';
+                });
+
+                const filterClass = filter.getAttribute('data-filter').substring(1) + '-description';
+                const activeDescription = document.getElementById(filterClass);
+                if (activeDescription) {
+                    activeDescription.style.display = 'block';
+                }
+            });
+        });
+
+        // Tampilkan deskripsi untuk filter aktif pertama kali
+        document.querySelector('.filter-active').click();
+    });
+
+        // Fungsi untuk menampilkan alert dan mengarahkan kembali ke halaman koleksi setelah operasi berhasil
+        function showAlertAndRedirect(message) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: message
+            });
+
+            setTimeout(function() {
+                window.location.href = '/koleksi';
+            }, 3000);
+        }
+
+        $(document).ready(function() {
+            // Ajax untuk menambah bucket
+            $('#tambahBucketModal form').submit(function(event) {
+                event.preventDefault(); // Mencegah form dari pengiriman standar
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "{{ url_for('tambah_koleksi') }}",
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        showAlertAndRedirect('Bucket berhasil ditambahkan');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+
+            // Ajax untuk mengedit bucket
+            {% for collection in collections %}
+            $('#editBucketModal{{ collection._id }} form').submit(function(event) {
+                event.preventDefault();
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "{{ url_for('edit_bucket') }}",
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        showAlertAndRedirect('Bucket berhasil diedit');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+            {% endfor %}
+
+            // Ajax untuk menghapus bucket
+            {% for collection in collections %}
+            $('#deleteBucketModal{{ collection._id }} form').submit(function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: "{{ url_for('delete_bucket') }}",
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        showAlertAndRedirect('Bucket berhasil dihapus');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+            {% endfor %}
+        });
+        
         function logout() {
             $.removeCookie('bouquet', { path: '/' })
             Swal.fire({

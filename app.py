@@ -30,15 +30,40 @@ TOKEN_KEY = 'bouquet'
 
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
+# @app.route('/')
+# def home():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+#         user_info = db.users.find_one({'useremail': payload.get('id')})
+#         return render_template('dashboard.html', user_info = user_info)
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return render_template('home.html')
+
+def format_rupiah(value):
+    return f"Rp {value:,.0f}".replace(",", ".")
+
 @app.route('/')
 def home():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        return render_template('dashboard.html', user_info = user_info)
+
+        account_name = user_info['account_name']
+
+        # Menghitung total pembelian dan total bucket
+        payments = list(db.payment.find({'account_name': account_name}))
+
+        total_pembelian = sum(payment['total_price'] for payment in payments)
+        total_bucket = sum(payment['quantity'] for payment in payments)
+
+        total_pembelian_rupiah = format_rupiah(total_pembelian)
+
+        return render_template('dashboard.html', user_info=user_info, total_pembelian=total_pembelian, total_bucket=total_bucket, total_pembelian_rupiah=total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
+
     
 # menyimpan pesan pada hubungi kami
 @app.route('/hubungi-kami', methods=['POST'])
@@ -267,21 +292,6 @@ def collection():
     except jwt.exceptions.DecodeError:
         return redirect(url_for('home'))
 
-# koleksi coba
-# @app.route('/koleksi')
-# def collection_coba():
-#     token_receive = request.cookies.get(TOKEN_KEY)
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user_info = db.users.find_one({'useremail': payload.get('id')})
-#         collection = list(db.collection.find())
-#         return render_template('collection_fransiscus.html', collection=collection, user_info=user_info)
-#     except jwt.ExpiredSignatureError:
-#         return redirect(url_for('home'))
-#     except jwt.exceptions.DecodeError:
-#         return redirect(url_for('home'))
-
-# tambah koleksi 
 @app.route('/tambah-koleksi', methods=['POST'])
 def tambah_koleksi():
     name_receive = request.form['name']
@@ -289,15 +299,14 @@ def tambah_koleksi():
     price_receive = request.form['price']
     category_receive = request.form['category']
 
-    # Mengatur penyimpanan gambar koleksi
     if 'image' in request.files:
         image = request.files['image']
         filename = secure_filename(image.filename)
         extension = filename.split('.')[-1]
-        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
+        file_path = f'collection_pics/{name_receive}.{extension}'
         image.save('./static/' + file_path)
     else:
-        file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
+        file_path = ''
 
     doc = {
         'name': name_receive,
@@ -309,62 +318,44 @@ def tambah_koleksi():
     db.collections.insert_one(doc)
     return redirect(url_for('collection'))
 
-# Simpan hasil edit bucket
-@app.route('/edit_bucket', methods=['POST'])
+@app.route('/ubah-bucket', methods=['POST'])
 def edit_bucket():
-    bucket_id = request.form['bucketId']
-    name_receive = request.form['name']
-    description_receive = request.form['description']
-    price_receive = request.form['price']
-    category_receive = request.form['category']
-
-    # Pengecekan apakah bucket_id adalah ObjectId yang valid
+    token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        ObjectId(bucket_id)
-    except:
-        # Jika bucket_id tidak valid, kembalikan pengguna ke halaman koleksi
-        return redirect(url_for('collection'))
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        bucket_id = request.form['bucketId']
+        name = request.form['name']
+        description = request.form['description']
+        price = request.form['price']
+        category = request.form['category']
 
-    # Mengatur penyimpanan gambar koleksi yang diedit
-    if 'editImage' in request.files:
-        image = request.files['editImage']
-        filename = secure_filename(image.filename)
-        extension = filename.split('.')[-1]
-        file_path = f'collection_pics/{name_receive}.{extension}'  # Menggunakan nama koleksi sebagai nama file
-        image.save('./static/' + file_path)
-    else:
-        # Jika tidak ada gambar yang diunggah, gunakan gambar yang sudah ada
-        current_bucket = db.collections.find_one({"_id": ObjectId(bucket_id)})
-        if current_bucket:
-            file_path = current_bucket['image']
-        else:
-            # Jika bucket_id tidak ditemukan, kembalikan pengguna ke halaman koleksi
-            return redirect(url_for('collection'))
-
-    # Perbarui data di database
-    db.collections.update_one(
-        {"_id": ObjectId(bucket_id)},
-        {
-            "$set": {
-                "name": name_receive,
-                "description": description_receive,
-                "price": price_receive,
-                "category": category_receive,
-                "image": file_path 
-            }
+        bucket_data = {
+            "name": name,
+            "description": description,
+            "price": price,
+            "category": category,
         }
-    )
 
-    return redirect(url_for('collection'))
+        if 'image' in request.files:
+                image = request.files['image']
+                filename = secure_filename(image.filename)
+                extension = filename.split('.')[-1]
+                file_path = f'collection_pics/{name}.{extension}'
+                image.save('./static/' + file_path)
+                bucket_data['image'] = file_path
+        else:
+                file_path = ''
 
-# Hapus bucket
-@app.route('/delete_bucket', methods=['POST'])
+        db.collections.update_one({'_id': ObjectId(bucket_id)}, {'$set': bucket_data})
+        return redirect(url_for('collection'))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+
+
+@app.route('/hapus-bucket', methods=['POST'])
 def delete_bucket():
     bucket_id = request.form['bucketId']
-
-    # Hapus data dari database
-    db.collections.delete_one({"_id": ObjectId(bucket_id)})
-
+    db.collections.delete_one({'_id': ObjectId(bucket_id)})
     return redirect(url_for('collection'))
 
 ### order_form.html ###
@@ -435,11 +426,11 @@ def process_order():
                 'quantity': quantity,
                 'total_price': total_price,
                 'name': name,
-                'email': email,
+                'useremail': email,
                 'phone': phone,
                 'address': address,
                 'status_order': 'pending',
-                'useremail': user_info['useremail']
+                'account_name': user_info['account_name']
             }
             # db.orders.insert_one(order_data)
             result = db.orders.insert_one(order_data)
@@ -490,7 +481,7 @@ def submit_purchase():
         quantity = order['quantity']
         total_price = order['total_price']
         name = order['name']
-        email = order['email']
+        email = order['useremail']
         phone = order['phone']
         address = order['address']
 
@@ -511,13 +502,14 @@ def submit_purchase():
             'quantity': quantity,
             'total_price': total_price,
             'name': name,
-            'email': email,
+            'useremail': email,
             'phone': phone,
             'address': address,
             'shipping_method': shipping_method,
             'payment_method': payment_method,
             'payment_proof': file_path,
-            'status_order': 'processing'
+            'status_order': 'processing',
+            'account_name': user_info['account_name']
         }
         db.payment.insert_one(doc)
 
