@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from bson import ObjectId
+from functools import wraps
 from os.path import join, dirname
 from dotenv import load_dotenv
 import jwt
@@ -16,6 +17,9 @@ load_dotenv(dotenv_path)
 
 MONGODB_URI = os.environ.get('MONGODB_URI')
 DB_NAME =  os.environ.get('DB_NAME')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+TOKEN_KEY = os.environ.get('TOKEN_KEY')
+ADMIN_KEY = os.environ.get('ADMIN_KEY')
 
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
@@ -25,8 +29,23 @@ app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
 app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 
-SECRET_KEY = 'AMDNOYUJIN'
-TOKEN_KEY = 'bouquet'
+# tanda kalau admin saja yang bisa mengakses
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         token_receive = request.cookies.get('mytoken')
+#         if token_receive is not None:
+#             try:
+#                 payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#                 if payload["role"] == "admin":
+#                     return f(*args, **kwargs)
+#                 else:
+#                     return redirect(url_for('home', msg='Only admin can access this page'))
+#             except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#                 return redirect(url_for('login', msg='Your token is invalid or has expired'))
+#         else:
+#             return redirect(url_for('login', msg='Please login to view this page'))
+#     return decorated_function
 
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
@@ -36,7 +55,6 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        # user_role = user_info['role']
 
         account_name = user_info['account_name']
 
@@ -89,6 +107,7 @@ def api_register():
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
         'first_name': first_name_receive,
+        'middle_name': middle_name_receive,
         'last_name': last_name_receive,
         'account_name': account_name_receive,
         'useremail': useremail_receive,
@@ -97,6 +116,7 @@ def api_register():
         'profile_name': ' '.join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
+        'full_name': ' '.join([first_name_receive, middle_name_receive, last_name_receive]),
         'address': '',
         'phone': '',
         'bio': ''
@@ -131,7 +151,7 @@ def api_login():
             'id': useremail_receive,
             'exp': datetime.utcnow() + timedelta(seconds = 60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return jsonify({'result': 'success', 'token': token})
     else:
         return jsonify({'result': 'fail'})
