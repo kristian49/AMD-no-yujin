@@ -107,7 +107,6 @@ def api_register():
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
         'first_name': first_name_receive,
-        'middle_name': middle_name_receive,
         'last_name': last_name_receive,
         'account_name': account_name_receive,
         'useremail': useremail_receive,
@@ -116,7 +115,6 @@ def api_register():
         'profile_name': ' '.join([first_name_receive, last_name_receive]),
         'profile_pic': '',
         'profile_pic_real': 'profile_pics/profile_placeholder.png',
-        'full_name': ' '.join([first_name_receive, middle_name_receive, last_name_receive]),
         'address': '',
         'phone': '',
         'bio': ''
@@ -151,7 +149,7 @@ def api_login():
             'id': useremail_receive,
             'exp': datetime.utcnow() + timedelta(seconds = 60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
         return jsonify({'result': 'success', 'token': token})
     else:
         return jsonify({'result': 'fail'})
