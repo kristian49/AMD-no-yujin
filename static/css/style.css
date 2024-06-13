@@ -1565,6 +1565,14 @@ body {
 .profile .profile-edit img {
   max-width: 120px;
 }
+
+.is-70x70 {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  object-position: center;
+
+}
   
   /*--------------------------------------------------------------
   # Contact
