@@ -442,5 +442,18 @@ def submit_purchase():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+@app.route('/admin')
+def admin():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        user_role = user_info['role']
+
+        account_name = user_info['account_name']
+        return render_template('admin/dashboard_admin.html', user_info=user_info, user_role=user_role)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('home.html')
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
