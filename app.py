@@ -632,6 +632,20 @@ def submit_purchase():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+# @app.route('/admin')
+# def admin():
+#     token_receive = request.cookies.get(TOKEN_KEY)
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({'useremail': payload.get('id')})
+#         user_role = user_info['role']
+
+#         account_name = user_info['account_name']
+#         return render_template('admin/dashboard_admin.html', user_info=user_info, user_role=user_role)
+#     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+#         return render_template('home.html')
+
+
 @app.route('/admin')
 def admin():
     token_receive = request.cookies.get(TOKEN_KEY)
@@ -641,6 +655,7 @@ def admin():
         user_role = user_info['role']
 
         account_name = user_info['account_name']
+<<<<<<< HEAD
         return render_template('admin/admin_dashboard.html', user_info=user_info, user_role=user_role)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
@@ -936,5 +951,45 @@ def delete_contact():
     db.hubungi.delete_one({'_id': ObjectId(id)})
     return redirect(url_for('admin_hubungi'))
 
+=======
+
+        # Hitung jumlah data bucket
+        bucket_count = db.collections.count_documents({})
+
+        # Hitung jumlah data pesanan
+        order_count = db.orders.count_documents({})
+
+        # Hitung total penghasilan
+        total_income = db.orders.aggregate([
+            {"$group": {"_id": None, "total": {"$sum": "$total_price"}}}
+        ])
+        total_income = list(total_income)  
+        if total_income:
+            total_income = total_income[0]['total']
+            total_income_rupiah = format_rupiah(total_income)
+        else:
+            total_income = 0
+    
+        # Hitung total bucket terjual
+        total_buckets_sold = db.orders.aggregate([
+            {"$group": {"_id": None, "total_buckets_sold": {"$sum": "$quantity"}}}
+        ])
+        total_buckets_sold = list(total_buckets_sold)
+        if total_buckets_sold:
+            total_buckets_sold = total_buckets_sold[0]['total_buckets_sold']
+        else:
+            total_buckets_sold = 0
+
+        return render_template('admin/dashboard_admin.html', 
+                               user_info=user_info, 
+                               user_role=user_role, 
+                               bucket_count=bucket_count, 
+                               order_count=order_count, 
+                               total_income=total_income, 
+                               total_income_rupiah = total_income_rupiah,
+                               total_buckets_sold=total_buckets_sold)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('home.html')
+>>>>>>> 5783302ba9f82e17e29ec2560c5c19e6ae992910
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
