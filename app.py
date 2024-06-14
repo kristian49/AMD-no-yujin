@@ -3,6 +3,8 @@ from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from bson import ObjectId
+from functools import wraps
+import pytz
 from os.path import join, dirname
 from dotenv import load_dotenv
 import jwt
@@ -16,6 +18,8 @@ load_dotenv(dotenv_path)
 
 MONGODB_URI = os.environ.get('MONGODB_URI')
 DB_NAME =  os.environ.get('DB_NAME')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+TOKEN_KEY =  os.environ.get('TOKEN_KEY')
 
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
@@ -25,9 +29,6 @@ app.config['UPLOAD_FOLDER'] = './static/profile_pics'
 app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
 app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 
-SECRET_KEY = 'AMDNOYUJIN'
-TOKEN_KEY = 'bouquet'
-
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
 @app.route('/')
@@ -36,6 +37,7 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
+        user_role = user_info['role']
 
         account_name = user_info['account_name']
 
@@ -47,7 +49,7 @@ def home():
 
         total_pembelian_rupiah = format_rupiah(total_pembelian)
 
-        return render_template('dashboard.html', user_info=user_info, total_pembelian=total_pembelian, total_bucket=total_bucket, total_pembelian_rupiah=total_pembelian_rupiah)
+        return render_template('dashboard.html', user_info=user_info, user_role=user_role, total_pembelian=total_pembelian, total_bucket=total_bucket, total_pembelian_rupiah=total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('home.html')
 
@@ -77,6 +79,15 @@ def contact_us():
 def register():
     return render_template('register.html')
 
+# mengecek nama akun dan email yang sudah terdaftar sebelumnya
+@app.route('/cek-nama-akun-dan-email', methods=['POST'])
+def check_email_and_account_name():
+    account_name_receive = request.form['account_name_give']
+    useremail_receive = request.form['useremail_give']
+    exists_account_name = bool(db.users.find_one({'account_name': account_name_receive}))
+    exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
+    return jsonify({'result': 'success', 'exists_account_name': exists_account_name, 'exists_useremail': exists_useremail})
+
 # menyimpan pendaftaran akun
 @app.route('/mendaftarkan-akun', methods = ['POST'])
 def api_register():
@@ -103,15 +114,6 @@ def api_register():
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
 
-# mengecek nama akun dan email yang sudah terdaftar sebelumnya
-@app.route('/cek-nama-akun-dan-email', methods=['POST'])
-def check_email_and_account_name():
-    account_name_receive = request.form['account_name_give']
-    useremail_receive = request.form['useremail_give']
-    exists_account_name = bool(db.users.find_one({'account_name': account_name_receive}))
-    exists_useremail = bool(db.users.find_one({'useremail': useremail_receive}))
-    return jsonify({'result': 'success'})
-
 ### login.html ###
 # menampilkan halaman masuk
 @app.route('/masuk')
@@ -128,7 +130,8 @@ def api_login():
     if result:
         payload = {
             'id': useremail_receive,
-            'exp': datetime.utcnow() + timedelta(seconds = 60 * 60 * 24)
+            'exp': datetime.utcnow() + timedelta(seconds = 60 * 60 * 24),
+            'role': result['role']
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm = 'HS256')
         return jsonify({'result': 'success', 'token': token})
@@ -180,7 +183,7 @@ def update_profile():
             new_doc['profile_pic'] = filename
             new_doc['profile_pic_real'] = file_path
         
-        db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
+        db.users.update_one({'account_name': payload['id']}, {'$set': new_doc})
         return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
@@ -438,6 +441,19 @@ def submit_purchase():
         return jsonify({'message': 'Pembayaran berhasil!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
+
+@app.route('/admin')
+def admin():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        user_role = user_info['role']
+
+        account_name = user_info['account_name']
+        return render_template('admin/dashboard_admin.html', user_info=user_info, user_role=user_role)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('home.html')
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
