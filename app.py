@@ -921,130 +921,41 @@ def bayar():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("login"))
 
-@app.route("/administrator/index")
+@app.route("/admin/beranda")
 @admin_required
 def admin_home():
-    articles_count = db.articles.count_documents({})
-    products_count = db.products.count_documents({})
-    transactions_count = db.transaksi.count_documents({})
-    testimony_count = db.testimoni.count_documents({})
-    pipeline = [
-    {
-        '$match': {
-            'status': 'selesai'
-        }
-    },
-    {
-        '$group': {
-            '_id': None,
-            'total_harga': {'$sum': '$total_harga'}
-        }
-    }
+    # products_count = db.bouquets.count_documents({})
+    # transactions_count = db.transaksi.count_documents({})
+    # testimony_count = db.testimoni.count_documents({})
+    # pipeline = [
+    # {
+    #     '$match': {
+    #         'status': 'selesai'
+    #     }
+    # },
+    # {
+    #     '$group': {
+    #         '_id': None,
+    #         'total_harga': {'$sum': '$total_harga'}
+    #     }
+    # }
     
-    ]
-    result = db.transaksi.aggregate(pipeline)
-    income = 0
-    for doc in result:
-        income = doc['total_harga']
-        break
-    thread_count = db.forums.count_documents({})
-    contact_count = db.hubungi.count_documents({})
-    return render_template("administrator/index.html",articles_count=articles_count, products_count = products_count, transactions_count = transactions_count,testimony_count=testimony_count,income=income,thread_count=thread_count,contact_count=contact_count)
+    # ]
+    # result = db.transaksi.aggregate(pipeline)
+    # income = 0
+    # for doc in result:
+    #     income = doc['total_harga']
+    #     break
+    # thread_count = db.forums.count_documents({})
+    # contact_count = db.hubungi.count_documents({})
+    # return render_template("admin/dashboard.html", bouquet_count = bouquet_count, transactions_count = transactions_count,testimony_count=testimony_count,income=income,thread_count=thread_count,contact_count=contact_count)
+    return render_template("admin/dashboard.html")
 
-@app.route("/administrator/artikel")
-@admin_required
-def admin_artikel():
-    articles= db.articles.find()
-    return render_template("administrator/artikel.html",articles=articles)
-
-@app.route('/tambah_artikel', methods=['POST'])
-@admin_required
-def tambah_artikel():
-    today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    judul =request.form['nama_artikel']
-    file = request.files['gambar_artikel']
-    filename = secure_filename(file.filename)
-    extension = filename.split(".")[-1]
-    file_path = f"administrator/assets/image/article-{mytime}.{extension}"
-    file.save("./static/" + file_path)
-    keterangan_gambar =request.form['keterangan_gambar']
-    keterangan_artikel =request.form['keterangan_artikel']
-    current_date = datetime.now().isoformat()
-    doc = {
-        "judul_artikel" : judul,
-        "gambar_artikel" : file_path,
-        "keterangan_gambar" : keterangan_gambar,
-        "keterangan_artikel" : keterangan_artikel,
-        "tanggal": current_date,
-    }
-    db.articles.insert_one(doc)
-    return redirect(url_for('admin_artikel'))
-
-
-@app.route('/edit_artikel', methods=['POST'])
-@admin_required
-def edit_artikel():
-    id =request.form['id']
-    today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    judul =request.form['nama_artikel']
-    keterangan_gambar =request.form['keterangan_gambar']
-    keterangan_artikel =request.form['keterangan_artikel']
-    new_doc = {
-        "judul_artikel" : judul,
-        "keterangan_gambar" : keterangan_gambar,
-        "keterangan_artikel" : keterangan_artikel,
-        }
-    
-    if 'gambar_artikel' in request.files and request.files['gambar_artikel'].filename != '':
-        article = db.articles.find_one({'_id': ObjectId(id)})
-        foto_lama = article.get('gambar_artikel', '')
-
-        # Menghapus gambar lama
-        if foto_lama:
-            old_file_path = os.path.abspath("./static/" + foto_lama)
-            if os.path.exists(old_file_path):
-                os.remove(old_file_path)
-        file = request.files['gambar_artikel']
-        print(file)
-        filename = secure_filename(file.filename)
-        extension = filename.split(".")[-1]
-        file_path = f"administrator/assets/image/article-{mytime}.{extension}"
-        file.save("./static/" + file_path)
-        new_doc["gambar_artikel"] = file_path
-    else:
-        pass
-    db.articles.update_one(
-            {'_id': ObjectId(id)}, 
-            {"$set": new_doc})
-    return redirect(url_for('admin_artikel'))
-
-
-@app.route('/delete_artikel', methods=['POST'])
-@admin_required
-def delete_artikel():
-    id =request.form['id']
-    article = db.articles.find_one({'_id': ObjectId(id)})
-   
-    if article:
-        foto = article.get('gambar_artikel', '')
-        if foto:
-            file_path = os.path.abspath("./static/" + foto)
-            if os.path.exists(file_path):
-                os.remove(file_path)
-        db.articles.delete_one({'_id': ObjectId(id)})
-    else:
-        pass
-    return redirect(url_for('admin_artikel'))
-
-
-
-@app.route("/administrator/produk")
+@app.route("/admin/buket")
 @admin_required
 def admin_produk():
-    products= db.products.find()
-    return render_template("administrator/produk.html", products = products)
+    bouquet = db.bouquets.find()
+    return render_template("admin/buket.html", products = products)
 
 
 
@@ -1072,7 +983,7 @@ def tambah_produk():
         "stok_produk" : stok_produk,
         "tanggal": current_date,
     }
-    db.products.insert_one(doc)
+    db.bouquets.insert_one(doc)
     return redirect(url_for('admin_produk'))
 
 
@@ -1097,7 +1008,7 @@ def edit_produk():
         }
     
     if 'gambar_produk' in request.files and request.files['gambar_produk'].filename != '':
-        product = db.products.find_one({'_id': ObjectId(id)})
+        product = db.bouquets.find_one({'_id': ObjectId(id)})
         foto_lama = product.get('gambar_produk', '')
 
         # Menghapus gambar lama
@@ -1114,7 +1025,7 @@ def edit_produk():
         new_doc["gambar_produk"] = file_path
     else:
         pass
-    db.products.update_one(
+    db.bouquets.update_one(
             {'_id': ObjectId(id)}, 
             {"$set": new_doc})
     return redirect(url_for('admin_produk'))
@@ -1124,14 +1035,14 @@ def edit_produk():
 @admin_required
 def delete_produk():
     id = request.form['id']
-    product = db.products.find_one({'_id': ObjectId(id)})
+    product = db.bouquets.find_one({'_id': ObjectId(id)})
     if product:
         foto = product.get('gambar_produk', '')
         if foto:
             file_path = os.path.abspath("./static/" + foto)
             if os.path.exists(file_path):
                 os.remove(file_path)
-        db.products.delete_one({'_id': ObjectId(id)})
+        db.bouquets.delete_one({'_id': ObjectId(id)})
     else:
         pass
     return redirect(url_for('admin_produk'))
