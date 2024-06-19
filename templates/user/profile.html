@@ -116,10 +116,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3"><img class="is-70x70" src="{{ url_for('static', filename=user_info.profile_pic_real)}}"></div>
+                    <div class="mb-3">
+                        <img class="is-70x70" src="{{ url_for('static', filename=user_info.profile_pic_real)}}">
+                    </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Foto Profil</label>
-                        <input type="file" class="form-control" id="profile_picture" name="profile_picture" value=""
+                        <input type="file" class="form-control" id="profile_picture" name="profile_picture" value="{{ user_info.profile_pic }}"
                             required>
                     </div>
                     <div class="mb-3">

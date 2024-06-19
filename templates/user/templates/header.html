@@ -17,27 +17,22 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='user/img/favicon.ico') }}" />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />
 
     <!-- CSS -->
-    <link href="{{ url_for('static', filename='user/css/animate.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='user/css/aos.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='user/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='user/css/bootstrap-icons.css') }}" rel="stylesheet"> -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='user/css/boxicons.min.css') }}" rel="stylesheet"> -->
-    <!-- <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"> -->
-    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel='stylesheet'>
-    <link href="{{ url_for('static', filename='user/css/glightbox.min.css') }}" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='user/css/remixicon.css') }}" rel="stylesheet"> -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='user/css/swiper-bundle.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='user/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='user/css/animate.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='user/css/aos.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='user/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel='stylesheet' />
+    <link href="{{ url_for('static', filename='user/css/glightbox.min.css') }}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='user/css/swiper-bundle.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='user/css/style.css') }}" rel="stylesheet" />
 
 </head>
 <body>
 
-    <!-- Navbar -->
     {% if user_info %}
     {% if user_info.role == 'admin' %}
     <header id="header" class="fixed-top">

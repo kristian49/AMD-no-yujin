@@ -55,22 +55,18 @@ def admin_required(f):
 def home():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Beranda'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-
         account_name = user_info['account_name']
 
         # Menghitung total pembelian dan total bucket
         payments = list(db.payment.find({'account_name': account_name}))
-
         total_pembelian = sum(payment['total_price'] for payment in payments)
         total_bucket = sum(payment['quantity'] for payment in payments)
-
         total_pembelian_rupiah = format_rupiah(total_pembelian)
 
-        title = 'Beranda'
-
-        return render_template('user/dashboard.html', user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah, title = title)
+        return render_template('user/dashboard.html', title = title, user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         title = 'Beranda'
         return render_template('user/home.html', title = title)
@@ -147,13 +143,13 @@ def api_register():
 def login():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Masuk'
         if token_receive:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
             user_info = db.users.find_one({'useremail': payload['id']})
             if user_info:
                 return redirect(url_for('home'))
         
-        title = 'Masuk'
         return render_template("user/auth/login.html", title = title)
     
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -184,11 +180,11 @@ def api_login():
 def profile(account_name):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Profil'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload["id"]  
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        title = 'Profil'
-        return render_template('user/profile.html', user_info = user_info, status = status, title = title)
+        return render_template('user/profile.html', title = title, user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
@@ -235,6 +231,7 @@ def update_profile():
 def obrolan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Obrolan'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'account_name': payload['id']})
         if request.method == 'POST':
@@ -258,8 +255,7 @@ def obrolan():
             db.chats.insert_one(doc)
             return redirect(url_for('forum'))
         chats = list(db.chats.find().sort('timestamp', -1))
-        title = 'Obrolan'
-        return render_template('user/obrolan.html', user_info = user_info, chats = chats, title = title)
+        return render_template('user/obrolan.html', title = title, user_info = user_info, chats = chats)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
