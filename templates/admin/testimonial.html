@@ -1,43 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>HealthyConnect</title>
-    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-    <script src="https://kit.fontawesome.com/f8535c9b97.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css"
-        href="{{ url_for('static', filename='admin/css/fonts.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/styleadmin.css') }}">
-
-
-</head>
-
-
-<script>
-    function logout() {
-        $.removeCookie('mytoken', { path: '/' });
-        alert('Signed out!');
-        window.location.href = "/";
-    }
-
-</script>
-
-<body>
-    <div class="wrapper">
-
-        <div class="main-header" data-background-color="purple">
-
-            <!-- Logo Header -->
-            {% include 'admin/navbar/navbar.html' %}
-            
-        </div>
-        <!-- Sidebar -->
-        {% include 'admin/sidebar/sidebar.html' %}
-
-
-
+{% include 'admin/templates/header.html' %}
         <div class="main-panel">
             <div class="content">
                 <div class="page-inner">
@@ -115,17 +76,6 @@
 
         
     </div>
-    <script src="{{ url_for('static', filename='admin/js/jquery.3.2.1.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="{{ url_for('static', filename='admin/js/popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
-    <script
-        src="{{ url_for('static', filename='admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
-    <script
-        src="{{ url_for('static', filename='admin/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
-    <script
-        src="{{ url_for('static', filename='admin/js/plugin/datatables/datatables.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='admin/js/ready.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#add-row').DataTable({
@@ -133,6 +83,4 @@
             });
         });
     </script>
-</body>
-
-</html>
+{% include 'admin/templates/footer.html' %}

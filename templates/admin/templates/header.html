@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <!-- Tag Meta yang Diperlukan -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <meta property="og:title" content="Bucket Tangan Navirins" />
+    <meta property="og:description" content="Apakah kamu mencari bucket tangan hias?" />
+    <meta property="og:image" content="{{ url_for('static', filename='profile_pics/profile_placeholder.png') }}" />
+
+    <!-- Judul Halaman Web -->
+    <title>{{title}}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='user/img/favicon.ico') }}" />
+
+    <!-- CSS -->
+    <link href="{{ url_for('static', filename='admin/css/fonts.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='admin/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='admin/css/styleadmin.css') }}" rel="stylesheet" />
+
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <div class="main-header" data-background-color="purple">
+
+            <!-- Logo Header -->
+            <div class="logo-header">
+
+                <a href="/" class="logo">
+                    <span class="navbar-brand mb-0"
+                        style="color:white;font-weight:550;font-size:1.25em;">Navirin's</span>
+                </a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+                    data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                        <i class="fa fa-bars"></i>
+                    </span>
+                </button>
+                <div class="navbar-minimize">
+                    <button class="btn btn-minimize btn-rounded">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <div class="sidebar-wrapper scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a href="/">
+                                <i class="bi bi-house"></i>
+                                <p>Beranda</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="beranda">
+                                <i class="bi bi-grid"></i>
+                                <p>Admin</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Manajemen Data</h4>
+                        </li>
+        
+        
+                        <li class="nav-item">
+                            <a href="pengguna">
+                                <i class="bi bi-people"></i>
+                                <p>Data Pengguna</p>
+                            </a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a href="buket">
+                                <i class="bi bi-flower1"></i>
+                                <p>Data Buket</p>
+                            </a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a href="transaksi">
+                                <i class="bi bi-credit-card-2-front"></i>
+                                <p>Data Transaksi</p>
+                            </a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a href="testimoni">
+                                <i class="bi bi-chat-left-quote"></i>
+                                <p>Data Testimoni</p>
+                            </a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a href="forum">
+                                <i class="bi bi-chat-dots"></i>
+                                <p>Data Obrolan</p>
+                            </a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a href="hubungi-kami">
+                                <i class="bi bi-chat-right-text"></i>
+                                <p>Data Hubungi Kami</p>
+                            </a>
+                        </li>
+        
+        
+                        <li class="nav-item">
+                            <a href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <p>Logout</p>
+                            </a>
+                        </li>
+        
+                    </ul>
+                </div>
+            </div>
+        </div>

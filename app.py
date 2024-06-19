@@ -373,7 +373,7 @@ def order():
             collection['image'] = f'static/{collection['image']}'
         
         title = 'Formulir Pemesanan'
-        return render_template('user/order_form.html', collection = collection, user_info = user_info, title = title)
+        return render_template('user/order_form.html', title = title, collection = collection, user_info = user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
@@ -462,7 +462,7 @@ def purchase_form(order_id):
         order = db.orders.find_one({'_id': ObjectId(order_id)})
         if order:
             title = 'Formulir Pembayaran'
-            return render_template('user/purchase_form.html', user_info = user_info, order = order, title = title)
+            return render_template('user/purchase_form.html', title = title, user_info = user_info, order = order)
         else:
             return redirect(url_for('home'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -703,13 +703,13 @@ def bouquet():
         else:
             user_info = None
 
+        title = 'Buket'
         query = request.args.get('query', '')
         if query:
             bouquets = db.bouquets.find({'bouquet': {'$regex': query, '$options': 'i'}})
         else:
             bouquets = db.bouquets.find().sort('tanggal', -1)
-        title = 'Buket'
-        return render_template('bouquet.html', user_info = user_info, bouquets = bouquets, title = title)
+        return render_template('bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
@@ -717,8 +717,8 @@ def bouquet():
 def riwayat_pesanan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         title = 'Riwayat Pemesanan'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
         transactions = list(db.transaksi.find({'useremail': user_info['useremail']}).sort('tanggal', -1)) 
         total_transactions = len(transactions) + 1
@@ -728,12 +728,12 @@ def riwayat_pesanan():
             transaction['nama_produk'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
             testimonial = db.testimoni.find_one({'transaction_id': str(transaction['_id'])})
             transaction['ulasan_produk'] = testimonial['ulasan'] if testimonial else None
-        return render_template('riwayat_pesanan.html', user_info = user_info, transactions = transactions, total_transactions = total_transactions, title = title)
+        return render_template('riwayat_pesanan.html', title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
 
-@app.route('/kirim-testimoni', methods=['POST'])
+@app.route('/kirim-testimoni', methods = ['POST'])
 def kirim_testimoni():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -744,13 +744,13 @@ def kirim_testimoni():
         bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
         current_date = datetime.now().isoformat()
         doc = {
-                'transaction_id' : str(transaction['_id']),
-                'useremail' : transaction['useremail'],
-                'nama_pembeli' : transaction['nama_pembeli'],
-                'alamat_pembeli' : transaction['alamat_pembeli'],
-                'no_pembeli' : transaction['nomor_telepon'],
-                'produk_yang_dibeli' : bouquet,
-                'ulasan':ulasan_produk,
+                'transaction_id': str(transaction['_id']),
+                'useremail': transaction['useremail'],
+                'nama_pembeli': transaction['nama_pembeli'],
+                'alamat_pembeli': transaction['alamat_pembeli'],
+                'no_pembeli': transaction['nomor_telepon'],
+                'produk_yang_dibeli': bouquet,
+                'ulasan': ulasan_produk,
                 'tanggal': current_date,
             }
         
@@ -821,8 +821,8 @@ def bayar():
 def admin_home():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         title = 'Admin'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
 
         users_count = db.users.count_documents({})
@@ -850,7 +850,7 @@ def admin_home():
             break
         thread_count = db.chats.count_documents({})
         contact_count = db.contact_us.count_documents({})
-        return render_template('admin/dashboard.html', user_info = user_info, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count, title = title)
+        return render_template('admin/dashboard.html', title = title, user_info = user_info, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('user/home.html')
 
@@ -861,12 +861,11 @@ def admin_home():
 def admin_user():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         title = 'Data Pengguna'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-
         users = db.users.find()
-        return render_template('admin/user.html', user_info = user_info, title = title, users = users)
+        return render_template('admin/user.html', title = title, user_info = user_info, users = users)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('user/home.html')
 
@@ -877,8 +876,8 @@ def admin_user():
 def admin_bouquet():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         title = 'Data Buket'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         bouquets = db.bouquets.find()
         return render_template('admin/bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
@@ -1060,7 +1059,7 @@ def admin_forum():
     return render_template('admin/forum.html', title = title, forums = forums)
 
 # menghapus obrolan
-@app.route('/delete_thread_admin_side', methods=['POST'])
+@app.route('/delete_thread_admin_side', methods = ['POST'])
 @admin_required
 def delete_thread_admin_side():
     id = request.form['id']
@@ -1086,4 +1085,4 @@ def delete_contact_us():
     return redirect(url_for('admin_contact_us'))
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port = 5000, debug = True)
