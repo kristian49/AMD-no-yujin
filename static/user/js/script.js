@@ -391,6 +391,20 @@ function sendMessage() {
   })
 }
 
+// cek email regex
+function is_email(asValue) {
+  var regExp = /\S+@\S+\.\S+/;
+  return regExp.test(asValue);
+}
+
+// kosongkan form
+function clearInputs() {
+  $('#name').val('');
+  $('#email').val('');
+  $('#subject').val('');
+  $('#message').val('');
+}
+
 /* home.html */
 // cek email regex
 function is_email(asValue) {
@@ -824,6 +838,17 @@ function update_profile() {
   });
 }
 
+/* updateTotalPrice */
+function updateTotalPrice() {
+            var price = parseFloat("{{ collection.price }}");
+            var quantity = parseInt(document.getElementById("quantityInput").value, 10);
+            var totalPrice = price * quantity;
+            document.getElementById("total").textContent = "Rp " + totalPrice.toFixed(0);
+            document.getElementById("quantity").value = quantity; // Simpan nilai quantity
+            document.getElementById("total_price").value = totalPrice.toFixed(0); // Simpan nilai total harga
+            
+        }
+        
 /* logout */
 function logout() {
   $.removeCookie('bouquet', { path: '/' })

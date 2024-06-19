@@ -78,7 +78,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Username</th>
+                                                    <th>Nama Akun</th>
                                                     <th>Nama</th>
                                                     <th>Peran</th>
                                                 </tr>
@@ -86,14 +86,12 @@
 
                                             <tbody>
                                                 {% for user in users %}
-                                                {% if user.role == 'member' %}
                                                 <tr>
                                                     <td>{{loop.index}}</td>
-                                                    <td>{{user.username}}</td>
-                                                    <td>{{user.name}}</td>
+                                                    <td>{{user.account_name}}</td>
+                                                    <td>{{user.profile_name}}</td>
                                                     <td>{{user.role}}</td>
                                                 </tr>
-                                                {% endif %}
                                         
                                                 {% endfor %}
 

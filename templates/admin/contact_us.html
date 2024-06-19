@@ -7,9 +7,9 @@
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <script src="https://kit.fontawesome.com/f8535c9b97.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css"
-        href="{{ url_for('static', filename='administrator/assets/css/fonts.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='administrator/assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='administrator/assets/css/styleadmin.css') }}">
+        href="{{ url_for('static', filename='admin/css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/styleadmin.css') }}">
 
 
 </head>
@@ -78,8 +78,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Nama Lengkap</th>
+                                                    <th>Nama</th>
                                                     <th>Email</th>
+                                                    <th>Hal</th>
                                                     <th>Pesan</th>
                                                     <th>Tanggal Kirim</th>
                                                     <th>Action</th>
@@ -90,19 +91,20 @@
                                                 {% for contact in contacts %}
                                                 <tr>
                                                     <td>{{loop.index}}</td>
-                                                    <td>{{contact.nama_lengkap}}</td>
+                                                    <td>{{contact.name}}</td>
                                                     <td>{{contact.email}}</td>
-                                                    <td>{{contact.pesan}}</td>
+                                                    <td>{{contact.subject}}</td>
+                                                    <td>{{contact.message}}</td>
                                                     <td>{{contact.tanggal_kirim}}</td>
                                                     <td>
-                                                        <a href="#hapusHubungi_{{contact['_id']}}" data-toggle="modal"
+                                                        <a href="#deleteContactUs_{{contact['_id']}}" data-toggle="modal"
                                                             class="btn btn-xs btn-danger">
                                                             <i class="fa fa-trash"></i> Hapus
                                                         </a>
                                                     </td>
                                                 </tr>
 
-                                                <div class="modal fade" id="hapusHubungi_{{contact['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal fade" id="deleteContactUs_{{contact['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header no-bd">
@@ -117,7 +119,7 @@
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form method="POST" action="/delete_contact" enctype="multipart/form-data">
+                                                            <form method="POST" action="/hapus-hubungi-kami" enctype="multipart/form-data">
                                         
                                                                 <div class="modal-body">
                                         
@@ -155,17 +157,17 @@
 
         
     </div>
-    <script src="{{ url_for('static', filename='administrator/assets/js/jquery.3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/jquery.3.2.1.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script src="{{ url_for('static', filename='administrator/assets/js/popper.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='administrator/assets/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
     <script
-        src="{{ url_for('static', filename='administrator/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
     <script
-        src="{{ url_for('static', filename='administrator/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
     <script
-        src="{{ url_for('static', filename='administrator/assets/js/plugin/datatables/datatables.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='administrator/assets/js/ready.min.js') }}"></script>
+        src="{{ url_for('static', filename='admin/js/plugin/datatables/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/ready.min.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#add-row').DataTable({

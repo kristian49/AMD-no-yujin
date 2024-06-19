@@ -68,9 +68,12 @@ def home():
 
         total_pembelian_rupiah = format_rupiah(total_pembelian)
 
-        return render_template('user/dashboard.html', user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah)
+        title = 'Beranda'
+
+        return render_template('user/dashboard.html', user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
+        title = 'Beranda'
+        return render_template('user/home.html', title = title)
 
 # untuk menampilkan format rupiah
 def format_rupiah(value):
@@ -103,7 +106,8 @@ def contact_us():
 # menampilkan halaman daftar
 @app.route('/daftar')
 def register():
-    return render_template('user/auth/register.html')
+    title = 'Daftar'
+    return render_template('user/auth/register.html', title = title)
 
 # mengecek nama akun dan email yang sudah terdaftar sebelumnya
 @app.route('/cek-nama-akun-dan-email', methods=['POST'])
@@ -149,10 +153,12 @@ def login():
             if user_info:
                 return redirect(url_for('home'))
         
-        return render_template("user/auth/login.html")
+        title = 'Masuk'
+        return render_template("user/auth/login.html", title = title)
     
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template("user/auth/login.html")
+        title = 'Masuk'
+        return render_template("user/auth/login.html", title = title)
 
 # menerima masuknya pengguna
 @app.route('/memasukkan-akun', methods = ['POST'])
@@ -181,7 +187,8 @@ def profile(account_name):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload["id"]  
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        return render_template('user/profile.html', user_info = user_info, status = status)
+        title = 'Profil'
+        return render_template('user/profile.html', user_info = user_info, status = status, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
@@ -251,7 +258,8 @@ def obrolan():
             db.chats.insert_one(doc)
             return redirect(url_for('forum'))
         chats = list(db.chats.find().sort('timestamp', -1))
-        return render_template('user/obrolan.html',user_info=user_info,chats=chats)
+        title = 'Obrolan'
+        return render_template('user/obrolan.html', user_info = user_info, chats = chats, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
@@ -283,14 +291,13 @@ def collection():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collections = list(db.collections.find())
-        return render_template('user/collection.html', collections=collections, user_info=user_info)
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('home'))
-    except jwt.exceptions.DecodeError:
+        title = 'Koleksi'
+        return render_template('user/collection.html', collections = collections, user_info = user_info, title = title)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
 # untuk menambahkan koleksi
-@app.route('/tambah-koleksi', methods=['POST'])
+@app.route('/tambah-koleksi', methods = ['POST'])
 def tambah_koleksi():
     name_receive = request.form['name']
     description_receive = request.form['description']
@@ -368,7 +375,9 @@ def order():
         collection = db.collections.find_one()
         if collection and 'image' in collection:
             collection['image'] = f'static/{collection['image']}'
-        return render_template('user/order_form.html', collection=collection, user_info=user_info)
+        
+        title = 'Formulir Pemesanan'
+        return render_template('user/order_form.html', collection = collection, user_info = user_info, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
@@ -456,7 +465,8 @@ def purchase_form(order_id):
         user_info = db.users.find_one({'useremail': payload.get('id')})
         order = db.orders.find_one({'_id': ObjectId(order_id)})
         if order:
-            return render_template('user/purchase_form.html', user_info=user_info, order=order)
+            title = 'Formulir Pembayaran'
+            return render_template('user/purchase_form.html', user_info = user_info, order = order, title = title)
         else:
             return redirect(url_for('home'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
@@ -518,7 +528,7 @@ def submit_purchase():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-@app.route('/forum' , methods=['GET', 'POST'])
+@app.route('/forum' , methods = ['GET', 'POST'])
 def forum():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -603,7 +613,6 @@ def edit_forum_post():
         user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         judul = request.form['judul']
-        print(judul)
         konten = request.form['konten']
         db.forums.update_one(
             {'_id': ObjectId(id)},
@@ -703,7 +712,8 @@ def bouquet():
             bouquets = db.bouquets.find({'bouquet': {'$regex': query, '$options': 'i'}})
         else:
             bouquets = db.bouquets.find().sort('tanggal', -1)
-        return render_template('bouquet.html', user_info = user_info, bouquets = bouquets)
+        title = 'Buket'
+        return render_template('bouquet.html', user_info = user_info, bouquets = bouquets, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
@@ -712,6 +722,7 @@ def riwayat_pesanan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title = 'Riwayat Pemesanan'
         user_info = db.users.find_one({'useremail': payload['id']})
         transactions = list(db.transaksi.find({'useremail': user_info['useremail']}).sort('tanggal', -1)) 
         total_transactions = len(transactions) + 1
@@ -721,12 +732,12 @@ def riwayat_pesanan():
             transaction['nama_produk'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
             testimonial = db.testimoni.find_one({'transaction_id': str(transaction['_id'])})
             transaction['ulasan_produk'] = testimonial['ulasan'] if testimonial else None
-        return render_template('riwayat_pesanan.html',user_info=user_info,transactions=transactions,total_transactions=total_transactions)
+        return render_template('riwayat_pesanan.html', user_info = user_info, transactions = transactions, total_transactions = total_transactions, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
 
-@app.route('/kirim_testimoni', methods=['POST'])
+@app.route('/kirim-testimoni', methods=['POST'])
 def kirim_testimoni():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -815,6 +826,7 @@ def admin_home():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title = 'Admin'
         user_info = db.users.find_one({'useremail': payload.get('id')})
 
         users_count = db.users.count_documents({})
@@ -842,7 +854,7 @@ def admin_home():
             break
         thread_count = db.chats.count_documents({})
         contact_count = db.contact_us.count_documents({})
-        return render_template('admin/dashboard.html', user_info = user_info, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
+        return render_template('admin/dashboard.html', user_info = user_info, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count, title = title)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('user/home.html')
 
@@ -854,10 +866,11 @@ def admin_user():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title = 'Data Pengguna'
         user_info = db.users.find_one({'useremail': payload.get('id')})
 
         users = db.users.find()
-        return render_template('admin/user.html', user_info = user_info, users = users)
+        return render_template('admin/user.html', user_info = user_info, title = title, users = users)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('user/home.html')
 
@@ -869,10 +882,10 @@ def admin_bouquet():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title = 'Data Buket'
         user_info = db.users.find_one({'useremail': payload.get('id')})
-
         bouquets = db.bouquets.find()
-        return render_template('admin/bouquet.html', bouquets = bouquets)
+        return render_template('admin/bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return render_template('user/home.html')
 
@@ -990,10 +1003,15 @@ def delete_bouquet():
 @app.route('/admin/transaksi')
 @admin_required
 def admin_transaction():
-    transactions = list(db.transactions.find())
-    for transaction in transactions:
-        transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
-    return render_template('admin/transaction.html', transactions = transactions)
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        title = 'Data Transaksi'
+        transactions = list(db.transactions.find())
+        for transaction in transactions:
+            transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
+        return render_template('admin/transaction.html', title = title, transactions = transactions)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('user/home.html')
 
 # terima pemesanan
 @app.route('/terima-pemesanan', methods=['POST'])
@@ -1032,16 +1050,18 @@ def send_order():
 @app.route('/admin/testimoni')
 @admin_required
 def admin_testimoni():
+    title = 'Data Testimoni'
     testimonials = db.testimonials.find()
-    return render_template('admin/testimonial.html', testimonials = testimonials)
+    return render_template('admin/testimonial.html', title = title, testimonials = testimonials)
 
 ### admin/chat.html ###
 # menampilkan halaman admin untuk obrolan
 @app.route('/admin/forum')
 @admin_required
 def admin_forum():
+    title = 'Data Obrolan'
     forums= db.chats.find()
-    return render_template('admin/forum.html', forums = forums)
+    return render_template('admin/forum.html', title = title, forums = forums)
 
 # menghapus obrolan
 @app.route('/delete_thread_admin_side', methods=['POST'])
@@ -1057,13 +1077,14 @@ def delete_thread_admin_side():
 @app.route('/admin/hubungi-kami')
 @admin_required
 def admin_contact_us():
+    title = 'Data Hubungi Kami'
     contacts = db.contact_us.find()
-    return render_template('admin/hubungi.html', contacts = contacts)
+    return render_template('admin/contact_us.html', title = title, contacts = contacts)
 
 # menghapus hubungi kami
-@app.route('/delete_contact', methods = ['POST'])
+@app.route('/hapus-hubungi-kami', methods = ['POST'])
 @admin_required
-def delete_contact():
+def delete_contact_us():
     id = request.form['id']
     db.contact_us.delete_one({'_id': ObjectId(id)})
     return redirect(url_for('admin_contact_us'))
