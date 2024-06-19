@@ -1,427 +1,405 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>HealthyConnect</title>
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+    <script src="https://kit.fontawesome.com/f8535c9b97.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='admin/css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/styleadmin.css') }}">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Admin</title>
-
-    <!-- Google fonts - Popppins for copy-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
-
-    <!-- Prism Syntax Highlighting-->
-    <link rel="stylesheet" href="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/plugins/toolbar/prism-toolbar.css">
-    <link rel="stylesheet" href="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/themes/prism-okaidia.css">
-
-    <!-- The Main Theme stylesheet (Contains also Bootstrap CSS)-->
-    <link rel="stylesheet" href="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/css/style.default.63c85ff9.css" id="theme-stylesheet">
-
-    <!-- Custom stylesheet - for your changes-->
-    <link rel="stylesheet" href="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/css/custom.0a822280.css">
-
-    <!-- FontAwesome CSS - loading as last, so it doesn't block rendering-->
-    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/img/favicon.png">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
 </head>
+
+
+<script>
+    function logout() {
+        $.removeCookie('mytoken', { path: '/' });
+        alert('Signed out!');
+        window.location.href = "/";
+    }
+
+</script>
+
 <body>
+    <div class="wrapper">
 
-    <!-- navbar-->
-    <header class="header">
-        <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow"><a class="sidebar-toggler text-gray-500 me-4 me-lg-5 lead" href="#"><i class="fas fa-align-left"></i></a><a class="navbar-brand fw-bold text-uppercase text-base" href="index.html"><span class="d-none d-brand-partial">Admin </span></a>
-            <ul class="ms-auto d-flex align-items-center list-unstyled mb-0">
+        <div class="main-header" data-background-color="purple">
 
-                <li class="nav-item dropdown ms-auto"><a class="nav-link pe-0" id="userInfo" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="avatar p-1" src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/img/avatar-6.jpg" alt="Jason Doe"></a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated" aria-labelledby="userInfo">
-                        <div class="dropdown-header text-gray-700">
-                            <h6 class="text-uppercase font-weight-bold">Mark Stephen</h6><small>Web Developer</small>
-                        </div>
-                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Activity log       </a>
-                        <div class="dropdown-divider"></div><a class="dropdown-item" href="login.html">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-    </header>
-    <div class="d-flex align-items-stretch">
-        <div class="sidebar py-3" id="sidebar">
-            <h6 class="sidebar-heading">Menu</h6>
-            <ul class="list-unstyled">
-                <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="docs/introduction.html">
-                    <span class="sidebar-link-title">Beranda</span></a>
-                </li>
-                <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="docs/directory-structure.html">
-                    <span class="sidebar-link-title">Admin</span></a>
-                </li>
-                <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="docs/directory-structure.html">
-                    <span class="sidebar-link-title">Koleksi Buket</span></a>
-                </li>
-            </ul>
-            <h6 class="sidebar-heading">Data</h6>
-            <ul class="list-unstyled">
-                <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="docs/introduction.html">
-                    <span class="sidebar-link-title">Data Buket</span></a>
-                </li>
-                <li class="sidebar-list-item"><a class="sidebar-link text-muted" href="docs/directory-structure.html">
-                    <span class="sidebar-link-title">Directory structure</span></a>
-                </li>
-            </ul>
+            <!-- Logo Header -->
+            {% include 'admin/navbar/navbar.html' %}
+            
         </div>
-        <div class="page-holder bg-gray-100">
-            <div class="container-fluid px-lg-4 px-xl-5">
-                <!-- Breadcrumbs -->
-                <div class="page-breadcrumb">
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active">Data Table</li>
-                    </ul>
-                </div>
-                <!-- Page Header-->
-                <div class="page-header">
-                    <h1 class="page-heading">Data Table</h1>
-                </div>
-                <section>
-                    <div class="card card-table mb-4">
-                        <div class="card-header">
-                            <div class="card-heading">Data Table - Card Table</div>
-                            <button class="btn btn-primary btn-round ml-auto" data-bs-toggle="modal" data-bs-target="#addBouquet">
-                                <i class="fa fa-plus"></i>
-                                    Tambah Data
-                            </button>
-                        </div>
-                        <table class="table table-hover mb-0" id="datatable2">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Gambar</th>
-                                    <th>Nama</th>
-                                    <th>Warna Bunga</th>
-                                    <th>Warna Kertas</th>
-                                    <th>Kategori</th>
-                                    <th>Deskripsi</th>
-                                    <th>Harga</th>
-                                    <th>Stok</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for bouquet in bouquets %}
-                                <tr>
-                                    <td>{{loop.index}}</td>
-                                    <td class="text-center"><img src="{{ url_for('static', filename=bouquet.image)}}" width="50" height="50"></td>
-                                    <td>{{bouquet.name}}</td>
-                                    <td>{{bouquet.flower_color}}</td>
-                                    <td>{{bouquet.paper_color}}</td>
-                                    <td>{{bouquet.category}}</td>
-                                    <td width="30%">{{bouquet.description}}</td>
-                                    <td>Rp {{bouquet.price}}</td>
-                                    <td>{{bouquet.stock}}</td>
-                                    <td>
-                                        <a href="#editBouquet_{{bouquet['_id']}}" data-toggle="modal"
-                                            class="btn btn-xs btn-primary">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
-                                        <a href="#deleteBouquet_{{bouquet['_id']}}" data-toggle="modal"
-                                            class="btn btn-xs btn-danger">
-                                            <i class="fa fa-trash"></i> Hapus
-                                        </a>
-                                    </td>
-                                </tr>
+        <!-- Sidebar -->
+        {% include 'admin/sidebar/sidebar.html' %}
 
-                                <!-- modal edit -->
-                                <div class="modal fade" id="editBouquet_{{bouquet['_id']}}" tabindex="-1"
-                                role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header no-bd">
-                                                <h5 class="modal-title">
-                                                    <span class="fw-mediumbold">
-                                                        Edit Data</span>
-                                                    <span class="fw-light">
-                                                        Buket
-                                                    </span>
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form method="POST" action="/edit-buket"
-                                                enctype="multipart/form-data">
 
-                                                <div class="modal-body">
-                                                    <input type="hidden" value="{{bouquet['_id']}}"
-                                                        class="form-control" name="id">
-
-                                                    <div class="form-group">
-                                                        <label>Nama Produk</label>
-                                                        <input type="text" class="form-control mt-2"
-                                                            name="name" id="name"
-                                                            placeholder="Nama Produk ..."
-                                                            value="{{bouquet.name}}" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <img src="{{ url_for('static', filename=bouquet.image)}}"
-                                                            width="70" height="70">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Gambar</label>
-                                                        <input type="file" class="form-control mt-2"
-                                                            name="image" id="image"
-                                                            accept=".png, .jpg, .jpeg">
-                                                        <small>Format gambar harus jpg/png/jpeg</small>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Warna Bunga</label>
-                                                        <input type="text" class="form-control mt-2"
-                                                            name="flower_color" id="flower_color"
-                                                            placeholder="Warna Bunga ..."
-                                                            value="{{bouquet.flower_color}}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Warna Kertas</label>
-                                                        <input type="text" class="form-control mt-2"
-                                                            name="paper_color" id="paper_color"
-                                                            placeholder="Warna Bunga ..."
-                                                            value="{{bouquet.paper_color}}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Kategori</label>
-                                                        <input type="text" class="form-control mt-2"
-                                                            name="category" id="category"
-                                                            placeholder="Warna Bunga ..."
-                                                            value="{{bouquet.category}}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Deskripsi</label>
-                                                        <textarea class="form-control mt-2"
-                                                            style="white-space: pre-line;" rows="4"
-                                                            name="description"
-                                                            id="description"
-                                                            placeholder="Keterangan Produk ..."
-                                                            required>{{bouquet.description}}</textarea>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Harga</label>
-                                                        <input type="number" class="form-control mt-2"
-                                                            name="price" id="price"
-                                                            placeholder="Harga Produk..."
-                                                            value="{{bouquet.price}}" required>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Stok</label>
-                                                        <input type="number" class="form-control mt-2"
-                                                            name="stock" id="stock"
-                                                            placeholder="stock Produk..."
-                                                            value="{{bouquet.stock_produk}}" required>
-                                                    </div>
-                                                </div>
-
-                                                <div class="modal-footer no-bd">
-                                                    <button type="submit" name="ubah"
-                                                        class="btn btn-primary"><i
-                                                            class="fa fa-save"></i> Save
-                                                        Changes</button>
-                                                    <button type="button" class="btn btn-danger"
-                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                        Close</button>
-                                                </div>
-
-                                            </form>
-                                        </div>
+        <div class="main-panel">
+            <div class="content">
+                <div class="page-inner">
+                    <div class="page-header">
+                        <h4 class="page-title">Data Buket</h4>
+                        <ul class="breadcrumbs">
+                            <li class="nav-home">
+                                <a href="#">
+                                    <i class="flaticon-home"></i>
+                                </a>
+                            </li>
+                            <li class="separator">
+                                <i class="flaticon-right-arrow"></i>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">Data</a>
+                            </li>
+                            <li class="separator">
+                                <i class="flaticon-right-arrow"></i>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">Buket</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Data Buket</h4>
+                                        <button class="btn btn-primary btn-round ml-auto" data-toggle="modal"
+                                            data-target="#addBouquet">
+                                            <i class="fa fa-plus"></i>
+                                            Tambah Data
+                                        </button>
                                     </div>
                                 </div>
-                                <!-- end of modal edit -->
+                                <div class="card-body">
+
+                                    <div class="table-responsive">
+                                        <table id="add-row" class="display table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Gambar</th>
+                                                    <th>Nama</th>
+                                                    <th>Warna Bunga</th>
+                                                    <th>Warna Kertas</th>
+                                                    <th>Kategori</th>
+                                                    <th>Deskripsi</th>
+                                                    <th>Harga</th>
+                                                    <th>Stok</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {% for bouquet in bouquets %}
+                                                <tr>
+                                                    <td>{{loop.index}}</td>
+                                                    <td class="text-center"><img
+                                                            src="{{ url_for('static', filename=bouquet.image) }}"
+                                                            width="50" height="50"></td>
+                                                    <td>{{bouquet.name}}</td>
+                                                    <td>{{bouquet.flower_color}}</td>
+                                                    <td>{{bouquet.paper_color}}</td>
+                                                    <td>{{bouquet.category}}</td>
+                                                    <td width="30%">{{bouquet.description}}</td>
+                                                    <td>Rp {{bouquet.price}}</td>
+                                                    <td>{{bouquet.stock}}</td>
+                                                    <td>
+                                                        <a href="#editBouquet{{bouquet['_id']}}" data-toggle="modal"
+                                                            class="btn btn-xs btn-primary">
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        <a href="#deleteBouquet_{{bouquet['_id']}}" data-toggle="modal"
+                                                            class="btn btn-xs btn-danger">
+                                                            <i class="fa fa-trash"></i> Hapus
+                                                        </a>
+                                                    </td>
+                                                </tr>
 
 
-                                <!-- modal delete -->
-                                <div class="modal fade" id="hapusProduk_{{bouquet['_id']}}"
-                                    tabindex="-1" role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header no-bd">
-                                                <h5 class="modal-title">
-                                                    <span class="fw-mediumbold">
-                                                        Hapus Data</span>
-                                                    <span class="fw-light">
-                                                        Produk
-                                                    </span>
-                                                </h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form method="POST" action="/hapus-buket"
-                                                enctype="multipart/form-data">
+                                                <!-- modal edit -->
+                                                <div class="modal fade" id="editBouquet{{bouquet['_id']}}" tabindex="-1"
+                                                    role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">
+                                                                        Edit Data</span>
+                                                                    <span class="fw-light">
+                                                                        Buket
+                                                                    </span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form method="POST" action="/edit-buket"
+                                                                enctype="multipart/form-data">
 
-                                                <div class="modal-body">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{bouquet['_id']}}"
+                                                                        class="form-control" name="id">
 
-                                                    <input type="hidden" value="{{bouquet['_id']}}"
-                                                        class="form-control" name="id">
+                                                                    <div class="form-group">
+                                                                        <label>Nama</label>
+                                                                        <input type="text" class="form-control mt-2"
+                                                                            name="name" id="name"
+                                                                            placeholder="Nama Produk ..."
+                                                                            value="{{bouquet.name}}" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <img src="{{ url_for('static', filename=bouquet.image)}}"
+                                                                            width="70" height="70">
+                                                                    </div>
 
-                                                    <div class="form-group">
-                                                        <h4>Apakah Anda ingin Menghapus Data ini ?</h4>
+                                                                    <div class="form-group">
+                                                                        <label>Gambar</label>
+                                                                        <input type="file" class="form-control mt-2"
+                                                                            name="image" id="image"
+                                                                            accept=".png, .jpg, .jpeg">
+                                                                        <small>Format Gambar Harus JPG / PNG /
+                                                                            JPEG</small>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Warna Bunga</label>
+                                                                        <input type="text" class="form-control mt-2"
+                                                                            name="flower_color" id="flower_color"
+                                                                            placeholder="Warna Bunga"
+                                                                            value="{{bouquet.flower_color}}" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Warna Kertas</label>
+                                                                        <input type="text" class="form-control mt-2"
+                                                                            name="paper_color" id="paper_color"
+                                                                            placeholder="Warna Kertas"
+                                                                            value="{{bouquet.paper_color}}" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Kategori</label>
+                                                                        <input type="text" class="form-control mt-2"
+                                                                            name="category" id="category"
+                                                                            placeholder="Kategori"
+                                                                            value="{{bouquet.category}}" required>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>Deskripsi</label>
+                                                                        <textarea class="form-control mt-2"
+                                                                            style="white-space: pre-line;" rows="4"
+                                                                            name="description"
+                                                                            id="description"
+                                                                            placeholder="Keterangan Produk ..."
+                                                                            required>{{bouquet.description}}</textarea>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>Harga</label>
+                                                                        <input type="number" class="form-control mt-2"
+                                                                            name="price" id="price"
+                                                                            placeholder="Harga Produk..."
+                                                                            value="{{bouquet.price}}" required>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>Stok</label>
+                                                                        <input type="number" class="form-control mt-2"
+                                                                            name="stock" id="stock"
+                                                                            placeholder="Stok Produk..."
+                                                                            value="{{bouquet.stock}}" required>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" name="ubah"
+                                                                        class="btn btn-primary"><i
+                                                                            class="fa fa-save"></i> Save
+                                                                        Changes</button>
+                                                                    <button type="button" class="btn btn-danger"
+                                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
+                                                                        Close</button>
+                                                                </div>
+
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <!-- end of modal edit -->
 
-                                                <div class="modal-footer no-bd">
-                                                    <button type="submit" name="hapus"
-                                                        class="btn btn-danger"><i
-                                                            class="fa fa-trash"></i>
-                                                        Hapus</button>
-                                                    <button type="button" class="btn btn-primary"
-                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                        Close</button>
+
+                                                <!-- modal delete -->
+                                                <div class="modal fade" id="deleteBouquet_{{bouquet['_id']}}"
+                                                    tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">
+                                                                        Hapus Data</span>
+                                                                    <span class="fw-light">
+                                                                        Buket
+                                                                    </span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form method="POST" action="/hapus-buket"
+                                                                enctype="multipart/form-data">
+
+                                                                <div class="modal-body">
+
+                                                                    <input type="hidden" value="{{bouquet['_id']}}"
+                                                                        class="form-control" name="id">
+
+                                                                    <div class="form-group">
+                                                                        <h4>Apakah Anda ingin Menghapus Data ini ?</h4>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" name="hapus"
+                                                                        class="btn btn-danger"><i
+                                                                            class="fa fa-trash"></i>
+                                                                        Hapus</button>
+                                                                    <button type="button" class="btn btn-primary"
+                                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
+                                                                        Close</button>
+                                                                </div>
+
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                <!-- end of modal delete -->
 
-                                            </form>
-                                        </div>
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-            </div>
-
-            <div class="modal fade" id="addBouquet" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header no-bd">
-                            <h5 class="modal-title">
-                                <span class="fw-mediumbold">
-                                    Tambah Data</span>
-                                <span class="fw-light">
-                                    Produk
-                                </span>
-                            </h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            </div>
                         </div>
-                        <form method="POST" action="/tambah-buket" enctype="multipart/form-data">
-    
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" class="form-control mt-2" name="name" id="name"
-                                        placeholder="Nama Buket ..." required>
-                                </div>
-    
-                                <div class="form-group">
-                                    <label>Gambar</label>
-                                    <input type="file" class="form-control mt-2" name="image" id="image"
-                                        accept=".png, .jpg, .jpeg" required>
-                                        <small>Format gambar harus jpg/png/jpeg</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>Warna Bunga</label>
-                                    <input type="text" class="form-control mt-2" name="flower_color" id="flower_color"
-                                        placeholder="Nama Buket ..." required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Warna Kertas</label>
-                                    <input type="text" class="form-control mt-2" name="paper_color" id="paper_color"
-                                        placeholder="Nama Buket ..." required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Kategori</label>
-                                    <input type="text" class="form-control mt-2" name="category" id="category"
-                                        placeholder="Nama Buket ..." required>
-                                </div>
-    
-                                <div class="form-group">
-                                    <label>Deskripsi</label>
-                                    <textarea class="form-control mt-2" style="white-space: pre-line;" rows="4"
-                                        name="description" id="description" placeholder="Keterangan Produk ..."
-                                        required></textarea>
-                                </div>
-    
-                                <div class="form-group">
-                                    <label>Harga</label>
-                                    <input type="number" class="form-control mt-2" name="price" id="price"
-                                        placeholder="Harga ..." required>
-                                </div>
-    
-                                <div class="form-group">
-                                    <label>Stok</label>
-                                    <input type="number" class="form-control mt-2" name="stock" id="stock"
-                                        placeholder="Stok Produk..." required>
-                                </div>
-                            </div>
-    
-                            <div class="modal-footer no-bd">
-                                <button type="submit" name="simpan" class="btn btn-primary"><i class="fa fa-save"></i> Save
-                                    Changes</button>
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa fa-undo"></i>
-                                    Close</button>
-                            </div>
-    
-                        </form>
                     </div>
                 </div>
             </div>
 
-            <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start fw-bold">
-                        <p class="mb-2 mb-md-0 fw-bold">Your company &copy; 2023</p>
+        </div>
+
+        <div class="modal fade" id="addBouquet" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header no-bd">
+                        <h5 class="modal-title">
+                            <span class="fw-mediumbold">
+                                Tambah Data</span>
+                            <span class="fw-light">
+                                Buket
+                            </span>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <form method="POST" action="/tambah-buket" enctype="multipart/form-data">
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Nama</label>
+                                <input type="text" class="form-control mt-2" name="name" id="name"
+                                    placeholder="Nama Produk ..." required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gambar</label>
+                                <input type="file" class="form-control mt-2" name="image" id="image"
+                                    accept=".png, .jpg, .jpeg" required>
+                                <small>Format Gambar Harus JPG / PNG / JPEG</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Warna Bunga</label>
+                                <input type="text" class="form-control mt-2" name="flower_color" id="flower_color"
+                                    placeholder="Warna Bunga" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Warna Kertas</label>
+                                <input type="text" class="form-control mt-2" name="paper_color" id="paper_color"
+                                    placeholder="Warna Kertas" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <input type="text" class="form-control mt-2" name="category" id="category"
+                                    placeholder="Kategori" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control mt-2" style="white-space: pre-line;" rows="4"
+                                    name="description" id="description" placeholder="Keterangan Produk ..."
+                                    required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Harga</label>
+                                <input type="number" class="form-control mt-2" name="price" id="price"
+                                    placeholder="Harga Produk..." required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Stok</label>
+                                <input type="number" class="form-control mt-2" name="stock" id="stock"
+                                    placeholder="Stok Produk..." required>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer no-bd">
+                            <button type="submit" name="simpan" class="btn btn-primary"><i class="fa fa-save"></i> Save
+                                Changes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
+                                Close</button>
+                        </div>
+
+                    </form>
                 </div>
             </div>
-            </footer>
         </div>
+
+
+
+
+
+
+
+
+
     </div>
-
-    <!-- JavaScript files-->
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-
-    <!-- Data Tables-->
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/simple-datatables/umd/simple-datatables.js"></script>
-    <script src="../static/admin/js/tables-datatable.adfe0634.js"></script>
-
-    <!-- Main Theme JS File-->
-    <script src="../static/admin/js/theme.87f0a411.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-
-    <!-- Prism for syntax highlighting-->
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/prism.js"></script>
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/plugins/toolbar/prism-toolbar.min.js"></script>
-    <script src="https://d19m59y37dris4.cloudfront.net/bubbly/1-3-2/vendor/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-    <script type="text/javascript">
-        // Optional
-        Prism.plugins.NormalizeWhitespace.setDefaults({
-            'remove-trailing': true,
-            'remove-indent': true,
-            'left-trim': true,
-            'right-trim': true,
+    <script src="{{ url_for('static', filename='admin/js/jquery.3.2.1.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='admin/js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/datatables/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/ready.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#add-row').DataTable({
+                pageLength: 25
+            });
         });
     </script>
-
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    
 </body>
+
 </html>

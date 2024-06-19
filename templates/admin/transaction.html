@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>HealthyConnect</title>
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+    <script src="https://kit.fontawesome.com/f8535c9b97.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css"
+        href="{{ url_for('static', filename='admin/css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin/css/styleadmin.css') }}">
+
+
+</head>
+
+
+<script>
+    function logout() {
+        $.removeCookie('mytoken', { path: '/' });
+        alert('Signed out!');
+        window.location.href = "/";
+    }
+
+</script>
+
+<body>
+    <div class="wrapper">
+
+        <div class="main-header" data-background-color="purple">
+
+            <!-- Logo Header -->
+            {% include 'admin/navbar/navbar.html' %}
+            
+        </div>
+        <!-- Sidebar -->
+        {% include 'admin/sidebar/sidebar.html' %}
+
+
+        <div class="main-panel">
+            <div class="content">
+                <div class="page-inner">
+                    <div class="page-header">
+                        <h4 class="page-title">Data Transaksi</h4>
+                        <ul class="breadcrumbs">
+                            <li class="nav-home">
+                                <a href="#">
+                                    <i class="flaticon-home"></i>
+                                </a>
+                            </li>
+                            <li class="separator">
+                                <i class="flaticon-right-arrow"></i>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">Data</a>
+                            </li>
+                            <li class="separator">
+                                <i class="flaticon-right-arrow"></i>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">Transaksi</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="card-title">Data Transaksi</h4>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="table-responsive">
+                                        <table id="add-row" class="display table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Username</th>
+                                                    <th>Warna Bunga</th>
+                                                    <th>Warna Kertas</th>
+                                                    <th>Nama Pembeli</th>
+                                                    <th>Alamat Pembeli</th>
+                                                    <th>No. Telepon Pembeli</th>
+                                                    <th>Kartu Ucapan</th>
+                                                    <th>Catatan Pembeli</th>
+                                                    <th>Buket Yang Dibeli</th>
+                                                    <th>Kuantitas</th>
+                                                    <th>Total Harga</th>
+                                                    <th>Bukti</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {% for transaction in transactions %}
+                                                <tr>
+                                                    <td>{{loop.index}}</td>
+                                                    <td>{{transaction.username}}</td>
+                                                    <td>{{transaction.flower_color}}</td>
+                                                    <td>{{transaction.paper_color}}</td>
+                                                    <td>{{transaction.name_of_buyer}}</td>
+                                                    <td>{{transaction.address}}</td>
+                                                    <td>{{transaction.phone}}</td>
+                                                    <td>{{transaction.greeting_card}}</td>
+                                                    <td>{{transaction.order_note}}</td>
+                                                    <td>{{transaction.name}}</td>
+                                                    <td>{{transaction.quantity}}</td>
+                                                    <td>{{transaction.total_price}}</td>
+                                                    <td><a href="{{ url_for('static', filename=transaction.proof_of_payment)}}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment)}}" width="70" height="70" style="object-fit:contain">
+                                                    </a></td>
+                                                    <td>{{transaction.status | capitalize}}</td>
+                                                    <td class="text-center">
+                                                        {% if transaction.status == "pending" %}
+                                                        <a href="#receive_orders_{{transaction['_id']}}" data-toggle="modal"
+                                                            class="btn btn-xs btn-primary mb-2">
+                                                            <i class="fa fa-check"></i> Terima
+                                                        </a>
+                                                        <a href="#reject_order_{{transaction['_id']}}" data-toggle="modal"
+                                                            class="btn btn-xs btn-danger">
+                                                            <i class="fa fa-times"></i> Tolak
+                                                        </a>
+                                                        {% elif transaction.status == "diterima" %}
+                                                        <a href="#send_order_{{transaction['_id']}}" data-toggle="modal"
+                                                        class="btn btn-xs btn-warning mb-2">
+                                                        <i class="fa fa-truck"></i> Kirim Barang
+                                                        </a>
+                                                        {% elif transaction.status == "ditolak" %}
+                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
+                                                         No Action
+                                                        </a>
+                                                        {% elif transaction.status == "dikirim" %}
+                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
+                                                         No Action
+                                                        </a>
+                                                        {% elif transaction.status == "selesai" %}
+                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
+                                                         No Action
+                                                        </a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+
+
+                                                 <!-- modal edit -->
+                                                 <div class="modal fade" id="receive_orders_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">
+                                                                        Terima</span>
+                                                                    <span class="fw-light">
+                                                                        Pemesanan
+                                                                    </span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form method="POST" action="/terima-pemesanan" enctype="multipart/form-data">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
+                                                                    <div class="form-group">
+                                                                        <label>Catatan Penjual</label>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5"
+                                                                        name="note" id="note"
+                                                                        placeholder="Catatan Admin ...." required></textarea>
+                                                                    </div>
+   
+                                                                </div>
+
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
+                                                                        Changes</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
+                                                                        Close</button>
+                                                                </div>
+                                        
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of modal edit -->
+
+                                                <!-- modal tolak -->
+                                                <div class="modal fade" id="reject_order_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">
+                                                                        Tolak</span>
+                                                                    <span class="fw-light">
+                                                                        Pemesanan
+                                                                    </span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form method="POST" action="/tolak-pemesanan" enctype="multipart/form-data">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
+                                                                    <div class="form-group">
+                                                                        <label>Alasan Penolakan</label>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5"
+                                                                        name="note" id="note"
+                                                                        placeholder="Alasan Penolakkan ...." required></textarea>
+                                                                    </div>
+   
+                                                                </div>
+
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
+                                                                        Changes</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
+                                                                        Close</button>
+                                                                </div>
+                                        
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- end of modal tolak -->
+
+                                                <!-- modal kirim barang -->
+                                                <div class="modal fade" id="send_order_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">
+                                                                        Kirim</span>
+                                                                    <span class="fw-light">
+                                                                        Pemesanan
+                                                                    </span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form method="POST" action="/kirim-pemesanan" enctype="multipart/form-data">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
+                                                                    <div class="form-group">
+                                                                        <label>No. Resi & Catatan Singkat</label>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="3"
+                                                                        name="note" id="note"
+                                                                        placeholder="Nomor Resi & Catatan Singkat ...." required></textarea>
+                                                                    </div>
+   
+                                                                </div>
+
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
+                                                                        Changes</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
+                                                                        Close</button>
+                                                                </div>
+                                        
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- end of modal kirim barang -->
+
+
+                                        
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        
+    </div>
+    <script src="{{ url_for('static', filename='admin/js/jquery.3.2.1.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='admin/js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='admin/js/plugin/datatables/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='admin/js/ready.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#add-row').DataTable({
+                pageLength: 25
+            });
+        });
+    </script>
+</body>
+
+</html>
