@@ -208,54 +208,6 @@
     <script src="{{ url_for('static', filename='user/js/jquery.cookie.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='user/js/script.js') }}"></script>
-    <script>
-        function update_profile() {
-            let first_name = $('#first_name').val();
-            let last_name = $('#last_name').val();
-            let profile_picture = $('#profile_picture')[0].files[0];
-            // let profile_picture = $("#profile_picture").prop("files")[0];
-            let address = $('#address').val();
-            let phone = $('#phone').val();
-            let bio = $('#bio').val();
-            let form_data = new FormData();
-            form_data.append('first_name_give', first_name);
-            form_data.append('last_name_give', last_name);
-            form_data.append('profile_picture_give', profile_picture);
-            form_data.append('address_give', address);
-            form_data.append('phone_give', phone);
-            form_data.append('bio_give', bio);
-            $.ajax({
-                type: 'POST',
-                url: '/perbarui-profil',
-                cache: false,
-                data: form_data,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response['result'] === 'success') {
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                        });
-                        Toast.fire({
-                            icon: 'success',
-                            title: "Profil Anda telah diperbarui"
-                        });
-                        setTimeout(function () {
-                            window.location.href = '/profil/{{ user_info.account_name }}';
-                        }, 3000);
-                    }
-                }
-            });
-        }
-    </script>
 
 </body>
 

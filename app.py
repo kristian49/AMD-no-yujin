@@ -382,7 +382,7 @@ def order_form(collection_id):
         collection = db.collections.find_one({'_id': ObjectId(collection_id)})
         if collection and 'image' in collection:
             collection['image'] = f'/static/{collection['image']}'
-        return render_template('order_form.html', collection=collection, user_info=user_info)
+        return render_template('user/order_form.html', collection=collection, user_info=user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
