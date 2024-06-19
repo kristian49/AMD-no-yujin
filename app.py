@@ -1,15 +1,16 @@
-from flask import Flask, render_template, jsonify, request, redirect, url_for
 from pymongo import MongoClient
+import jwt
+import datetime
+import hashlib
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
-from bson import ObjectId
 from functools import wraps
+from bson import ObjectId
+import os
 import pytz
 from os.path import join, dirname
 from dotenv import load_dotenv
-import jwt
-import hashlib
-import os
 
 app = Flask(__name__)
 
@@ -32,7 +33,7 @@ app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 # fungsi untuk admin
 def admin_required(f):
     @wraps(f)
-    def admin_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):
         token_receive = request.cookies.get(TOKEN_KEY)
         if token_receive is not None:
             try:
@@ -45,7 +46,7 @@ def admin_required(f):
                 return redirect(url_for('login', msg='Token Anda tidak valid atau telah kedaluwarsa'))
         else:
             return redirect(url_for('login', msg = 'Silakan masuk untuk melihat halaman ini'))
-    return admin_function
+    return decorated_function
 
 ### home.html atau dashboard.html ###
 # menampilkan halaman depan (sebelum pengguna login) atau halaman dashboard (sesudah pengguna login)
@@ -632,7 +633,7 @@ def submit_purchase():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-@app.route("/forum" , methods=['GET', 'POST'])
+@app.route('/forum' , methods=['GET', 'POST'])
 def forum():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -646,48 +647,48 @@ def forum():
             post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
             timestamp = current_datetime.timestamp()
             doc = {
-                "useremail":user_info['useremail'],
-                "nama_lengkap":user_info['name'],
-                "foto_profil": user_info['profile_pic_real'],
-                "role":user_info['role'],
-                "judul":judul,
-                "konten":konten,
-                "post_data":post_date,
-                "isCompleted":"false",
-                "timestamp": timestamp,
+                'useremail':user_info['useremail'],
+                'nama_lengkap':user_info['name'],
+                'foto_profil': user_info['profile_pic_real'],
+                'role':user_info['role'],
+                'judul':judul,
+                'konten':konten,
+                'post_data':post_date,
+                'isCompleted':'false',
+                'timestamp': timestamp,
             }
             db.forums.insert_one(doc)
             return redirect(url_for('forum'))
-        forums = list(db.forums.find().sort("timestamp", -1))
-        return render_template("forum.html",user_info=user_info,forums=forums)
+        forums = list(db.forums.find().sort('timestamp', -1))
+        return render_template('forum.html',user_info=user_info,forums=forums)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/forum/<id>')
 def isi_forum(id):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         forum = db.forums.find_one({'_id': ObjectId(id)})
-        user = db.users.find_one({"useremail": forum["useremail"]})
+        user = db.users.find_one({'useremail': forum['useremail']})
         forum['nama_lengkap'] = user['name']
         forum['foto_profil'] = user['profile_pic_real']
-        comments = list(db.comments.find({"thread_id": id}))
+        comments = list(db.comments.find({'thread_id': id}))
         for comment in comments:
-            user = db.users.find_one({"useremail": comment["useremail"]})
+            user = db.users.find_one({'useremail': comment['useremail']})
             comment['nama_lengkap'] = user['name']
             comment['foto_profil'] = user['profile_pic_real']
-        return render_template("isi_forum.html",user_info=user_info,forum=forum,comments=comments)
+        return render_template('isi_forum.html',user_info=user_info,forum=forum,comments=comments)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/user_forum_komen', methods=['POST'])
 def user_forum_komen():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         komen = request.form['komen']
         timezone = pytz.timezone('Asia/Jakarta')
@@ -695,65 +696,65 @@ def user_forum_komen():
         post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
         timestamp = current_datetime.timestamp()
         doc = {
-                "useremail":user_info['useremail'],
-                "nama_lengkap":user_info['name'],
-                "foto_profil": user_info['profile_pic_real'],
-                "role":user_info['role'],
-                "thread_id": id,
-                "komen":komen,
-                "post_data":post_date,
-                "timestamp": timestamp,
+                'useremail':user_info['useremail'],
+                'nama_lengkap':user_info['name'],
+                'foto_profil': user_info['profile_pic_real'],
+                'role':user_info['role'],
+                'thread_id': id,
+                'komen':komen,
+                'post_data':post_date,
+                'timestamp': timestamp,
             }
         db.comments.insert_one(doc)
-        return redirect(url_for("isi_forum", id=id))
+        return redirect(url_for('isi_forum', id=id))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/edit_forum_post', methods=['POST'])
 def edit_forum_post():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         judul = request.form['judul']
         print(judul)
         konten = request.form['konten']
         db.forums.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": {"judul": judul, "konten": konten}}
+            {'_id': ObjectId(id)},
+            {'$set': {'judul': judul, 'konten': konten}}
         )
-        return redirect(url_for("isi_forum", id=id))
+        return redirect(url_for('isi_forum', id=id))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/delete_forum_post', methods=['POST'])
 def delete_forum_post():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         db.forums.delete_one({'_id': ObjectId(id)})
-        db.comments.delete_many({"thread_id": id})
-        return redirect(url_for("forum"))
+        db.comments.delete_many({'thread_id': id})
+        return redirect(url_for('forum'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/close_forum_post', methods=['POST'])
 def close_forum_post():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         db.forums.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": {"isCompleted": "true"}}
+            {'_id': ObjectId(id)},
+            {'$set': {'isCompleted': 'true'}}
         )
-        return redirect(url_for("isi_forum", id=id))
+        return redirect(url_for('isi_forum', id=id))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
 
     
 
@@ -761,33 +762,33 @@ def close_forum_post():
 def edit_komen():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         url_id = request.form['url_id']
         komen = request.form['komen']
         db.comments.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": { "komen": komen}}
+            {'_id': ObjectId(id)},
+            {'$set': { 'komen': komen}}
         )
-        return redirect(url_for("isi_forum", id=url_id))
+        return redirect(url_for('isi_forum', id=url_id))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 @app.route('/delete_komen', methods=['POST'])
 def delete_komen():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         id = request.form['id']
         url_id = request.form['url_id']
         db.comments.delete_one({'_id': ObjectId(id)})
-        return redirect(url_for("isi_forum", id=url_id))
+        return redirect(url_for('isi_forum', id=url_id))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
-@app.route("/riwayat_forum")
+@app.route('/riwayat_forum')
 def riwayat_forum():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -796,13 +797,13 @@ def riwayat_forum():
         forums = list(db.forums.find({'useremail': user_info['useremail']}).sort('timestamp', -1)) 
         for forum in forums:
             forum['jumlah_komen'] = db.comments.count_documents({'thread_id': str(forum['_id'])})
-        return render_template("riwayat_forum.html", user_info=user_info,forums=forums)
+        return render_template('riwayat_forum.html', user_info=user_info,forums=forums)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 
     
-@app.route("/buket")
+@app.route('/buket')
 def bouquet():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -816,12 +817,12 @@ def bouquet():
         if query:
             bouquets = db.bouquets.find({'bouquet': {'$regex': query, '$options': 'i'}})
         else:
-            bouquets = db.bouquets.find().sort("tanggal", -1)
-        return render_template("bouquet.html", user_info = user_info, bouquets = bouquets)
+            bouquets = db.bouquets.find().sort('tanggal', -1)
+        return render_template('bouquet.html', user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+        return redirect(url_for('home'))
     
-@app.route("/riwayat_pesanan")
+@app.route('/riwayat_pesanan')
 def riwayat_pesanan():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -835,9 +836,9 @@ def riwayat_pesanan():
             transaction['nama_produk'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
             testimonial = db.testimoni.find_one({'transaction_id': str(transaction['_id'])})
             transaction['ulasan_produk'] = testimonial['ulasan'] if testimonial else None
-        return render_template("riwayat_pesanan.html",user_info=user_info,transactions=transactions,total_transactions=total_transactions)
+        return render_template('riwayat_pesanan.html',user_info=user_info,transactions=transactions,total_transactions=total_transactions)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 
 @app.route('/kirim_testimoni', methods=['POST'])
@@ -851,24 +852,24 @@ def kirim_testimoni():
         bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
         current_date = datetime.now().isoformat()
         doc = {
-                "transaction_id" : str(transaction['_id']),
-                "useremail" : transaction['useremail'],
-                "nama_pembeli" : transaction['nama_pembeli'],
-                "alamat_pembeli" : transaction['alamat_pembeli'],
-                "no_pembeli" : transaction['nomor_telepon'],
-                "produk_yang_dibeli" : bouquet,
-                "ulasan":ulasan_produk,
-                "tanggal": current_date,
+                'transaction_id' : str(transaction['_id']),
+                'useremail' : transaction['useremail'],
+                'nama_pembeli' : transaction['nama_pembeli'],
+                'alamat_pembeli' : transaction['alamat_pembeli'],
+                'no_pembeli' : transaction['nomor_telepon'],
+                'produk_yang_dibeli' : bouquet,
+                'ulasan':ulasan_produk,
+                'tanggal': current_date,
             }
         
         db.testimoni.insert_one(doc)
         db.transaksi.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
         return redirect(url_for('riwayat_pesanan'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
     
 
-@app.route("/bayar", methods=['GET', 'POST'])
+@app.route('/bayar', methods=['GET', 'POST'])
 def bayar():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -880,7 +881,7 @@ def bayar():
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
             price = int(bouquet['harga_produk'])
             print(price)
-            return render_template("bayar.html", user_info=user_info, bouquet=bouquet, quantity=quantity, bouquet_id=bouquet_id, price=price)
+            return render_template('bayar.html', user_info=user_info, bouquet=bouquet, quantity=quantity, bouquet_id=bouquet_id, price=price)
         elif request.method == 'POST':
            today = datetime.now()
            mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -896,22 +897,22 @@ def bayar():
            total_harga = quantity * harga_per_produk
            file = request.files['bukti_pembayaran']
            filename = secure_filename(file.filename)
-           extension = filename.split(".")[-1]
-           file_path = f"admin/img/bukti-{useremail}-{mytime}.{extension}"
-           file.save("./static/" + file_path)
+           extension = filename.split('.')[-1]
+           file_path = f'admin/img/bukti-{useremail}-{mytime}.{extension}'
+           file.save('./static/' + file_path)
            current_date = datetime.now().isoformat()
            doc = {
-            "useremail" : useremail,
-            "bouquet_id":bouquet_id,
-            "quantity" : quantity,
-            "nama_pembeli" : nama_pembeli,
-            "alamat_pembeli" : alamat_pembeli,
-            "nomor_telepon" : nomor_telepon,
-            "catatan_pembelian" : catatan_pembelian,
-            "total_harga" : total_harga,
-            "bukti_pembayaran" : file_path,
-            "tanggal": current_date,
-            "status": "pending",
+            'useremail' : useremail,
+            'bouquet_id':bouquet_id,
+            'quantity' : quantity,
+            'nama_pembeli' : nama_pembeli,
+            'alamat_pembeli' : alamat_pembeli,
+            'nomor_telepon' : nomor_telepon,
+            'catatan_pembelian' : catatan_pembelian,
+            'total_harga' : total_harga,
+            'bukti_pembayaran' : file_path,
+            'tanggal': current_date,
+            'status': 'pending',
 
           }
            db.transaksi.insert_one(doc)
@@ -919,9 +920,9 @@ def bayar():
          
         
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
 
-@app.route("/admin/beranda")
+@app.route('/admin/beranda')
 @admin_required
 def admin_home():
     # products_count = db.bouquets.count_documents({})
@@ -948,112 +949,155 @@ def admin_home():
     #     break
     # thread_count = db.forums.count_documents({})
     # contact_count = db.hubungi.count_documents({})
-    # return render_template("admin/dashboard.html", bouquet_count = bouquet_count, transactions_count = transactions_count,testimony_count=testimony_count,income=income,thread_count=thread_count,contact_count=contact_count)
-    return render_template("admin/dashboard.html")
+    # return render_template('admin/dashboard.html', bouquet_count = bouquet_count, transactions_count = transactions_count,testimony_count=testimony_count,income=income,thread_count=thread_count,contact_count=contact_count)
+    return render_template('admin/dashboard.html')
 
-@app.route("/admin/buket")
+### admin/bouquet.html ###
+# menampilkan halaman admin untuk buket
+@app.route('/admin/buket')
 @admin_required
-def admin_produk():
-    bouquet = db.bouquets.find()
-    return render_template("admin/buket.html", products = products)
+def admin_bouquet():
+    bouquets = db.bouquets.find()
+    return render_template('admin/bouquet.html', bouquets = bouquets)
 
-
-
-@app.route('/tambah_produk', methods=['POST'])
+# menambah buket
+@app.route('/tambah-buket', methods = ['POST'])
 @admin_required
-def tambah_produk():
+def add_bouquet():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    nama_produk =request.form['nama_produk']
-    file = request.files['gambar_produk']
+    name =request.form['name']
+    file = request.files['image']
     filename = secure_filename(file.filename)
     extension = filename.split(".")[-1]
     file_path = f"administrator/assets/image/product-{mytime}.{extension}"
     file.save("./static/" + file_path)
-    deskripsi_produk =request.form['deskripsi_produk']
-    harga_produk =int(request.form['harga_produk'])
-    stok_produk = int(request.form['stok'])
+    flower_color = request.form['flower_color']
+    paper_color = request.form['paper_color']
+    category = request.form['category']
+    description =request.form['description']
+    price =int(request.form['price'])
+    stock = int(request.form['stock'])
+
+    # today = datetime.now()
+    # mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    
+    # name = request.form['name']
+
+    # file = request.files['image']
+    # filename = secure_filename(file.filename)
+    # extension = filename.split('.')[-1]
+    # file_path = f'admin/img/bouquet-{mytime}.{extension}'
+    # file.save('./static/' + file_path)
+
+    # flower_color = request.form['flower_color']
+    # paper_color = request.form['paper_color']
+    # category = request.form['category']
+    # description = request.form['description']
+    # price = int(request.form['price'])
+    # stock = int(request.form['stock'])
+    # greeting_card = request.form['greeting_card']
+    # note_of_buyer = request.form['note_of_buyer']
 
     current_date = datetime.now().isoformat()
+
     doc = {
-        "nama_produk" : nama_produk,
-        "gambar_produk" : file_path,
-        "deskripsi_produk" : deskripsi_produk,
-        "harga_produk" : harga_produk,
-        "stok_produk" : stok_produk,
-        "tanggal": current_date,
+        'name': name,
+        'image': file_path,
+        'flower_color': flower_color,
+        'paper_color': paper_color,
+        'category': category,
+        'description': description,
+        'price': price,
+        'stock': stock,
+        # 'greeting_card': greeting_card,
+        # 'note_of_buyer': note_of_buyer,
+        'date': current_date
     }
     db.bouquets.insert_one(doc)
-    return redirect(url_for('admin_produk'))
+    return redirect(url_for('admin_bouquet'))
 
-
-@app.route('/edit_produk', methods=['POST'])
+# mengedit buket
+@app.route('/edit-buket', methods = ['POST'])
 @admin_required
-def edit_produk():
-    id =request.form['id']
+def edit_bouquet():
+    id = request.form['id']
+
+    name = request.form['name']
+
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    nama_produk =request.form['nama_produk']
-    deskripsi_produk =request.form['deskripsi_produk']
-    harga_produk =int(request.form['harga_produk'])
-    stok_produk = int(request.form['stok'])
 
-    current_date = datetime.now().isoformat()
-    new_doc = {
-        "nama_produk" : nama_produk,
-        "deskripsi_produk" : deskripsi_produk,
-        "harga_produk" : harga_produk,
-        "stok_produk" : stok_produk,
-        "tanggal": current_date,
-        }
-    
-    if 'gambar_produk' in request.files and request.files['gambar_produk'].filename != '':
-        product = db.bouquets.find_one({'_id': ObjectId(id)})
-        foto_lama = product.get('gambar_produk', '')
+    if 'image' in request.files and request.files['image'].filename != '':
+        bouquet = db.bouquets.find_one({'_id': ObjectId(id)})
+        old_photo = bouquet.get('image', '')
 
         # Menghapus gambar lama
-        if foto_lama:
-            old_file_path = os.path.abspath("./static/" + foto_lama)
+        if old_photo:
+            old_file_path = os.path.abspath('./static/' + old_photo)
             if os.path.exists(old_file_path):
                 os.remove(old_file_path)
 
-        file = request.files['gambar_produk']
+        file = request.files['image']
         filename = secure_filename(file.filename)
-        extension = filename.split(".")[-1]
-        file_path = f"administrator/assets/image/product-{mytime}.{extension}"
-        file.save("./static/" + file_path)
-        new_doc["gambar_produk"] = file_path
+        extension = filename.split('.')[-1]
+        file_path = f'admin/img/bouquet-{mytime}.{extension}'
+        file.save('./static/' + file_path)
+        new_doc['image'] = file_path
     else:
         pass
-    db.bouquets.update_one(
-            {'_id': ObjectId(id)}, 
-            {"$set": new_doc})
-    return redirect(url_for('admin_produk'))
 
+    flower_color = request.form['flower_color']
+    paper_color = request.form['paper_color']
+    category = request.form['category']
+    description = request.form['description']
+    price = int(request.form['price'])
+    stock = int(request.form['stock'])
+    # greeting_card = request.form['greeting_card']
+    # note_of_buyer = request.form['note_of_buyer']
 
-@app.route('/delete_produk', methods=['POST'])
+    current_date = datetime.now().isoformat()
+
+    new_doc = {
+        'name': name,
+        'flower_color': flower_color,
+        'paper_color': paper_color,
+        'category': category,
+        'description': description,
+        'price' : price,
+        'stock' : stock,
+        # 'greeting_card' : greeting_card,
+        # 'note_of_buyer' : note_of_buyer,
+        'date': current_date
+    }
+    
+    db.bouquets.update_one({'_id': ObjectId(id)}, {'$set': new_doc})
+    return redirect(url_for('admin_bouquet'))
+
+# menghapus buket
+@app.route('/hapus-buket', methods = ['POST'])
 @admin_required
-def delete_produk():
+def delete_bouquet():
     id = request.form['id']
-    product = db.bouquets.find_one({'_id': ObjectId(id)})
-    if product:
-        foto = product.get('gambar_produk', '')
-        if foto:
-            file_path = os.path.abspath("./static/" + foto)
+    bouquet = db.bouquets.find_one({'_id': ObjectId(id)})
+    if bouquet:
+        photo = bouquet.get('image', '')
+        if photo:
+            file_path = os.path.abspath('./static/' + photo)
             if os.path.exists(file_path):
                 os.remove(file_path)
         db.bouquets.delete_one({'_id': ObjectId(id)})
     else:
         pass
-    return redirect(url_for('admin_produk'))
+    return redirect(url_for('admin_bouquet'))
 
-@app.route("/admin/transaksi")
+@app.route('/admin/transaksi')
 @admin_required
 def admin_transaksi():
     transactions= list(db.transaksi.find())
     for transaction in transactions:
         transaction['nama_produk'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
-    return render_template("admin/transaksi.html", transactions = transactions)
+    return render_template('admin/transaksi.html', transactions = transactions)
 
 @app.route('/terima_pembelian', methods=['POST'])
 @admin_required
@@ -1086,32 +1130,32 @@ def kirim_pembelian():
     return redirect(url_for('admin_transaksi'))
 
 
-@app.route("/admin/testimoni")
+@app.route('/admin/testimoni')
 @admin_required
 def admin_testimoni():
     testimonies= db.testimoni.find()
-    return render_template("admin/testimoni.html", testimonies = testimonies)
+    return render_template('admin/testimoni.html', testimonies = testimonies)
 
-@app.route("/admin/forum")
+@app.route('/admin/forum')
 @admin_required
 def admin_forum():
     forums= db.forums.find()
-    return render_template("admin/forum.html", forums = forums)
+    return render_template('admin/forum.html', forums = forums)
 
 @app.route('/delete_thread_admin_side', methods=['POST'])
 @admin_required
 def delete_thread_admin_side():
     id =request.form['id']
     db.forums.delete_one({'_id': ObjectId(id)})
-    db.comments.delete_many({"thread_id": id})
+    db.comments.delete_many({'thread_id': id})
     return redirect(url_for('admin_forum'))
 
 
-@app.route("/admin/hubungi")
+@app.route('/admin/hubungi')
 @admin_required
 def admin_hubungi():
     contacts = db.hubungi.find()
-    return render_template("admin/hubungi.html", contacts = contacts)
+    return render_template('admin/hubungi.html', contacts = contacts)
 
 
 @app.route('/delete_contact', methods=['POST'])
