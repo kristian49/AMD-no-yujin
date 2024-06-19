@@ -280,15 +280,15 @@ def isi_chat(id):
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi
-@app.route('/koleksi')
+@app.route('/buket')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Koleksi Buket'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
         collections = list(db.collections.find())
-        title = 'Koleksi'
-        return render_template('user/collection.html', collections = collections, user_info = user_info, title = title)
+        return render_template('user/bouquet.html', title = title, collections = collections, user_info = user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
