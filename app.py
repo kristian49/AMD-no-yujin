@@ -358,7 +358,7 @@ def kirim_testimoni():
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi
-@app.route('/buket')
+@app.route('/koleksi')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
