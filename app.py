@@ -180,10 +180,10 @@ def api_login():
 def profile(account_name):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Profil'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        status = account_name == payload["id"]  
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        return render_template('user/profile.html', user_info = user_info, status = status)
+        return render_template('user/profile.html', title = title, user_info = user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
@@ -193,7 +193,7 @@ def update_profile():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        useremail = payload['id']
+        account_name = payload['id']
 
         first_name_receive = request.form['first_name_give']
         last_name_receive = request.form['last_name_give']
@@ -219,11 +219,10 @@ def update_profile():
             new_doc['profile_pic'] = filename
             new_doc['profile_pic_real'] = file_path
 
-        db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
+        db.users.update_one({'account_name': payload['id']}, {'$set': new_doc})
         return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi

@@ -757,15 +757,14 @@ function login() {
 function update_profile() {
     let first_name = $("#first_name").val();
     let last_name = $("#last_name").val();
-    let profile_picture = $("#profile_picture")[0].files[0];
-    // let profile_picture = $("#profile_picture").prop("files")[0];
+    let profile_picture = $('#profile_picture')[0].files[0];
     let address = $("#address").val();
     let phone = $("#phone").val();
     let bio = $("#bio").val();
     let form_data = new FormData();
+    form_data.append("profile_picture_give", profile_picture);
     form_data.append("first_name_give", first_name);
     form_data.append("last_name_give", last_name);
-    form_data.append("profile_picture_give", profile_picture);
     form_data.append("address_give", address);
     form_data.append("phone_give", phone);
     form_data.append("bio_give", bio);

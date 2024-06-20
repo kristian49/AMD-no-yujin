@@ -17,10 +17,10 @@
 
                             <div class="testimonial-wrap">
                                 <div class="testimonial-item">
-                                    <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" class="testimonial-img" alt="">
+                                    <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" class="testimonial-img">
                                     <h3>{{ user_info.profile_name }}</h3>
                                     <span>@{{user_info.account_name}}</span>
-                                    <h4>{{ user_info.role }}</h4>
+                                    <h4 class="mt-1">{{ user_info.role }}</h4>
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
                                         {{ user_info.bio }}
@@ -88,56 +88,57 @@
                 </div>
       
             </div>
-          </section>
+        </section>
 
-    </main>
-
-    <!-- Modal Edit -->
-    <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profil</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <label for="exampleFormControlInput1" class="form-label">Nama Depan</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_info.first_name }}" autofocus>
-                            </div>
-                            <div class="col-md-6 form-group mt-3 mt-md-0">
-                                <label for="exampleFormControlInput1" class="form-label">Nama Belakang</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_info.last_name }}">
+        <!-- Modal Edit -->
+        <div class="modal fade" id="editProfile" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Profil</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label for="exampleFormControlInput1" class="form-label">Nama Depan</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_info.first_name }}" autofocus>
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <label for="exampleFormControlInput1" class="form-label">Nama Belakang</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_info.last_name }}">
+                                </div>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <img class="is-70x70" src="{{ url_for('static', filename=user_info.profile_pic_real)}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Foto Profil</label>
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" value="{{ user_info.profile_pic }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="address" name="address" rows="3">{{ user_info.address }}</textarea>
+                            <small class="form-text text-muted">Alamat diharapkan sesuai format (nama alamat, RT, RW, Desa/Kelurahan, Desa/Kelurahan, Kota/Kabupaten, dan Provinsi) untuk memudahkan pemesanan buket.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">No. Telepon</label>
+                            <input type="number" class="form-control" id="phone" name="phone" value="{{ user_info.phone }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3">{{ user_info.bio }}</textarea>
+                        </div>
                     </div>
-                    <div class="mb-3"><img class="is-70x70" src="{{ url_for('static', filename=user_info.profile_pic_real)}}"></div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Foto Profil</label>
-                        <input type="file" class="form-control" id="profile_picture" name="profile_picture" value=""
-                            required>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" onclick="update_profile()">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="address" name="address" rows="3" required>{{ user_info.address }}</textarea>
-                        <small class="form-text text-muted">Alamat diharapkan sesuai format (nama alamat, RT, RW, Desa/Kelurahan, Desa/Kelurahan, Kota/Kabupaten, dan Provinsi) untuk memudahkan pemesanan buket.</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">No. Telepon</label>
-                        <input type="number" class="form-control" id="phone" name="phone" value="{{ user_info.phone }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Bio</label>
-                        <textarea class="form-control" id="bio" name="bio" rows="3" required>{{ user_info.bio }}</textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="update_profile()">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 </div>
             </div>
         </div>
-    </div>
+
+    </main>
 {% include 'user/templates/footer.html' %}
