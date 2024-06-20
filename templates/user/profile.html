@@ -21,14 +21,11 @@
                                     <h3>{{ user_info.profile_name }}</h3>
                                     <span>@{{user_info.account_name}}</span>
                                     <h4>{{ user_info.role }}</h4>
-                                    {% if user_info.bio == '' %}
-                                    {% else %}
                                     <p>
                                         <i class="bx bxs-quote-alt-left quote-icon-left"></i>
                                         {{ user_info.bio }}
                                         <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                                        </p>
-                                    {% endif %}
+                                    </p>
                                     <div class="text-center mt-5">
                                         <!-- Edit Profil -->
                                         <button type="button" class="btn btn-outline-success wide-button" data-bs-toggle="modal" data-bs-target="#editProfile">

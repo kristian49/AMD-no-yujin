@@ -17,11 +17,11 @@ app = Flask(__name__)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-TOKEN_KEY =  os.environ.get('TOKEN_KEY')
 
 MONGODB_URI = os.environ.get('MONGODB_URI')
 DB_NAME =  os.environ.get('DB_NAME')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+TOKEN_KEY =  os.environ.get('TOKEN_KEY')
 
 client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
@@ -224,58 +224,6 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-### chat.html ###
-# menampilkan halaman chat
-@app.route('/obrolan' , methods=['GET', 'POST'])
-def obrolan():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Obrolan'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'account_name': payload['id']})
-        if request.method == 'POST':
-            judul = request.form['judul']
-            konten = request.form['konten']
-            timezone = pytz.timezone('Asia/Jakarta')
-            current_datetime = datetime.now(timezone)
-            post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
-            timestamp = current_datetime.timestamp()
-            doc = {
-                'useremail': user_info['useremail'],
-                'nama_lengkap': user_info['name'],
-                'foto_profil': user_info['profile_pic_real'],
-                'role': user_info['role'],
-                'judul': judul,
-                'konten': konten,
-                'post_data': post_date,
-                'isCompleted': 'false',
-                'timestamp': timestamp,
-            }
-            db.chats.insert_one(doc)
-            return redirect(url_for('forum'))
-        chats = list(db.chats.find().sort('timestamp', -1))
-        return render_template('user/obrolan.html', title = title, user_info = user_info, chats = chats)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/chat/<id>')
-def isi_chat(id):
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'account_name': payload['id']})
-        chat = db.chats.find_one({'_id': ObjectId(id)})
-        user = db.users.find_one({'account_name': chat['account_name']})
-        forum['nama_lengkap'] = user['name']
-        forum['foto_profil'] = user['profile_pic_real']
-        comments = list(db.comments.find({'thread_id': id}))
-        for comment in comments:
-            user = db.user.find_one({'account_name': comment['account_name']})
-            comment['nama_lengkap'] = user['name']
-            comment['foto_profil'] = user['profile_pic_real']
-        return render_template('isi_forum.html',user_info=user_info,forum=forum,comments=comments)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi
@@ -522,175 +470,6 @@ def submit_purchase():
         return jsonify({'message': 'Pembayaran berhasil!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-
-@app.route('/forum' , methods = ['GET', 'POST'])
-def forum():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        if request.method == 'POST':
-            judul = request.form['judul']
-            konten = request.form['konten']
-            timezone = pytz.timezone('Asia/Jakarta')
-            current_datetime = datetime.now(timezone)
-            post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
-            timestamp = current_datetime.timestamp()
-            doc = {
-                'useremail':user_info['useremail'],
-                'nama_lengkap':user_info['name'],
-                'foto_profil': user_info['profile_pic_real'],
-                'role':user_info['role'],
-                'judul':judul,
-                'konten':konten,
-                'post_data':post_date,
-                'isCompleted':'false',
-                'timestamp': timestamp,
-            }
-            db.forums.insert_one(doc)
-            return redirect(url_for('forum'))
-        forums = list(db.forums.find().sort('timestamp', -1))
-        return render_template('forum.html',user_info=user_info,forums=forums)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/forum/<id>')
-def isi_forum(id):
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        forum = db.forums.find_one({'_id': ObjectId(id)})
-        user = db.users.find_one({'useremail': forum['useremail']})
-        forum['nama_lengkap'] = user['name']
-        forum['foto_profil'] = user['profile_pic_real']
-        comments = list(db.comments.find({'thread_id': id}))
-        for comment in comments:
-            user = db.users.find_one({'useremail': comment['useremail']})
-            comment['nama_lengkap'] = user['name']
-            comment['foto_profil'] = user['profile_pic_real']
-        return render_template('isi_forum.html',user_info=user_info,forum=forum,comments=comments)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/user_forum_komen', methods=['POST'])
-def user_forum_komen():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        komen = request.form['komen']
-        timezone = pytz.timezone('Asia/Jakarta')
-        current_datetime = datetime.now(timezone)
-        post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
-        timestamp = current_datetime.timestamp()
-        doc = {
-                'useremail':user_info['useremail'],
-                'nama_lengkap':user_info['name'],
-                'foto_profil': user_info['profile_pic_real'],
-                'role':user_info['role'],
-                'thread_id': id,
-                'komen':komen,
-                'post_data':post_date,
-                'timestamp': timestamp,
-            }
-        db.comments.insert_one(doc)
-        return redirect(url_for('isi_forum', id=id))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/edit_forum_post', methods=['POST'])
-def edit_forum_post():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        judul = request.form['judul']
-        konten = request.form['konten']
-        db.forums.update_one(
-            {'_id': ObjectId(id)},
-            {'$set': {'judul': judul, 'konten': konten}}
-        )
-        return redirect(url_for('isi_forum', id=id))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/delete_forum_post', methods=['POST'])
-def delete_forum_post():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        db.forums.delete_one({'_id': ObjectId(id)})
-        db.comments.delete_many({'thread_id': id})
-        return redirect(url_for('forum'))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/close_forum_post', methods=['POST'])
-def close_forum_post():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        db.forums.update_one(
-            {'_id': ObjectId(id)},
-            {'$set': {'isCompleted': 'true'}}
-        )
-        return redirect(url_for('isi_forum', id=id))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-
-    
-
-@app.route('/edit_komen', methods=['POST'])
-def edit_komen():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        url_id = request.form['url_id']
-        komen = request.form['komen']
-        db.comments.update_one(
-            {'_id': ObjectId(id)},
-            {'$set': { 'komen': komen}}
-        )
-        return redirect(url_for('isi_forum', id=url_id))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/delete_komen', methods=['POST'])
-def delete_komen():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        id = request.form['id']
-        url_id = request.form['url_id']
-        db.comments.delete_one({'_id': ObjectId(id)})
-        return redirect(url_for('isi_forum', id=url_id))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-@app.route('/riwayat_forum')
-def riwayat_forum():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        forums = list(db.forums.find({'useremail': user_info['useremail']}).sort('timestamp', -1)) 
-        for forum in forums:
-            forum['jumlah_komen'] = db.comments.count_documents({'thread_id': str(forum['_id'])})
-        return render_template('riwayat_forum.html', user_info=user_info,forums=forums)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-
     
 @app.route('/buket')
 def bouquet():
@@ -711,107 +490,6 @@ def bouquet():
         return render_template('bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-    
-@app.route('/riwayat_pesanan')
-def riwayat_pesanan():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Riwayat Pemesanan'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        transactions = list(db.transaksi.find({'useremail': user_info['useremail']}).sort('tanggal', -1)) 
-        total_transactions = len(transactions) + 1
-        for transaction in transactions:
-            tanggal_asli = datetime.fromisoformat(transaction['tanggal']).date()
-            transaction['tanggal'] = tanggal_asli.strftime('%d/%m/%Y')
-            transaction['nama_produk'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
-            testimonial = db.testimoni.find_one({'transaction_id': str(transaction['_id'])})
-            transaction['ulasan_produk'] = testimonial['ulasan'] if testimonial else None
-        return render_template('riwayat_pesanan.html', title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-
-@app.route('/kirim-testimoni', methods = ['POST'])
-def kirim_testimoni():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        id = request.form['id']
-        ulasan_produk = request.form['ulasan_produk']
-        transaction =  db.transaksi.find_one({'_id': ObjectId(id)})
-        bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['nama_produk']
-        current_date = datetime.now().isoformat()
-        doc = {
-                'transaction_id': str(transaction['_id']),
-                'useremail': transaction['useremail'],
-                'nama_pembeli': transaction['nama_pembeli'],
-                'alamat_pembeli': transaction['alamat_pembeli'],
-                'no_pembeli': transaction['nomor_telepon'],
-                'produk_yang_dibeli': bouquet,
-                'ulasan': ulasan_produk,
-                'tanggal': current_date,
-            }
-        
-        db.testimoni.insert_one(doc)
-        db.transaksi.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
-        return redirect(url_for('riwayat_pesanan'))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
-    
-
-@app.route('/bayar', methods=['GET', 'POST'])
-def bayar():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        if request.method == 'GET':
-            quantity = request.args.get('quantity', default=1, type=int)
-            bouquet_id = request.args.get('bouquet_id')
-            bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
-            price = int(bouquet['harga_produk'])
-            print(price)
-            return render_template('bayar.html', user_info=user_info, bouquet=bouquet, quantity=quantity, bouquet_id=bouquet_id, price=price)
-        elif request.method == 'POST':
-           today = datetime.now()
-           mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-           useremail = db.users.find_one({'useremail': payload['id']})['useremail']
-           quantity = int(request.form['quantity'])
-           bouquet_id = request.form['bouquet_id']
-           nama_pembeli = request.form['nama_pembeli']
-           alamat_pembeli = request.form['alamat_pembeli']
-           nomor_telepon = request.form['nomor_telepon']
-           catatan_pembelian = request.form['catatan_pembelian']
-           bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
-           harga_per_produk = int(bouquet['harga_produk'])
-           total_harga = quantity * harga_per_produk
-           file = request.files['bukti_pembayaran']
-           filename = secure_filename(file.filename)
-           extension = filename.split('.')[-1]
-           file_path = f'admin/img/bukti-{useremail}-{mytime}.{extension}'
-           file.save('./static/' + file_path)
-           current_date = datetime.now().isoformat()
-           doc = {
-            'useremail' : useremail,
-            'bouquet_id':bouquet_id,
-            'quantity' : quantity,
-            'nama_pembeli' : nama_pembeli,
-            'alamat_pembeli' : alamat_pembeli,
-            'nomor_telepon' : nomor_telepon,
-            'catatan_pembelian' : catatan_pembelian,
-            'total_harga' : total_harga,
-            'bukti_pembayaran' : file_path,
-            'tanggal': current_date,
-            'status': 'pending',
-
-          }
-           db.transaksi.insert_one(doc)
-           return jsonify({'message': 'Order placed successfully'}), 200
-         
-        
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
 
 ### admin/dashboard.html ###
 # menampilkan halaman admin untuk beranda
@@ -823,7 +501,7 @@ def admin_home():
         title = 'Admin'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-
+        
         users_count = db.users.count_documents({})
         bouquets_count = db.bouquets.count_documents({})
         transactions_count = db.transactions.count_documents({})
@@ -909,14 +587,14 @@ def add_bouquet():
 
         current_date = datetime.now().isoformat()
         doc = {
-            'name' : name,
-            'image' : file_path,
-            'flower_color' : flower_color,
-            'paper_color' : paper_color,
-            'category' : category,
-            'description' : description,
-            'price' : price,
-            'stock' : stock,
+            'name': name,
+            'image': file_path,
+            'flower_color': flower_color,
+            'paper_color': paper_color,
+            'category': category,
+            'description': description,
+            'price': price,
+            'stock': stock,
             'date': current_date
         }
         db.bouquets.insert_one(doc)
