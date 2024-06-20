@@ -54,28 +54,11 @@
                 {% for bouquet in bouquets %}
                     {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
                     <div class="col-lg-4 col-md-6 portfolio-item Artificial-Full-Flower-Hand-Bouquet">
-                        <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid portfolio-img" alt="{{ bouquet.name }}">
-                        <div class="portfolio-info">
-                            <h4>{{bouquet.name}}</h4>
-                            <p>{{bouquet.category}}</p>
-                            <p class="card-text"><strong>Rp {{ bouquet.price }}</strong></p><br>
-                            <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
-                            <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
-                        </div>
-                    </div>
                     {% elif bouquet.category == 'Money-Hand-Bouquet' %}
                     <div class="col-lg-4 col-md-6 portfolio-item Money-Hand-Bouquet">
-                        <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid portfolio-img" alt="{{ bouquet.name }}">
-                        <div class="portfolio-info">
-                            <h4>{{bouquet.name}}</h4>
-                            <p>{{bouquet.category}}</p>
-                            <p class="card-text"><strong>Rp {{ bouquet.price }}</strong></p><br>
-                            <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
-                            <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
-                        </div>
-                    </div>
                     {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
                     <div class="col-lg-4 col-md-6 portfolio-item Hand-Bouquet-Snack">
+                    {% endif %}
                         <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid portfolio-img" alt="{{ bouquet.name }}">
                         <div class="portfolio-info">
                             <h4>{{bouquet.name}}</h4>
@@ -85,7 +68,6 @@
                             <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
                         </div>
                     </div>
-                    {% endif %}
                 {% endfor %}
             </div>
 
@@ -98,7 +80,7 @@
     $('.purchase-button').click(function() {
         var id = $(this).data('id');
         var quantity = $('#quantity-' + id).val();
-        var url = '/pembayaran?quantity=' + quantity + '&bouquet_id=' + id;
+        var url = '/pembayaran?quantity=' + 1 + '&bouquet_id=' + id;
         window.location.href = url;
     });
 

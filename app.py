@@ -69,7 +69,9 @@ def home():
         return render_template('user/dashboard.html', title = title, user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         title = 'Beranda'
-        return render_template('user/home.html', title = title)
+        bouquets = list(db.bouquets.find())
+        faqs = list(db.faqs.find())
+        return render_template('user/home.html', title = title, bouquets = bouquets, faqs = faqs)
 
 # untuk menampilkan format rupiah
 def format_rupiah(value):
@@ -645,8 +647,9 @@ def admin_home():
         income = doc['total_price']
         break
     thread_count = db.chats.count_documents({})
+    faqs_count = db.faqs.count_documents({})
     contact_count = db.contact_us.count_documents({})
-    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
+    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, faqs_count = faqs_count, contact_count = contact_count)
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
@@ -829,6 +832,51 @@ def delete_thread_admin_side():
     db.chats.delete_one({'_id': ObjectId(id)})
     db.comments.delete_many({'thread_id': id})
     return redirect(url_for('admin_forum'))
+
+### admin/faq.html ###
+# menampilkan halaman admin untuk pertanyaan dan jawaban
+@app.route("/admin/pertanyaan-dan-jawaban")
+@admin_required
+def admin_faq():
+    faqs = db.faqs.find()
+    return render_template("admin/faq.html", faqs = faqs)
+
+# tambah pertanyaan dan jawaban
+@app.route('/tambah-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def add_faq():
+    question = request.form['question']
+    answer = request.form['answer']
+    current_date = datetime.now().isoformat()
+    doc = {
+        "question": question,
+        "answer": answer,
+        "date": current_date
+    }
+    db.faqs.insert_one(doc)
+    return redirect(url_for('admin_faq'))
+
+# edit pertanyaan dan jawaban
+@app.route('/edit-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def edit_faq():
+    id = request.form['id']
+    question = request.form['question']
+    answer = request.form['answer']
+    new_doc = {
+        "question": question,
+        "answer": answer
+    }
+    db.faqs.update_one({'_id': ObjectId(id)}, {"$set": new_doc})
+    return redirect(url_for('admin_faq'))
+
+# hapus pertanyaan dan jawaban
+@app.route('/hapus-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def delete_faq():
+    id = request.form['id']
+    db.faqs.delete_one({'_id': ObjectId(id)})
+    return redirect(url_for('admin_faq'))
 
 ### admin/contact_us.html ###
 # menampilkan halaman admin untuk hubungi kami

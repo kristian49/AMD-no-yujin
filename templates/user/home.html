@@ -82,75 +82,76 @@
             </div>
         </section>
 
-        <!-- Rekap -->
-        <section id="counts" class="counts">
-            <div class="container" data-aos="fade-up">
-
-                <div class="row no-gutters justify-content-md-center">
-
-                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
-                        <div class="count-box">
-                            <i class="bi bi-emoji-smile"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-                            <p><strong>Variasi buket</strong> yang disediakan oleh Navirin's</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
-                        <div class="count-box">
-                            <i class="bi bi-journal-richtext"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                            <p><strong>Custom order buket</strong> yang telah dikerjakan bersama Navirin's</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
-                        <div class="count-box">
-                            <i class="bi bi-headset"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
-                            <p><strong>Pelanggan</strong> yang telah kami layani</p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
         <!-- Koleksi Buket -->
         <section id="koleksi-buket" class="portfolio">
             <div class="container" data-aos="fade-up">
 
                 <div class="section-title">
-                    <h2>Koleksi Buket</h2>
-                    <p>Daftar koleksi buket</p>
+                    <h2>Buket</h2>
+                    <p>Koleksi Buket Navirin's</p>
                 </div>
-
+    
                 <div class="row" data-aos="fade-up" data-aos-delay="100">
                     <div class="col-lg-12 d-flex justify-content-center">
                         <ul id="portfolio-flters">
-                            <li data-filter="*" class="filter-active">All</li>
-                            <li data-filter=".filter-app">App</li>
-                            <li data-filter=".filter-card">Card</li>
-                            <li data-filter=".filter-web">Web</li>
+                            <li data-filter="*" class="filter-active">Semua</li>
+                            <li data-filter=".Artificial-Full-Flower-Hand-Bouquet">Artificial Full Flower Hand Bouquet</li>
+                            <li data-filter=".Money-Hand-Bouquet">Money Hand Bouquet</li>
+                            <li data-filter=".Hand-Bouquet-Snack">Hand Bouquet Snack</li>
                         </ul>
                     </div>
                 </div>
-
-                <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                        <img src="../static/user/img/portfolio-1.jpg" class="img-fluid" alt="">
-                        <div class="portfolio-info">
-                            <h4>App 1</h4>
-                            <p>App</p>
-                            <a href="../static/user/img/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="App 1"><i class="bx bx-plus"></i></a>
-                            <a href="portfolio-details.html" class="details-link" title="More Details"><i class="bx bx-link"></i></a>
+    
+                <!-- Deskripsi Filter -->
+                <div class="row" data-aos="fade-up" data-aos-delay="150">
+                    <div class="col-md-12 md-5 d-flex justify-content-center">
+                        <div id="filter-descriptions">
+                            <div class="filter-description" id="Artificial-Full-Flower-Hand-Bouquet-description">
+                                <p>
+                                    <small>Bunga artificial adalah bunga yang berbahan sintesis atau plastic.
+                                    Meskipun tidak hidup, bunga artificial memiliki daya tarik dan kegunaan yang tak kalah indah.Tidak heran kalau bunga artificial ini popular di berbagai macam acara.</small>
+                                </p>
+                                <hr>
+                            </div>
+                            <div class="filter-description" id="Money-Hand-Bouquet-description">
+                                <p>
+                                    <small>Bunga uang yang terdiri atas artificial flowers dan uang tunai. Merupakan pilihan yang praktis dan tepat untuk diberikan sebagai hadiah atau bentuk penghargaan, sangat cocok di berbagai acara dan kalangan.
+                                    Kamu bisa memilih pecahan uang berapa saja untuk ditambahkan di Money Bouquet. Harga untuk produk ini sudah termasuk artificial flowers dan belum termasuk uang tunai yang diinginkan.</small>
+                                </p>
+                                <hr>
+                            </div>
+                            <div class="filter-description" id="Hand-Bouquet-Snack-description">
+                                <p>
+                                    <small>Bunga snack yang berisi aneka macam snack. Isi snack dari buket ini dapat kamu request sesuai dengan keinginan kamu. 
+                                    Harga udah termasuk artificial flowers dan belum termasuk snack dan kartu ucapan.</small>
+                                </p>
+                                <hr>
+                            </div>
                         </div>
                     </div>
-
                 </div>
-
+    
+                <div class="row portfolio-container mt-3" data-aos="fade-up" data-aos-delay="200">
+                    {% for bouquet in bouquets %}
+                        {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
+                        <div class="col-lg-4 col-md-6 portfolio-item Artificial-Full-Flower-Hand-Bouquet">
+                        {% elif bouquet.category == 'Money-Hand-Bouquet' %}
+                        <div class="col-lg-4 col-md-6 portfolio-item Money-Hand-Bouquet">
+                        {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
+                        <div class="col-lg-4 col-md-6 portfolio-item Hand-Bouquet-Snack">
+                        {% endif %}
+                            <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid portfolio-img" alt="{{ bouquet.name }}">
+                            <div class="portfolio-info">
+                                <h4>{{bouquet.name}}</h4>
+                                <p>{{bouquet.category}}</p>
+                                <p class="card-text"><strong>Rp {{ bouquet.price }}</strong></p><br>
+                                <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
+                                <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+    
             </div>
         </section>
 
@@ -164,43 +165,15 @@
                 </div>
 
                 <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    <div class="col-lg-5">
+                    {% for faq in faqs %}
+                    <div class="col-lg-5 mt-3">
                         <i class="bx bx-help-circle"></i>
-                        <h4>Kapan saja waktu operasional Navirin's?</h4>
+                        <h4>{{faq.question}}</h4>
                     </div>
-                    <div class="col-lg-7">
-                        <p>
-                            Waktu operasional Navirin's ada pada:
-                            <ul>
-                                <li>Hari Senin - Jumat pada pukul 08:30 WIB - 17:30 WIB.</li>
-                                <li>Hari Sabtu pada pukul 09:00 WIB - 12:00 WIB.</li>
-                            </ul>
-                        </p>
+                    <div class="col-lg-7 mt-3">
+                        <p>{{faq.answer}}</p>
                     </div>
-                </div>
-
-                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
-                    <div class="col-lg-5">
-                        <i class="bx bx-help-circle"></i>
-                        <h4>Apakah dapat memesan buket dari hari H?</h4>
-                    </div>
-                    <div class="col-lg-7">
-                        <p>
-                            Tidak bisa. Pelanggan mesti mem-booking buket dari H-3.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
-                    <div class="col-lg-5">
-                        <i class="bx bx-help-circle"></i>
-                        <h4>Apakah bunga pada buket dapat dari bunga asli?</h4>
-                    </div>
-                    <div class="col-lg-7">
-                        <p>
-                            Tidak bisa. Bunga pada buket tersebut adalah bunga plastik.
-                        </p>
-                    </div>
+                    {% endfor %}
                 </div>
 
             </div>
@@ -229,6 +202,7 @@
 
                     <div class="col-lg-6">
                         <div class="fillable-form">
+                            <h5 class="mt-2 mb-4">Pertanyaan, Kritik, dan Saran</h5>
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Nama Anda">
@@ -258,3 +232,33 @@
 
     </main>
 {% include 'user/templates/footer.html' %}
+<script>
+    $('.purchase-button').click(function() {
+        var id = $(this).data('id');
+        var quantity = $('#quantity-' + id).val();
+        var url = '/pembayaran?quantity=' + 1 + '&bouquet_id=' + id;
+        window.location.href = url;
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const filters = document.querySelectorAll('#portfolio-flters li');
+        const descriptions = document.querySelectorAll('.filter-description');
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                descriptions.forEach(description => {
+                    description.style.display = 'none';
+                });
+
+                const filterClass = filter.getAttribute('data-filter').substring(1) + '-description';
+                const activeDescription = document.getElementById(filterClass);
+                if (activeDescription) {
+                    activeDescription.style.display = 'block';
+                }
+            });
+        });
+
+        // Tampilkan deskripsi untuk filter aktif pertama kali
+        document.querySelector('.filter-active').click();
+    });
+</script>

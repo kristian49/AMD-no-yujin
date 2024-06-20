@@ -31,11 +31,11 @@
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <div class="col-md-2 col-lg-2 col-xl-2">
-                                    <img src="{{ url_for('static', filename=product.gambar_produk)}}"
+                                    <img src="{{ url_for('static', filename=bouquet.image) }}"
                                         class="img-fluid rounded-3" alt="Cotton T-shirt">
                                 </div>
                                 <div class="col-md-3 col-lg-3 col-xl-3">
-                                    <p class="lead fw-normal mb-4 mb-md-0 text-center">{{product.nama_produk}}</p>
+                                    <p class="lead fw-normal mb-4 mb-md-0 text-center">{{bouquet.name}}</p>
                                 </div>
                                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
                                     <button class="btn btn-link px-2"
@@ -52,7 +52,7 @@
                                     </button>
                                 </div>
                                 <div class="col-md-3 mt-3 mt-md-0 col-lg-2 col-xl-2 offset-lg-1">
-                                    <div id="product-price" style="display: none;">{{product.price}}</div>
+                                    <div id="bouquet-price" style="display: none;">{{bouquet.price}}</div>
                                     <h5 class="mb-0 text-center total-price">Rp. {{quantity*price}}</h5>
                                 </div>
                             </div>
