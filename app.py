@@ -228,6 +228,7 @@ def update_profile():
 def bouquetPaketZ():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Koleksi Buket'
         if token_receive:
             payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
             user_info = db.user.find_one({'useremail': payload['id']})
@@ -239,7 +240,7 @@ def bouquetPaketZ():
             bouquets = db.bouquets.find({'name': {'$regex': query, '$options': 'i'}})
         else:
             bouquets = db.bouquets.find().sort('date', -1)
-        return render_template('user/paketZ.html', user_info = user_info, bouquets = bouquets)
+        return render_template('user/paketZ.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
@@ -247,6 +248,7 @@ def bouquetPaketZ():
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Pembayaran'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.user.find_one({'useremail': payload['id']})
         if request.method == 'GET':
@@ -254,7 +256,7 @@ def pay():
             bouquet_id = request.args.get('bouquet_id')
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
             price = int(bouquet['price'])
-            return render_template('user/payment.html', user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
+            return render_template('user/payment.html', title = title, user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
         elif request.method == 'POST':
             today = datetime.now()
             mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
