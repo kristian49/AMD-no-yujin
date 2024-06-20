@@ -224,22 +224,16 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+### bouquet atau collection.html ###
+# menampilkan halaman koleksi buket
 @app.route('/paketz')
 def bouquetPaketZ():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         title = 'Koleksi Buket'
-        if token_receive:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-            user_info = db.user.find_one({'useremail': payload['id']})
-        else:
-            user_info = None
-
-        query = request.args.get('query', '')
-        if query:
-            bouquets = db.bouquets.find({'name': {'$regex': query, '$options': 'i'}})
-        else:
-            bouquets = db.bouquets.find().sort('date', -1)
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        bouquets = list(db.bouquets.find())
         return render_template('user/paketZ.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
@@ -682,10 +676,9 @@ def add_bouquet():
     file = request.files['image']
     filename = secure_filename(file.filename)
     extension = filename.split('.')[-1]
-    file_path = f'admin/img/bouquet/{mytime}.{extension}'
+    file_path = f'admin/img/bouquet/{name}-{mytime}.{extension}'
     file.save('./static/' + file_path)
-    flower_color = request.form['flower_color']
-    paper_color = request.form['paper_color']
+    flower_and_paper_color = request.form['flower_and_paper_color']
     category = request.form['category']
     price = int(request.form['price'])
     stock = int(request.form['stock'])
@@ -694,8 +687,7 @@ def add_bouquet():
     doc = {
         'name': name,
         'image': file_path,
-        'flower_color': flower_color,
-        'paper_color': paper_color,
+        'flower_and_paper_color': flower_and_paper_color,
         'category': category,
         'price': price,
         'stock': stock,
@@ -714,8 +706,7 @@ def edit_bouquet():
     mytime = today.strftime('%Y-%m-%d_%H-%M-%S')
 
     name = request.form['name']
-    flower_color = request.form['flower_color']
-    paper_color = request.form['paper_color']
+    flower_and_paper_color = request.form['flower_and_paper_color']
     category = request.form['category']
     price = int(request.form['price'])
     stock = int(request.form['stock'])
@@ -723,8 +714,7 @@ def edit_bouquet():
     current_date = datetime.now().isoformat()
     new_doc = {
         'name': name,
-        'flower_color': flower_color,
-        'paper_color': paper_color,
+        'flower_and_paper_color': flower_and_paper_color,
         'category': category,
         'price': price,
         'stock': stock,
@@ -744,8 +734,7 @@ def edit_bouquet():
         file = request.files['image']
         filename = secure_filename(file.filename)
         extension = filename.split('.')[-1]
-        file_path = f'admin/img/bouquet/{mytime}.{extension}'
-        # file_path = f'admin/img/{mytime}.{extension}'
+        file_path = f'admin/img/bouquet/{name}-{mytime}.{extension}'
         file.save('./static/' + file_path)
         new_doc['image'] = file_path
     else:
