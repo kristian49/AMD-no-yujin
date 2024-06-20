@@ -193,7 +193,7 @@ def update_profile():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        account_name = payload['id']
+        useremail = payload['id']
 
         first_name_receive = request.form['first_name_give']
         last_name_receive = request.form['last_name_give']
@@ -219,10 +219,140 @@ def update_profile():
             new_doc['profile_pic'] = filename
             new_doc['profile_pic_real'] = file_path
 
-        db.users.update_one({'account_name': payload['id']}, {'$set': new_doc})
+        db.users.update_one({'useremail': payload['id']}, {'$set': new_doc})
         return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
+
+@app.route('/paketz')
+def bouquetPaketZ():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        if token_receive:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+            user_info = db.user.find_one({'useremail': payload['id']})
+        else:
+            user_info = None
+
+        query = request.args.get('query', '')
+        if query:
+            bouquets = db.bouquets.find({'name': {'$regex': query, '$options': 'i'}})
+        else:
+            bouquets = db.bouquets.find().sort('date', -1)
+        return render_template('user/paketZ.html', user_info = user_info, bouquets = bouquets)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+
+@app.route('/pembayaran', methods = ['GET', 'POST'])
+def pay():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.user.find_one({'useremail': payload['id']})
+        if request.method == 'GET':
+            quantity = request.args.get('quantity', default = 1, type = int)
+            bouquet_id = request.args.get('bouquet_id')
+            bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
+            price = int(bouquet['price'])
+            return render_template('user/payment.html', user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
+        elif request.method == 'POST':
+            today = datetime.now()
+            mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+            useremail = db.user.find_one({'useremail': payload['id']})['useremail']
+            quantity = int(request.form['quantity'])
+            bouquet_id = request.form['bouquet_id']
+            name_of_buyer = request.form['name_of_buyer']
+            address_of_buyer = request.form['address_of_buyer']
+            phone_of_buyer = request.form['phone_of_buyer']
+            note_of_buyer = request.form['note_of_buyer']
+            bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
+            price_per_bouquet = int(bouquet['price'])
+            total_harga = quantity * price_per_bouquet
+            file = request.files['proof_of_payment']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'admin/img/proof_of_payment/{account_name}-{mytime}.{extension}'
+            file.save('./static/' + file_path)
+            current_date = datetime.now().isoformat()
+            doc = {
+                'useremail': useremail,
+                'bouquet_id': bouquet_id,
+                'quantity': quantity,
+                'name_of_buyer': name_of_buyer,
+                'address_of_buyer': address_of_buyer,
+                'phone_of_buyer': phone_of_buyer,
+                'note_of_buyer': note_of_buyer,
+                'total_price': total_price,
+                'proof_of_payment': file_path,
+                'date': current_date,
+                'status': 'pending',
+            }
+            db.transactions.insert_one(doc)
+            return jsonify({'message': 'Order placed successfully'}), 200
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('login'))
+
+### order.history ###
+# menampilkan riwayat pemesanan
+@app.route('/riwayat-pemesanan')
+def order_history():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.user.find_one({'useremail': payload['id']})
+        transactions = list(db.transactions.find({'useremail': user_info['useremail']}).sort('date', -1)) 
+        total_transactions = len(transactions) + 1
+        for transaction in transactions:
+            original_date = datetime.fromisoformat(transaction['date']).date()
+            transaction['date'] = original_date.strftime('%d/%m/%Y')
+            transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
+            testimonial = db.testimonials.find_one({'transaction_id': str(transaction['_id'])})
+            transaction['bouquet_review'] = testimonial['review'] if testimonial else None
+        return render_template('order_history.html', user_info = user_info, transactions = transactions, total_transactions = total_transactions)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('login'))
+    
+# kirim testimoni
+@app.route('/kirim-testimoni', methods = ['POST'])
+def kirim_testimoni():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        id = request.form['id']
+        bouquet_review = request.form['bouquet_review']
+        transaction =  db.transactions.find_one({'_id': ObjectId(id)})
+        bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
+        current_date = datetime.now().isoformat()
+        doc = {
+            'transaction_id': str(transaction['_id']),
+            'useremail' : transaction['useremail'],
+            'name_of_buyer': transaction['name_of_buyer'],
+            'address_of_buyer': transaction['address_of_buyer'],
+            'phone_of_buyer': transaction['phone_of_buyer'],
+            'purchased_bouquet': bouquet,
+            'review': bouquet_review,
+            'date': current_date,
+        }
+        
+        db.testimonials.insert_one(doc)
+        db.transactions.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
+        return redirect(url_for('order_history'))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('login'))
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi
@@ -499,7 +629,7 @@ def admin_home():
     users_count = db.users.count_documents({})
     bouquets_count = db.bouquets.count_documents({})
     transactions_count = db.transactions.count_documents({})
-    testimonials_count = db.testimonials.count_documents({})
+    testimonials_count = db.testimonialsals.count_documents({})
     pipeline = [
         {
             '$match': {
@@ -549,9 +679,9 @@ def add_bouquet():
     name = request.form['name']
     file = request.files['image']
     filename = secure_filename(file.filename)
-    extension = filename.split(".")[-1]
-    file_path = f"admin/img/bouquet/{mytime}.{extension}"
-    file.save("./static/" + file_path)
+    extension = filename.split('.')[-1]
+    file_path = f'admin/img/bouquet/{mytime}.{extension}'
+    file.save('./static/' + file_path)
     flower_color = request.form['flower_color']
     paper_color = request.form['paper_color']
     category = request.form['category']
@@ -560,14 +690,14 @@ def add_bouquet():
 
     current_date = datetime.now().isoformat()
     doc = {
-        "name": name,
-        "image": file_path,
-        "flower_color": flower_color,
-        "paper_color": paper_color,
-        "category": category,
-        "price": price,
-        "stock": stock,
-        "date": current_date
+        'name': name,
+        'image': file_path,
+        'flower_color': flower_color,
+        'paper_color': paper_color,
+        'category': category,
+        'price': price,
+        'stock': stock,
+        'date': current_date
     }
     db.bouquets.insert_one(doc)
     return redirect(url_for('admin_bouquet'))
@@ -594,7 +724,6 @@ def edit_bouquet():
         'flower_color': flower_color,
         'paper_color': paper_color,
         'category': category,
-        'description': description,
         'price': price,
         'stock': stock,
         'date': current_date
@@ -689,7 +818,7 @@ def send_order():
 @admin_required
 def admin_testimoni():
     title = 'Data Testimoni'
-    testimonials = db.testimonials.find()
+    testimonials = db.testimonialsals.find()
     return render_template('admin/testimonial.html', title = title, testimonials = testimonials)
 
 ### admin/chat.html ###

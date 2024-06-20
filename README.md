@@ -29,7 +29,7 @@ $ git clone https://github.com/kristian49/AMD-no-yujin.git
 Buat virtual env di dalam folder:
 
 ````shell
-$ python3 -m venv env_anda
+$ python3 -m venv nama_env
 ````
 
 Instal dependensi:

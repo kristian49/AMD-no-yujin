@@ -1,0 +1,54 @@
+{% include 'user/templates/header.html' %}
+<main id="main" class="mt-5">
+
+    <!-- Koleksi Buket -->
+    <section id="portfolio" class="portfolio">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Buket</h2>
+                <p>Koleksi Buket Navirin's</p>
+            </div>
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <ul id="portfolio-flters">
+                        <li data-filter="*" class="filter-active">Semua</li>
+                        <li data-filter=".filter-atificial">Artificial Full Flower Hand Bouquet</li>
+                        <li data-filter=".filter-money">Money Hand Bouquet</li>
+                        <li data-filter=".filter-hand">Hand Bouquet Snack</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
+
+                {% for bouquet in bouquets %}
+
+                <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                    <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid">
+                    <div class="portfolio-info">
+                        <h4>{{bouquet.name}}</h4>
+                        <p>{{bouquet.category}}</p>
+                        <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
+                        <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+{% include 'user/templates/footer.html' %}
+<script>
+    $('.purchase-button').click(function() {
+        var id = $(this).data('id');
+        var quantity = $('#quantity-' + id).val();
+        var url = '/pembayaran?quantity=' + quantity + '&bouquet_id=' + id;
+        window.location.href = url;
+    });
+</script>
