@@ -29,6 +29,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css" rel="stylesheet" />
     <link href="{{ url_for('static', filename='user/css/swiper-bundle.min.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='user/css/style.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='user/css/hc_style.css') }}" rel="stylesheet" />
 
 </head>
 <body>
@@ -52,7 +53,7 @@
                         </a>
                         <ul>
                             <li><a href="profil/{{ user_info.account_name }}">Profil</a></li>
-                            <li><a href="obrolan/{{ user_info.account_name }}">Obrolan</a></li>
+                            <li><a href="obrolan">Obrolan</a></li>
                             <li><a href="riwayat-pemesanan">Riwayat Pemesanan</a></li>
                             <li><a href="#" onclick="logout()">Keluar</a></li>
                         </ul>
@@ -80,7 +81,7 @@
                         </a>
                         <ul>
                             <li><a href="profil/{{ user_info.account_name }}">Profil</a></li>
-                            <li><a href="obrolan/{{ user_info.account_name }}">Obrolan</a></li>
+                            <li><a href="obrolan">Obrolan</a></li>
                             <li><a href="riwayat-pemesanan/{{ user_info.account_name }}">Riwayat Pemesanan</a></li>
                             <li><a href="#" onclick="logout()">Keluar</a></li>
                         </ul>

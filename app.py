@@ -495,17 +495,12 @@ def bouquet():
 @app.route('/admin/beranda')
 @admin_required
 def admin_home():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Admin'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        
-        users_count = db.users.count_documents({})
-        bouquets_count = db.bouquets.count_documents({})
-        transactions_count = db.transactions.count_documents({})
-        testimonials_count = db.testimonials.count_documents({})
-        pipeline = [
+    title = 'Admin'
+    users_count = db.users.count_documents({})
+    bouquets_count = db.bouquets.count_documents({})
+    transactions_count = db.transactions.count_documents({})
+    testimonials_count = db.testimonials.count_documents({})
+    pipeline = [
         {
             '$match': {
                 'status': 'selesai'
@@ -517,114 +512,95 @@ def admin_home():
                 'total_price': {'$sum': '$total_price'}
             }
         }
-        
-        ]
-        result = db.transactions.aggregate(pipeline)
-        income = 0
-        for doc in result:
-            income = doc['total_price']
-            break
-        thread_count = db.chats.count_documents({})
-        contact_count = db.contact_us.count_documents({})
-        return render_template('admin/dashboard.html', title = title, user_info = user_info, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
+    ]
+    result = db.transactions.aggregate(pipeline)
+    income = 0
+    for doc in result:
+        income = doc['total_price']
+        break
+    thread_count = db.chats.count_documents({})
+    contact_count = db.contact_us.count_documents({})
+    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
 @app.route('/admin/pengguna')
 @admin_required
 def admin_user():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Data Pengguna'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        users = db.users.find()
-        return render_template('admin/user.html', title = title, user_info = user_info, users = users)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
-
+    title = 'Data Pengguna'
+    users = db.users.find()
+    return render_template('admin/user.html', title = title, users = users)
+    
 ### admin/bouquet.html ###
 # menampilkan halaman admin untuk buket
 @app.route('/admin/buket')
 @admin_required
 def admin_bouquet():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Data Buket'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        bouquets = db.bouquets.find()
-        return render_template('admin/bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
+    title = 'Data Buket'
+    bouquets = db.bouquets.find()
+    return render_template('admin/bouquet.html', title = title, bouquets = bouquets)
 
 # tambah buket
 @app.route('/tambah-buket', methods=['POST'])
 @admin_required
 def add_bouquet():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d_%H-%M-%S')
+    
+    name = request.form['name']
+    flower_color = request.form['flower_color']
+    paper_color = request.form['paper_color']
+    category = request.form['category']
+    price = int(request.form['price'])
+    stock = int(request.form['stock'])
 
-        today = datetime.now()
-        mytime = today.strftime('%Y-%m-%d_%H.%M.%S')
-        name = request.form['name']
-        file = request.files['image']
-        filename = secure_filename(file.filename)
-        extension = filename.split('.')[-1]
-        file_path = f'admin/img/bouquet/{mytime}.{extension}'
-        file.save('./static/' + file_path)
-        flower_color = request.form['flower_color']
-        paper_color = request.form['paper_color']
-        category = request.form['category']
-        description = request.form['description']
-        price =int(request.form['price'])
-        stock = int(request.form['stock'])
+    file = request.files['image']
+    filename = secure_filename(file.filename)
+    extension = filename.split('.')[-1]
+    file_path = f'admin/img/bouquet/{mytime}.{extension}'
+    # file_path = f'admin/img/{mytime}.{extension}'
+    file.save('./static/' + file_path)
 
-        current_date = datetime.now().isoformat()
-        doc = {
-            'name': name,
-            'image': file_path,
-            'flower_color': flower_color,
-            'paper_color': paper_color,
-            'category': category,
-            'description': description,
-            'price': price,
-            'stock': stock,
-            'date': current_date
-        }
-        db.bouquets.insert_one(doc)
-        return redirect(url_for('admin_bouquet'))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
+    current_date = datetime.now().isoformat()
+    doc = {
+        'name': name,
+        'image': file_path,
+        'flower_color': flower_color,
+        'paper_color': paper_color,
+        'category': category,
+        'description': description,
+        'price': price,
+        'stock': stock,
+        'date': current_date
+    }
+    db.bouquets.insert_one(doc)
+    return redirect(url_for('admin_bouquet'))
 
 # edit buket
 @app.route('/edit-buket', methods=['POST'])
 @admin_required
 def edit_bouquet():
-    id =request.form['id']
+    id = request.form['id']
+
     today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d_%H.%M.%S')
+    mytime = today.strftime('%Y-%m-%d_%H-%M-%S')
+
     name = request.form['name']
     flower_color = request.form['flower_color']
     paper_color = request.form['paper_color']
     category = request.form['category']
-    description =request.form['description']
-    price =int(request.form['price'])
+    price = int(request.form['price'])
     stock = int(request.form['stock'])
 
     current_date = datetime.now().isoformat()
     new_doc = {
-        'name' : name,
-        'flower_color' : flower_color,
-        'paper_color' : paper_color,
-        'category' : category,
-        'description' : description,
-        'price' : price,
-        'stock' : stock,
+        'name': name,
+        'flower_color': flower_color,
+        'paper_color': paper_color,
+        'category': category,
+        'description': description,
+        'price': price,
+        'stock': stock,
         'date': current_date
     }
     
@@ -642,14 +618,13 @@ def edit_bouquet():
         filename = secure_filename(file.filename)
         extension = filename.split('.')[-1]
         file_path = f'admin/img/bouquet/{mytime}.{extension}'
+        # file_path = f'admin/img/{mytime}.{extension}'
         file.save('./static/' + file_path)
         new_doc['image'] = file_path
     else:
         pass
-    db.bouquets.update_one(
-        {'_id': ObjectId(id)}, 
-        {'$set': new_doc}
-    )
+
+    db.bouquets.update_one({'_id': ObjectId(id)}, {'$set': new_doc})
     return redirect(url_for('admin_bouquet'))
 
 # hapus buket
@@ -659,9 +634,9 @@ def delete_bouquet():
     id = request.form['id']
     bouquet = db.bouquets.find_one({'_id': ObjectId(id)})
     if bouquet:
-        foto = bouquet.get('bouquet', '')
-        if foto:
-            file_path = os.path.abspath('./static/' + foto)
+        photo = bouquet.get('bouquet', '')
+        if photo:
+            file_path = os.path.abspath('./static/' + photo)
             if os.path.exists(file_path):
                 os.remove(file_path)
         db.bouquets.delete_one({'_id': ObjectId(id)})
@@ -674,16 +649,12 @@ def delete_bouquet():
 @app.route('/admin/transaksi')
 @admin_required
 def admin_transaction():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Data Transaksi'
-        transactions = list(db.transactions.find())
-        for transaction in transactions:
-            transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
-        return render_template('admin/transaction.html', title = title, transactions = transactions)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
-
+    title = 'Data Transaksi'
+    transactions = list(db.transactions.find())
+    for transaction in transactions:
+        transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
+    return render_template('admin/transaction.html', title = title, transactions = transactions)
+    
 # terima pemesanan
 @app.route('/terima-pemesanan', methods=['POST'])
 @admin_required
@@ -731,8 +702,8 @@ def admin_testimoni():
 @admin_required
 def admin_forum():
     title = 'Data Obrolan'
-    forums= db.chats.find()
-    return render_template('admin/forum.html', title = title, forums = forums)
+    chats = db.chats.find()
+    return render_template('admin/forum.html', title = title, chats = chats)
 
 # menghapus obrolan
 @app.route('/delete_thread_admin_side', methods = ['POST'])
