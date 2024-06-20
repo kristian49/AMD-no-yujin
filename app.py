@@ -150,11 +150,11 @@ def login():
             if user_info:
                 return redirect(url_for('home'))
         
-        return render_template("user/auth/login.html", title = title)
+        return render_template('user/auth/login.html', title = title)
     
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         title = 'Masuk'
-        return render_template("user/auth/login.html", title = title)
+        return render_template('user/auth/login.html', title = title)
 
 # menerima masuknya pengguna
 @app.route('/memasukkan-akun', methods = ['POST'])
@@ -176,15 +176,14 @@ def api_login():
 
 ### profile.html ###
 # menampilkan halaman profil
-@app.route('/profil/<account_name>', methods = ['GET'])
+@app.route('/profil/<account_name>')
 def profile(account_name):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        title = 'Profil'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         status = account_name == payload["id"]  
         user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
-        return render_template('user/profile.html', title = title, user_info = user_info, status = status)
+        return render_template('user/profile.html', user_info = user_info, status = status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
