@@ -541,37 +541,33 @@ def admin_bouquet():
     return render_template('admin/bouquet.html', title = title, bouquets = bouquets)
 
 # tambah buket
-@app.route('/tambah-buket', methods=['POST'])
+@app.route('/tambah-buket', methods = ['POST'])
 @admin_required
 def add_bouquet():
     today = datetime.now()
-    mytime = today.strftime('%Y-%m-%d_%H-%M-%S')
-    
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
     name = request.form['name']
+    file = request.files['image']
+    filename = secure_filename(file.filename)
+    extension = filename.split(".")[-1]
+    file_path = f"admin/img/bouquet/{mytime}.{extension}"
+    file.save("./static/" + file_path)
     flower_color = request.form['flower_color']
     paper_color = request.form['paper_color']
     category = request.form['category']
     price = int(request.form['price'])
     stock = int(request.form['stock'])
 
-    file = request.files['image']
-    filename = secure_filename(file.filename)
-    extension = filename.split('.')[-1]
-    file_path = f'admin/img/bouquet/{mytime}.{extension}'
-    # file_path = f'admin/img/{mytime}.{extension}'
-    file.save('./static/' + file_path)
-
     current_date = datetime.now().isoformat()
     doc = {
-        'name': name,
-        'image': file_path,
-        'flower_color': flower_color,
-        'paper_color': paper_color,
-        'category': category,
-        'description': description,
-        'price': price,
-        'stock': stock,
-        'date': current_date
+        "name": name,
+        "image": file_path,
+        "flower_color": flower_color,
+        "paper_color": paper_color,
+        "category": category,
+        "price": price,
+        "stock": stock,
+        "date": current_date
     }
     db.bouquets.insert_one(doc)
     return redirect(url_for('admin_bouquet'))
