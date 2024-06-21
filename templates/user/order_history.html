@@ -1,0 +1,298 @@
+{% include 'user/templates/header.html' %}
+    <main id="main" class="mt-5">
+
+        <!-- Kontak -->
+        <section id="kontak" class="contact section-bg">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Riwayat Pemesanan</h2>
+                    <p>Riwayat Pemesanan Buket Navirin's</p>
+                </div>
+
+                <div class="row no-gutters justify-content-md-center">
+
+                    <div class="col-lg-10">
+                        {% for pay in payment %}
+                        <div class="card mb-3 mx-auto pointer-cursor" style="max-width: 900px;" data-bs-toggle="modal"
+                            data-bs-target="#modalPesanan_{{payment['_id']}}">
+                            <div class="row g-0">
+                                <div class="col-8 col-md-9 col-lg-10">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pembelian #{{total_payment - loop.index}}</h5>
+                                        <p class="card-text">By {{pay.useremail}}</p>
+                                        <p class="card-text"><small class="text-muted">{{pay.tanggal}}</small></p>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-md-3 col-lg-2 d-flex align-items-center">
+                                    <div class="card-body">
+                                        {% if pay.status_order == "processing" %}
+                                        <button type="button" class="btn btn-outline-warning btnriwayat shadow-sm">processing</button>
+                                        {% elif pay.status_order == "diterima" %}
+                                        <button class="btn btn-outline-success btnriwayat shadow-sm">Diterima</button>
+                                        {% elif pay.status_order == "ditolak" %}
+                                        <button class="btn btn-outline-danger btnriwayat shadow-sm">Ditolak</button>
+                                        {% elif pay.status_order == "dikirim" %}
+                                        <button type="button" class="btn btn-outline-info btnriwayat shadow-sm">Dikirim</button>
+                                        {% elif pay.status_order == "selesai" %}
+                                        <button type="button" class="btn btn-outline-secondary btnriwayat shadow-sm">Selesai</button>
+                                        {% else %}
+                                        <button type="button" class="btn btn-secondary">status_order Tidak Dikenali</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modalPesanan_{{payment['_id']}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Pembelian</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body px-4">
+                                        {% if pay.status_order == "processing" %}
+                                        <div class="mb-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Buket</th>
+                                                        <th>Kuantitas</th>
+                                                        <th>Total Harga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{pay.bucket_name}}</td>
+                                                        <td>{{pay.quantity}}</td>
+                                                        <td>{{pay.total_price}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tanggal Pembelian</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.tanggal}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-column gap-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bukti Pembayaran</label>
+                                            <a href="{{ url_for('static', filename=pay.bukti_pembayaran)}}" target="_blank">
+                                                <img src="{{ url_for('static', filename=pay.bukti_pembayaran)}}" width="70" height="70" style="object-fit:contain">
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">status_order</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.status_order | capitalize}}  " disabled
+                                                readonly>
+                                        </div>
+                                        {% elif pay.status_order == "diterima" %}
+                                        <div class="mb-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Buket</th>
+                                                        <th>Kuantitas</th>
+                                                        <th>Total Harga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{pay.bucket_name}}</td>
+                                                        <td>{{pay.quantity}}</td>
+                                                        <td>{{pay.total_price}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tanggal Pembelian</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.tanggal}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-column gap-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bukti Pembayaran</label>
+                                            <a href="{{ url_for('static', filename=pay.bukti_pembayaran)}}" target="_blank">
+                                                <img src="{{ url_for('static', filename=pay.bukti_pembayaran)}}" width="70" height="70" style="object-fit:contain">
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">status_order</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.status_order | capitalize}}  " disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Catatan Admin</label>
+                                            <textarea class="form-control" id="catatan_admin" name="catatan_admin" rows="4"
+                                            disabled readonly>{{pay.catatan_admin}}</textarea>
+                                        </div>
+
+                                        {% elif pay.status_order == "ditolak" %}
+                                        <div class="mb-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Buket</th>
+                                                        <th>Kuantitas</th>
+                                                        <th>Total Harga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{pay.bucket_name}}</td>
+                                                        <td>{{pay.quantity}}</td>
+                                                        <td>{{pay.total_price}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tanggal Pembelian</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.tanggal}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-column gap-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bukti Pembayaran</label>
+                                            <a href="{{ url_for('static', filename=pay.bukti_pembayaran)}}" target="_blank">
+                                                <img src="{{ url_for('static', filename=pay.bukti_pembayaran)}}" width="70" height="70" style="object-fit:contain">
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">status_order</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.status_order | capitalize}}  " disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Alasan Penolakkan</label>
+                                            <textarea class="form-control" id="catatan_admin" name="catatan_admin" rows="4"
+                                            disabled readonly>{{pay.catatan_admin}}</textarea>
+                                        </div>
+
+                                        {% elif pay.status_order == "dikirim" %}
+                                        <div class="mb-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Buket</th>
+                                                        <th>Kuantitas</th>
+                                                        <th>Total Harga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{pay.bucket_name}}</td>
+                                                        <td>{{pay.quantity}}</td>
+                                                        <td>{{pay.total_price}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tanggal Pembelian</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.tanggal}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-column gap-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bukti Pembayaran</label>
+                                            <a href="{{ url_for('static', filename=pay.bukti_pembayaran)}}" target="_blank">
+                                                <img src="{{ url_for('static', filename=pay.bukti_pembayaran)}}" width="70" height="70" style="object-fit:contain">
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">status_order</label>
+                                            <input type="text" class="form-control" id="status_order_pembelian" name="status_order_pembelian" value="{{pay.status_order | capitalize}}  " disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Nomor Resi</label>
+                                            <input type="text" class="form-control" id="nomor_resi" name="nomor_resi" value="{{pay.catatan_admin}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Sudah Menerima Barang? Silahkan Berikan Ulasan Anda!</label>
+                                            <textarea class="form-control" id="ulasan_produk_{{payment['_id']}}" data-id="{{payment['_id']}}" name="ulasan_produk_{{payment['_id']}}" rows="4"
+                                            required></textarea>
+                                        </div>
+
+
+                                        {% elif pay.status_order == "selesai" %}
+                                        <div class="mb-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Buket</th>
+                                                        <th>Kuantitas</th>
+                                                        <th>Total Harga</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{pay.bucket_name}}</td>
+                                                        <td>{{pay.quantity}}</td>
+                                                        <td>{{pay.total_price}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Tanggal Pembelian</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.tanggal}}" disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-column gap-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bukti Pembayaran</label>
+                                            <a href="{{ url_for('static', filename=pay.bukti_pembayaran)}}" target="_blank">
+                                                <img src="{{ url_for('static', filename=pay.bukti_pembayaran)}}" width="70" height="70" style="object-fit:contain">
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">status_order</label>
+                                            <input type="text" class="form-control" id="tanggal" name="tanggal" value="{{pay.status_order | capitalize}}  " disabled
+                                                readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlTextarea1" class="form-label">Ulasan Anda</label>
+                                            <textarea class="form-control" id="ulasan_produk_done" name="ulasan_produk_done" rows="4"
+                                            disabled readonly>{{pay.ulasan_produk}}</textarea>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                    
+                                
+                                    <div class="modal-footer px-3 d-flex justify-content-center gap-2">
+                                        {% if pay.status_order == "processing" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                        {% elif pay.status_order == "diterima" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                        {% elif pay.status_order == "ditolak" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                        {% elif pay.status_order == "dikirim" %}
+                                        <button type="button" class="btn btn-primary flex-fill" onclick="kirim_testimoni('{{payment['_id']}}')">Kirim</button>
+                                        <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                        
+                                        {% elif pay.status_order == "selesai" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                    
+                                        {% endif %}
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+{% include 'user/templates/footer.html' %}

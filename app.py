@@ -17,7 +17,6 @@ app = Flask(__name__)
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-
 MONGODB_URI = os.environ.get('MONGODB_URI')
 DB_NAME =  os.environ.get('DB_NAME')
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -242,7 +241,7 @@ def bouquetPaketZ():
 
 ### payment.html ###
 # menampilkan halaman pembayaran
-@app.route('/bayar', methods = ['GET', 'POST'])
+@app.route('/pakety', methods = ['GET', 'POST'])
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -271,8 +270,8 @@ def pay():
             address_of_buyer = request.form['address_of_buyer']
             shipping_method = request.form['shipping_method']
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
-            # price_per_bouquet = int(bouquet['price'])
-            # total_price = quantity * price_per_bouquet
+            price_per_bouquet = int(bouquet['price'])
+            total_price = quantity * price_per_bouquet
             file = request.files['proof_of_payment']
             filename = secure_filename(file.filename)
             extension = filename.split('.')[-1]
@@ -292,7 +291,7 @@ def pay():
                 'phone_of_buyer': phone_of_buyer,
                 'address_of_buyer': address_of_buyer,
                 'shipping_method': shipping_method,
-                # 'total_price': total_price,
+                'total_price': total_price,
                 'proof_of_payment': file_path,
                 'date': current_date,
                 'status': 'pending'
@@ -304,26 +303,26 @@ def pay():
 
 ### order_history.html ###
 # menampilkan riwayat pemesanan
-@app.route('/riwayat-pemesanan')
+@app.route('/riwayat-pemesan')
 def order_history():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
-        transactions = list(db.transactions.find({'useremail': user_info['useremail']}).sort('date', -1)) 
-        total_transactions = len(transactions) + 1
-        for transaction in transactions:
-            original_date = datetime.fromisoformat(transaction['date']).date()
-            transaction['date'] = original_date.strftime('%d/%m/%Y')
-            transaction['name'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
-            testimonial = db.testimonials.find_one({'transaction_id': str(transaction['_id'])})
-            transaction['bouquet_review'] = testimonial['review'] if testimonial else None
-        return render_template('order_history.html', user_info = user_info, transactions = transactions, total_transactions = total_transactions)
+        payments = list(db.payment.find({'useremail': user_info['useremail']}).sort('order_date', -1)) 
+        total_payments = len(payments) + 1
+        for payment in payments:
+            # original_date = datetime.fromisoformat(pay['date']).date()
+            # pay['date'] = original_date.strftime('%d/%m/%Y')
+            payment['bucket_name'] = db.payment.find_one({'_id': ObjectId(payment['order_id'])})['bucket_name']
+            testimonial = db.testimoni_b.find_one({'payment_id': str(payment['_id'])})
+            pay['bouquet_review'] = testimonial['review'] if testimonial else None
+        return render_template('user/order_history.html', user_info = user_info, payments = payments, total_payments = total_payments)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
 # kirim testimoni
-@app.route('/kirim-testimoni', methods = ['POST'])
+@app.route('/kirim-testi', methods = ['POST'])
 def kirim_testimoni():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -837,28 +836,54 @@ def send_order():
 # menampilkan halaman admin untuk testimoni
 @app.route('/admin/testimoni')
 @admin_required
-def admin_testimoni():
+def admin_testimonials():
     title = 'Data Testimoni'
-    testimonials = db.testimonialsals.find()
+    testimonials = db.testimonials.find()
     return render_template('admin/testimonial.html', title = title, testimonials = testimonials)
 
-### admin/chat.html ###
-# menampilkan halaman admin untuk obrolan
-@app.route('/admin/forum')
+### test
+@app.route("/admin/transaksi-b")
 @admin_required
-def admin_forum():
-    title = 'Data Obrolan'
-    chats = db.chats.find()
-    return render_template('admin/forum.html', title = title, chats = chats)
+def admin_transaksi():
+    transactions = list(db.payment.find())
+    for transaction in transactions:
+        transaction['bucket_name'] = db.collections.find_one({'_id': ObjectId(transaction['order_id'])})['bucket_name']
+    return render_template("admin/transaksi-b.html", transactions = transactions)
 
-# menghapus obrolan
-@app.route('/delete_thread_admin_side', methods = ['POST'])
+@app.route('/terima_pembelian', methods=['POST'])
 @admin_required
-def delete_thread_admin_side():
+def terima_pembelian():
     id = request.form['id']
-    db.chats.delete_one({'_id': ObjectId(id)})
-    db.comments.delete_many({'thread_id': id})
-    return redirect(url_for('admin_forum'))
+    catatan_admin = request.form['catatan_admin']
+    transaction =  db.payment.find_one({'_id': ObjectId(id)})
+    quantity = transaction['quantity']
+
+    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'diterima', 'catatan_admin': catatan_admin}})
+    db.collections.update_one({'_id': ObjectId(transaction['order_id'])})
+
+    return redirect(url_for('admin_transaksi'))
+
+@app.route('/tolak_pembelian', methods=['POST'])
+@admin_required
+def tolak_pembelian():
+    id = request.form['id']
+    catatan_admin = request.form['catatan_admin']
+    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'ditolak', 'catatan_admin': catatan_admin}})
+    return redirect(url_for('admin_transaksi'))
+
+@app.route('/kirim_pembelian', methods=['POST'])
+@admin_required
+def kirim_pembelian():
+    id = request.form['id']
+    catatan_admin = request.form['catatan_admin']
+    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'dikirim', 'catatan_admin': catatan_admin}})
+    return redirect(url_for('admin_transaksi'))
+
+@app.route("/admin/testimoni-b")
+@admin_required
+def admin_testimoni():
+    testimonies = db.testimoni_b.find()
+    return render_template("admin/testimoni-b.html", testimonies = testimonies)
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban

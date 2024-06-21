@@ -25,7 +25,7 @@
                                 <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <input id="content_quantity" min="1" name="quantity" value="{{quantity}}" type="number" class="form-control form-control-sm text-center">
+                                <input id="content_quantity" min="1" name="quantity" value="{{quantity}}" type="number" class="form-control text-center">
                                 <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -134,7 +134,6 @@
                         </div>
                         <div class="text-center mt-5">
                             <button type="submit" onclick="pay()" id="order-button" data-id="{{bouquet['_id']}}">Pesan</button>
-                            <button type="submit" href="paketz">Batal</button>
                         </div>
                     </div>
                 </div>
@@ -192,7 +191,7 @@
             form_data.append("proof_of_payment", proof_of_payment);
             $.ajax({
                 type: "POST",
-                url: "/bayar",
+                url: "/pakety",
                 data: form_data,
                 cache: false,
                 contentType: false,
