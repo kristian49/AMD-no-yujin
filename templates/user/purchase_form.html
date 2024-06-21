@@ -75,58 +75,51 @@
             </div>
         </div>
     </main>
-<<<<<<< HEAD
-=======
-    
-    <!-- Footer -->
->>>>>>> 9523aadfc084883ca96443d39dd54bf0162aa853
+{% include 'user/templates/footer.html' %}
+<script>
+    $(document).ready(function() {
+        // Submit form pembayaran
+        $('form').submit(function(event) {
+            event.preventDefault(); // Mencegah form dari pengiriman standar
+            var formData = new FormData($(this)[0]);
 
-    <script>
-        $(document).ready(function() {
-            // Submit form pembayaran
-            $('form').submit(function(event) {
-                event.preventDefault(); // Mencegah form dari pengiriman standar
-                var formData = new FormData($(this)[0]);
-    
-                $.ajax({
-                    url: "{{ url_for('submit_purchase') }}",
-                    type: 'POST',
-                    data: formData,
-                    async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        // Tampilkan SweetAlert ketika pembayaran berhasil
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer);
-                                toast.addEventListener('mouseleave', Swal.resumeTimer);
-                            }
-                        });
-    
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.message
-                        });
-    
-                        // Arahkan ke halaman profil setelah 3 detik
-                        setTimeout(function() {
-                            window.location.href = '/koleksi';
-                        }, 3000);
-                    },
-                    error: function(xhr, status, error) {
-                        // Tangani kesalahan jika ada
-                        console.error(xhr.responseText);
-                    }
-                });
+            $.ajax({
+                url: "{{ url_for('submit_purchase') }}",
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    // Tampilkan SweetAlert ketika pembayaran berhasil
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseleave', Swal.resumeTimer);
+                        }
+                    });
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.message
+                    });
+
+                    // Arahkan ke halaman profil setelah 3 detik
+                    setTimeout(function() {
+                        window.location.href = '/koleksi';
+                    }, 3000);
+                },
+                error: function(xhr, status, error) {
+                    // Tangani kesalahan jika ada
+                    console.error(xhr.responseText);
+                }
             });
         });
-    </script>
-    
-{% include 'user/templates/footer.html' %}
+    });
+</script>

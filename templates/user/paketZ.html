@@ -65,7 +65,7 @@
                             <p>{{bouquet.category}}</p>
                             <p class="card-text"><strong>Rp {{ bouquet.price }}</strong></p><br>
                             <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
-                            <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
+                            <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="Pesan"><i class='bx bx-transfer-alt'></i></a>
                         </div>
                     </div>
                 {% endfor %}
@@ -80,7 +80,7 @@
     $('.purchase-button').click(function() {
         var id = $(this).data('id');
         var quantity = $('#quantity-' + id).val();
-        var url = '/pembayaran?quantity=' + 1 + '&bouquet_id=' + id;
+        var url = '/bayar?quantity=' + 1 + '&bouquet_id=' + id;
         window.location.href = url;
     });
 

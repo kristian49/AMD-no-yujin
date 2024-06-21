@@ -6,21 +6,15 @@
                         <h4 class="page-title">Data Hubungi Kami</h4>
                         <ul class="breadcrumbs">
                             <li class="nav-home">
-                                <a href="#">
-                                    <i class="flaticon-home"></i>
+                                <a href="../admin/beranda">
+                                    <i class="bi bi-archive"></i>
                                 </a>
                             </li>
                             <li class="separator">
                                 <i class="flaticon-right-arrow"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Data</a>
-                            </li>
-                            <li class="separator">
-                                <i class="flaticon-right-arrow"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">Hubungi Kami</a>
+                                <a>Data Hubungi Kami</a>
                             </li>
                         </ul>
                     </div>
@@ -56,7 +50,7 @@
                                                     <td>{{contact.email}}</td>
                                                     <td>{{contact.subject}}</td>
                                                     <td>{{contact.message}}</td>
-                                                    <td>{{contact.tanggal_kirim}}</td>
+                                                    <td>{{contact.sent_date}}</td>
                                                     <td>
                                                         <a href="#deleteContactUs_{{contact['_id']}}" data-toggle="modal"
                                                             class="btn btn-xs btn-danger">
