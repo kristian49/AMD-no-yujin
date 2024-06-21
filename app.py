@@ -241,7 +241,7 @@ def bouquetPaketZ():
 
 ### payment.html ###
 # menampilkan halaman pembayaran
-@app.route('/pakety', methods = ['GET', 'POST'])
+@app.route('/bayar', methods = ['GET', 'POST'])
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -260,7 +260,7 @@ def pay():
             useremail = db.users.find_one({'useremail': payload['id']})['useremail']
             quantity = int(request.form['quantity'])
             bouquet_id = request.form['bouquet_id']
-            flower_and_color_paper = request.form['flower_and_color_paper']
+            flower_and_paper_color = request.form['flower_and_paper_color']
             note_of_buyer = request.form['note_of_buyer']
             delivery_date = request.form['delivery_date']
             delivery_time = request.form['delivery_time']
