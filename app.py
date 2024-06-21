@@ -270,6 +270,8 @@ def pay():
             address_of_buyer = request.form['address_of_buyer']
             shipping_method = request.form['shipping_method']
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
+            bouquet_image = bouquet['image']
+            name_of_the_bouquet = bouquet['name']
             price_per_bouquet = int(bouquet['price'])
             total_price = quantity * price_per_bouquet
             file = request.files['proof_of_payment']
@@ -277,6 +279,8 @@ def pay():
             extension = filename.split('.')[-1]
             file_path = f'admin/img/proof_of_payment/{useremail}-{mytime}.{extension}'
             file.save('./static/' + file_path)
+            order_date = today.strftime('%Y-%m-%d')
+            order_time = today.strftime('%H:%M')
             current_date = datetime.now().isoformat()
             doc = {
                 'useremail': useremail,
@@ -291,8 +295,12 @@ def pay():
                 'phone_of_buyer': phone_of_buyer,
                 'address_of_buyer': address_of_buyer,
                 'shipping_method': shipping_method,
+                'bouquet_image': bouquet_image,
+                'name_of_the_bouquet': name_of_the_bouquet,
                 'total_price': total_price,
                 'proof_of_payment': file_path,
+                'order_date': order_date,
+                'order_time': order_time,
                 'date': current_date,
                 'status': 'pending'
             }
@@ -545,50 +553,6 @@ def admin_testimonials():
     title = 'Data Testimoni'
     testimonials = db.testimonials.find()
     return render_template('admin/testimonial.html', title = title, testimonials = testimonials)
-
-### test
-@app.route("/admin/transaksi-b")
-@admin_required
-def admin_transaksi():
-    transactions = list(db.payment.find())
-    for transaction in transactions:
-        transaction['bucket_name'] = db.collections.find_one({'_id': ObjectId(transaction['order_id'])})['bucket_name']
-    return render_template("admin/transaksi-b.html", transactions = transactions)
-
-@app.route('/terima_pembelian', methods=['POST'])
-@admin_required
-def terima_pembelian():
-    id = request.form['id']
-    catatan_admin = request.form['catatan_admin']
-    transaction =  db.payment.find_one({'_id': ObjectId(id)})
-    quantity = transaction['quantity']
-
-    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'diterima', 'catatan_admin': catatan_admin}})
-    db.collections.update_one({'_id': ObjectId(transaction['order_id'])})
-
-    return redirect(url_for('admin_transaksi'))
-
-@app.route('/tolak_pembelian', methods=['POST'])
-@admin_required
-def tolak_pembelian():
-    id = request.form['id']
-    catatan_admin = request.form['catatan_admin']
-    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'ditolak', 'catatan_admin': catatan_admin}})
-    return redirect(url_for('admin_transaksi'))
-
-@app.route('/kirim_pembelian', methods=['POST'])
-@admin_required
-def kirim_pembelian():
-    id = request.form['id']
-    catatan_admin = request.form['catatan_admin']
-    db.payment.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'dikirim', 'catatan_admin': catatan_admin}})
-    return redirect(url_for('admin_transaksi'))
-
-@app.route("/admin/testimoni-b")
-@admin_required
-def admin_testimoni():
-    testimonies = db.testimoni_b.find()
-    return render_template("admin/testimoni-b.html", testimonies = testimonies)
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban

@@ -39,7 +39,6 @@
                                                     <th>No</th>
                                                     <th>Gambar</th>
                                                     <th>Nama</th>
-                                                    <th>Warna Bunga dan Kertas</th>
                                                     <th>Kategori</th>
                                                     <th>Harga</th>
                                                     <th>Stok</th>
@@ -52,21 +51,22 @@
                                                 <tr>
                                                     <td class="text-center">{{loop.index}}</td>
                                                     <td class="text-center">
-                                                        <img src="{{ url_for('static', filename=bouquet.image) }}" width="60" height="60">
+                                                        <a href="{{ url_for('static', filename=bouquet.image) }}" target="_blank">
+                                                            <img src="{{ url_for('static', filename=bouquet.image) }}" width="60" height="60">
+                                                        </a>
                                                     </td>
                                                     <td>{{bouquet.name}}</td>
-                                                    <td>{{bouquet.flower_and_paper_color}}</td>
                                                     <td>{{bouquet.category}}</td>
                                                     <td class="text-end">Rp {{bouquet.price}}</td>
                                                     <td class="text-end">{{bouquet.stock}}</td>
                                                     <td class="text-center">
-                                                        <a href="#detailBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-success">
+                                                        <a href="#detailBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-success mb-2">
                                                             <i class="fa fa-eye"></i> Detail
                                                         </a>
-                                                        <a href="#editBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-warning">
+                                                        <a href="#editBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-warning mb-2">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
-                                                        <a href="#deleteBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-danger">
+                                                        <a href="#deleteBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-danger mb-2">
                                                             <i class="fa fa-trash"></i> Hapus
                                                         </a>
                                                     </td>
@@ -90,43 +90,37 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6 form-group">
                                                                             <label>Nama</label>
-                                                                            <input type="text" readonly class="form-control mt-2" name="name" id="name" placeholder="Masukkan nama buket" value="{{bouquet.name}}">
+                                                                            <p class="form-control mt-2">{{bouquet.name}}</p>
                                                                         </div>
                                                                         <div class="col-md-6 form-group mt-3 mt-md-0">
                                                                             <div class="col-md-12 form-group mt-3 mt-md-0">
                                                                                 <label>Gambar</label>
                                                                             </div>
                                                                             <div class="col-md-12 form-group mt-3 mt-md-0">
-                                                                                <img src="{{ url_for('static', filename=bouquet.image)}}" width="70" height="70">
+                                                                                <a href="{{ url_for('static', filename=bouquet.image) }}" target="_blank">
+                                                                                    <img src="{{ url_for('static', filename=bouquet.image) }}" width="70" height="70">
+                                                                                </a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-md-6 form-group">
                                                                             <label>Warna Bunga dan Kertas</label>
-                                                                            <input type="text" readonly class="form-control mt-2" name="flower_and_paper_color" id="flower_and_paper_color" placeholder="Masukkan warna bunga dan kertas" value="{{bouquet.flower_and_paper_color}}">
+                                                                            <p class="form-control mt-2">{{bouquet.flower_and_paper_color}}</p>
                                                                         </div>
                                                                         <div class="col-md-6 form-group mt-3 mt-md-0">
                                                                             <label for="editCategory"class="form-label">Kategori</label>
-                                                                            <select class="form-control" readonly id="editCategory" name="category">
-                                                                                {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
-                                                                                <option value="Artificial-Full-Flower-Hand-Bouquet" selected>Artificial Full Flower Hand Bouquet</option>
-                                                                                {% elif bouquet.category == 'Money-Hand-Bouquet' %}
-                                                                                <option value="Money-Hand-Bouquet" selected>Money Hand Bouquet</option>
-                                                                                {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
-                                                                                <option value="Hand-Bouquet-Snack" selected>Hand Bouquet Snack</option>
-                                                                                {% endif %}
-                                                                            </select>
+                                                                            <p class="form-control mt-2">{{bouquet.category}}</p>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col-md-6 form-group">
                                                                             <label>Harga</label>
-                                                                            <input type="number" readonly class="form-control mt-2" name="price" id="price" placeholder="Masukkan harga buket" value="{{bouquet.price}}">
+                                                                            <p class="form-control mt-2">{{bouquet.price}}</p>
                                                                         </div>
                                                                         <div class="col-md-6 form-group mt-3 mt-md-0">
                                                                             <label>Stok</label>
-                                                                            <input type="number" readonly class="form-control mt-2" name="stock" id="stock" placeholder="Masukkan stok buket" value="{{bouquet.stock}}">
+                                                                            <p class="form-control mt-2">{{bouquet.stock}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -310,12 +304,11 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function () {
-            $('#add-row').DataTable({
-                pageLength: 25
-            });
-        });
-    </script>
 {% include 'admin/templates/footer.html' %}
+<script>
+    $(document).ready(function () {
+        $('#add-row').DataTable({
+            pageLength: 25
+        });
+    });
+</script>

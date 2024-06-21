@@ -6,21 +6,15 @@
                         <h4 class="page-title">Data Transaksi</h4>
                         <ul class="breadcrumbs">
                             <li class="nav-home">
-                                <a href="#">
-                                    <i class="flaticon-home"></i>
+                                <a href="../admin/beranda">
+                                    <i class="bi bi-archive"></i>
                                 </a>
                             </li>
                             <li class="separator">
                                 <i class="flaticon-right-arrow"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Data</a>
-                            </li>
-                            <li class="separator">
-                                <i class="flaticon-right-arrow"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">Transaksi</a>
+                                <a>Data Transaksi</a>
                             </li>
                         </ul>
                     </div>
@@ -33,42 +27,28 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-
                                     <div class="table-responsive">
                                         <table id="add-row" class="display table table-striped table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Username</th>
-                                                    <th>Warna Bunga</th>
-                                                    <th>Warna Kertas</th>
                                                     <th>Nama Pembeli</th>
-                                                    <th>Alamat Pembeli</th>
                                                     <th>No. Telepon Pembeli</th>
-                                                    <th>Kartu Ucapan</th>
-                                                    <th>Catatan Pembeli</th>
                                                     <th>Buket Yang Dibeli</th>
-                                                    <th>Kuantitas</th>
+                                                    <th>Jumlah</th>
                                                     <th>Total Harga</th>
                                                     <th>Bukti</th>
                                                     <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
                                             </thead>
-
                                             <tbody>
                                                 {% for transaction in transactions %}
                                                 <tr>
                                                     <td>{{loop.index}}</td>
-                                                    <td>{{transaction.username}}</td>
-                                                    <td>{{transaction.flower_color}}</td>
-                                                    <td>{{transaction.paper_color}}</td>
                                                     <td>{{transaction.name_of_buyer}}</td>
-                                                    <td>{{transaction.address}}</td>
-                                                    <td>{{transaction.phone}}</td>
-                                                    <td>{{transaction.greeting_card}}</td>
-                                                    <td>{{transaction.order_note}}</td>
-                                                    <td>{{transaction.name}}</td>
+                                                    <td>{{transaction.phone_of_buyer}}</td>
+                                                    <td>{{transaction.name_of_the_bouquet}}</td>
                                                     <td>{{transaction.quantity}}</td>
                                                     <td>{{transaction.total_price}}</td>
                                                     <td><a href="{{ url_for('static', filename=transaction.proof_of_payment)}}" target="_blank">
@@ -76,165 +56,225 @@
                                                     </a></td>
                                                     <td>{{transaction.status | capitalize}}</td>
                                                     <td class="text-center">
+                                                        <a href="#detail_transaction_{{transaction['_id']}}" data-toggle="modal" class="btn btn-xs btn-success mb-2">
+                                                            <i class="fa fa-eye"></i> Detail
+                                                        </a>
                                                         {% if transaction.status == "pending" %}
-                                                        <a href="#receive_orders_{{transaction['_id']}}" data-toggle="modal"
-                                                            class="btn btn-xs btn-primary mb-2">
+                                                        <a href="#receive_orders_{{transaction['_id']}}" data-toggle="modal" class="btn btn-xs btn-primary mb-2">
                                                             <i class="fa fa-check"></i> Terima
                                                         </a>
-                                                        <a href="#reject_order_{{transaction['_id']}}" data-toggle="modal"
-                                                            class="btn btn-xs btn-danger">
+                                                        <a href="#reject_order_{{transaction['_id']}}" data-toggle="modal" class="btn btn-xs btn-danger mb-2">
                                                             <i class="fa fa-times"></i> Tolak
                                                         </a>
                                                         {% elif transaction.status == "diterima" %}
-                                                        <a href="#send_order_{{transaction['_id']}}" data-toggle="modal"
-                                                        class="btn btn-xs btn-warning mb-2">
-                                                        <i class="fa fa-truck"></i> Kirim Barang
+                                                        <a href="#send_order_{{transaction['_id']}}" data-toggle="modal" class="btn btn-xs btn-warning mb-2">
+                                                            <i class="fa fa-truck"></i> Kirim Barang
                                                         </a>
-                                                        {% elif transaction.status == "ditolak" %}
-                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
-                                                         No Action
-                                                        </a>
-                                                        {% elif transaction.status == "dikirim" %}
-                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
-                                                         No Action
-                                                        </a>
-                                                        {% elif transaction.status == "selesai" %}
-                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">
-                                                         No Action
-                                                        </a>
+                                                        {% elif transaction.status == "ditolak" or "dikirim" or "selesai" %}
+                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">Tidak ada aksi</a>
                                                         {% endif %}
                                                     </td>
                                                 </tr>
 
-
-                                                 <!-- modal edit -->
-                                                 <div class="modal fade" id="receive_orders_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
+                                                <!-- Modal Detail -->
+                                                <div class="modal fade" id="detail_transaction_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header no-bd">
                                                                 <h5 class="modal-title">
-                                                                    <span class="fw-mediumbold">
-                                                                        Terima</span>
-                                                                    <span class="fw-light">
-                                                                        Pemesanan
-                                                                    </span>
+                                                                    <span class="fw-mediumbold">Detail Transaksi</span>
                                                                 </h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form method="POST" action="/terima-pemesanan" enctype="multipart/form-data">
+                                                            <form>
                                                                 <div class="modal-body">
                                                                     <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
-                                                                    <div class="form-group">
-                                                                        <label>Catatan Penjual</label>
-                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5"
-                                                                        name="note" id="note"
-                                                                        placeholder="Catatan Admin ...." required></textarea>
+                                                                    <div class="row">
+                                                                        <div class="col-md-4 form-group text-center">
+                                                                            <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                                                <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                                            </a>
+                                                                            <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                                            <label>Jumlah</label>
+                                                                            <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                                            <label>Total Harga</label>
+                                                                            <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                                                        </div>
                                                                     </div>
-   
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Nama Pembeli</label>
+                                                                            <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Nomor Telepon Pembeli</label>
+                                                                            <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 form-group">
+                                                                            <label>Alamat Pembeli</label>
+                                                                            <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Warna Bunga dan Kertas</label>
+                                                                            <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Catatan Pembeli</label>
+                                                                            <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Tanggal Pemesanan</label>
+                                                                            <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Tanggal Pengiriman</label>
+                                                                            <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Waktu Pemesanan</label>
+                                                                            <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Waktu Pengiriman</label>
+                                                                            <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                                            <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                                            <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <div class="col-md-12">
+                                                                                <label>Bukti Pembayaran</label>
+                                                                            </div>
+                                                                            <div class="col-md-12 text-center">
+                                                                                <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                                                    <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Status</label>
+                                                                            <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-
                                                                 <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
-                                                                        Changes</button>
-                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                                        Close</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"></i> Tutup</button>
                                                                 </div>
-                                        
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- end of modal edit -->
 
-                                                <!-- modal tolak -->
+                                                <!-- Modal Terima Pemesanan -->
+                                                <div class="modal fade" id="receive_orders_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">Terima Pemesanan</span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form action="/terima-pemesanan" method="POST" enctype="multipart/form-data">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
+                                                                    <div class="form-group">
+                                                                        <label>Catatan Penjual</label>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5" name="note" id="note" placeholder="Catatan Navirin's" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i> Batal</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Modal Tolak Pemesanan -->
                                                 <div class="modal fade" id="reject_order_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header no-bd">
                                                                 <h5 class="modal-title">
-                                                                    <span class="fw-mediumbold">
-                                                                        Tolak</span>
-                                                                    <span class="fw-light">
-                                                                        Pemesanan
-                                                                    </span>
+                                                                    <span class="fw-mediumbold">Tolak Pemesanan</span>
                                                                 </h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form method="POST" action="/tolak-pemesanan" enctype="multipart/form-data">
+                                                            <form action="/tolak-pemesanan" method="POST" enctype="multipart/form-data">
                                                                 <div class="modal-body">
                                                                     <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
                                                                     <div class="form-group">
                                                                         <label>Alasan Penolakan</label>
-                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5"
-                                                                        name="note" id="note"
-                                                                        placeholder="Alasan Penolakkan ...." required></textarea>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="5" name="note" id="note" placeholder="Alasan Penolakan" required></textarea>
                                                                     </div>
-   
                                                                 </div>
-
                                                                 <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
-                                                                        Changes</button>
-                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                                        Close</button>
+                                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i> Batal</button>
                                                                 </div>
-                                        
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- end of modal tolak -->
 
-                                                <!-- modal kirim barang -->
+                                                <!-- Modal Kirim Buket -->
                                                 <div class="modal fade" id="send_order_{{transaction['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header no-bd">
                                                                 <h5 class="modal-title">
-                                                                    <span class="fw-mediumbold">
-                                                                        Kirim</span>
-                                                                    <span class="fw-light">
-                                                                        Pemesanan
-                                                                    </span>
+                                                                    <span class="fw-mediumbold">Kirim Buket</span>
                                                                 </h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form method="POST" action="/kirim-pemesanan" enctype="multipart/form-data">
+                                                            <form action="/kirim-pemesanan" method="POST" enctype="multipart/form-data">
                                                                 <div class="modal-body">
                                                                     <input type="hidden" value="{{transaction['_id']}}" class="form-control" name="id">
                                                                     <div class="form-group">
                                                                         <label>No. Resi & Catatan Singkat</label>
-                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="3"
-                                                                        name="note" id="note"
-                                                                        placeholder="Nomor Resi & Catatan Singkat ...." required></textarea>
+                                                                        <textarea class="form-control mt-3" style="white-space: pre-line;" rows="3" name="note" id="note" placeholder="Nomor Resi & Catatan Singkat" required></textarea>
                                                                     </div>
-   
                                                                 </div>
-
                                                                 <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="ubah" class="btn btn-primary"><i class="fa fa-save"></i> Save
-                                                                        Changes</button>
-                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                                        Close</button>
+                                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i> Batal</button>
                                                                 </div>
-                                        
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <!-- end of modal kirim barang -->
-
-
-                                        
                                                 {% endfor %}
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -244,16 +284,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-        
     </div>
-    <script>
-        $(document).ready(function () {
-            $('#add-row').DataTable({
-                pageLength: 25
-            });
-        });
-    </script>
 {% include 'admin/templates/footer.html' %}
+<script>
+    $(document).ready(function () {
+        $('#add-row').DataTable({
+            pageLength: 25
+        });
+    });
+</script>
