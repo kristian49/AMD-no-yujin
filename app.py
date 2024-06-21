@@ -78,7 +78,7 @@ def format_rupiah(value):
     return f'Rp {value:,.0f}'.replace(',', '.')
     
 # menyimpan pesan pada hubungi kami
-@app.route('/hubungi-kami', methods=['POST'])
+@app.route('/hubungi-kami', methods = ['POST'])
 def contact_us():
     name_receive = request.form['name_give']
     email_receive = request.form['email_give']
@@ -87,14 +87,14 @@ def contact_us():
     
     timezone = pytz.timezone('Asia/Jakarta')
     current_datetime = datetime.now(timezone)
-    tanggal_kirim = current_datetime.strftime('%d/%m/%y - %H:%M')
+    sent_date = current_datetime.strftime('%d/%m/%y - %H:%M')
     timestamp = current_datetime.timestamp()
     doc = {
         'name': name_receive,
         'email': email_receive,
         'subject': subject_receive,
         'message': message_receive,
-        'tanggal_kirim' : tanggal_kirim,
+        'sent_date' : sent_date,
         'timestamp': timestamp,
     }
     db.contact_us.insert_one(doc)
@@ -234,70 +234,82 @@ def bouquetPaketZ():
     try:
         title = 'Koleksi Buket'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
+        user_info = db.users.find_one({'useremail': payload['id']})
         bouquets = list(db.bouquets.find())
         return render_template('user/paketZ.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-@app.route('/pembayaran', methods = ['GET', 'POST'])
+### payment.html ###
+# menampilkan halaman pembayaran
+@app.route('/bayar', methods = ['GET', 'POST'])
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         title = 'Pembayaran'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.user.find_one({'useremail': payload['id']})
+        user_info = db.users.find_one({'useremail': payload['id']})
         if request.method == 'GET':
             quantity = request.args.get('quantity', default = 1, type = int)
             bouquet_id = request.args.get('bouquet_id')
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
             price = int(bouquet['price'])
-            return render_template('user/payment.html', title = title, user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
+            return render_template('user/payment.html', title = title, user_info = user_info, quantity = quantity, bouquet_id = bouquet_id, bouquet = bouquet, price = price)
         elif request.method == 'POST':
             today = datetime.now()
             mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-            useremail = db.user.find_one({'useremail': payload['id']})['useremail']
+            useremail = db.users.find_one({'useremail': payload['id']})['useremail']
             quantity = int(request.form['quantity'])
             bouquet_id = request.form['bouquet_id']
-            name_of_buyer = request.form['name_of_buyer']
-            address_of_buyer = request.form['address_of_buyer']
-            phone_of_buyer = request.form['phone_of_buyer']
+            flower_and_color_paper = request.form['flower_and_color_paper']
             note_of_buyer = request.form['note_of_buyer']
+            delivery_date = request.form['delivery_date']
+            delivery_time = request.form['delivery_time']
+            greeting_card = request.form['greeting_card']
+            name_of_buyer = request.form['name_of_buyer']
+            phone_of_buyer = request.form['phone_of_buyer']
+            address_of_buyer = request.form['address_of_buyer']
+            shipping_method = request.form['shipping_method']
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
-            price_per_bouquet = int(bouquet['price'])
-            total_harga = quantity * price_per_bouquet
+            # price_per_bouquet = int(bouquet['price'])
+            # total_price = quantity * price_per_bouquet
             file = request.files['proof_of_payment']
             filename = secure_filename(file.filename)
             extension = filename.split('.')[-1]
-            file_path = f'admin/img/proof_of_payment/{account_name}-{mytime}.{extension}'
+            file_path = f'admin/img/proof_of_payment/{useremail}-{mytime}.{extension}'
             file.save('./static/' + file_path)
             current_date = datetime.now().isoformat()
             doc = {
                 'useremail': useremail,
                 'bouquet_id': bouquet_id,
                 'quantity': quantity,
-                'name_of_buyer': name_of_buyer,
-                'address_of_buyer': address_of_buyer,
-                'phone_of_buyer': phone_of_buyer,
+                'flower_and_paper_color': flower_and_paper_color,
                 'note_of_buyer': note_of_buyer,
-                'total_price': total_price,
+                'delivery_date': delivery_date,
+                'delivery_time': delivery_time,
+                'greeting_card': greeting_card,
+                'name_of_buyer': name_of_buyer,
+                'phone_of_buyer': phone_of_buyer,
+                'address_of_buyer': address_of_buyer,
+                'shipping_method': shipping_method,
+                # 'total_price': total_price,
                 'proof_of_payment': file_path,
                 'date': current_date,
-                'status': 'pending',
+                'status': 'pending'
             }
             db.transactions.insert_one(doc)
-            return jsonify({'message': 'Order placed successfully'}), 200
+            return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
 
-### order.history ###
+### order_history.html ###
 # menampilkan riwayat pemesanan
 @app.route('/riwayat-pemesanan')
 def order_history():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.user.find_one({'useremail': payload['id']})
+        user_info = db.users.find_one({'useremail': payload['id']})
         transactions = list(db.transactions.find({'useremail': user_info['useremail']}).sort('date', -1)) 
         total_transactions = len(transactions) + 1
         for transaction in transactions:
@@ -597,26 +609,7 @@ def submit_purchase():
         return jsonify({'message': 'Pembayaran berhasil!'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
-    
-@app.route('/buket')
-def bouquet():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        if token_receive:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            user_info = db.users.find_one({'useremail': payload['id']})
-        else:
-            user_info = None
 
-        title = 'Buket'
-        query = request.args.get('query', '')
-        if query:
-            bouquets = db.bouquets.find({'bouquet': {'$regex': query, '$options': 'i'}})
-        else:
-            bouquets = db.bouquets.find().sort('tanggal', -1)
-        return render_template('bouquet.html', title = title, user_info = user_info, bouquets = bouquets)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
 
 ### admin/dashboard.html ###
 # menampilkan halaman admin untuk beranda
