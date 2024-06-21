@@ -1780,23 +1780,38 @@ section {
   font-size: 14px;
 }
 
-#footer .copyright {
+#footer .credits {
   border-top: 1px solid #0f2f57;
   text-align: center;
   padding-top: 30px;
 }
 
-#footer .credits {
-  padding-top: 10px;
-  text-align: center;
-  font-size: 13px;
+#footer .credits .social-links a {
+  font-size: 18px;
+  display: inline-block;
   color: #fff;
+  line-height: 1;
+  padding: 8px 0;
+  margin-right: 4px;
+  border-radius: 4px;
+  text-align: center;
+  width: 36px;
+  height: 36px;
+  transition: 0.3s;
+  background: #0a1e38;
 }
 
-@media (max-width: 575px) {
-  #footer .footer-top .footer-info {
-    margin: -20px 0 30px 0;
-  }
+#footer .credits .social-links a:hover {
+  color: #fff;
+  background: #ed502e;
+  text-decoration: none;
+}
+
+#footer .copyright {
+    padding-top: 10px;
+    text-align: center;
+    font-size: 13px;
+    color: #fff;
 }
 
 

@@ -69,7 +69,9 @@ def home():
         return render_template('user/dashboard.html', title = title, user_info = user_info, total_pembelian = total_pembelian, total_bucket = total_bucket, total_pembelian_rupiah = total_pembelian_rupiah)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         title = 'Beranda'
-        return render_template('user/home.html', title = title)
+        bouquets = list(db.bouquets.find())
+        faqs = list(db.faqs.find())
+        return render_template('user/home.html', title = title, bouquets = bouquets, faqs = faqs)
 
 # untuk menampilkan format rupiah
 def format_rupiah(value):
@@ -224,22 +226,17 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+### bouquet atau collection.html ###
+# menampilkan halaman koleksi buket
 @app.route('/paketz')
 def bouquetPaketZ():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        if token_receive:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-            user_info = db.user.find_one({'useremail': payload['id']})
-        else:
-            user_info = None
-
-        query = request.args.get('query', '')
-        if query:
-            bouquets = db.bouquets.find({'name': {'$regex': query, '$options': 'i'}})
-        else:
-            bouquets = db.bouquets.find().sort('date', -1)
-        return render_template('user/paketZ.html', user_info = user_info, bouquets = bouquets)
+        title = 'Koleksi Buket'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload.get('id')})
+        bouquets = list(db.bouquets.find())
+        return render_template('user/paketZ.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
@@ -247,6 +244,7 @@ def bouquetPaketZ():
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
+        title = 'Pembayaran'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.user.find_one({'useremail': payload['id']})
         if request.method == 'GET':
@@ -254,7 +252,7 @@ def pay():
             bouquet_id = request.args.get('bouquet_id')
             bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
             price = int(bouquet['price'])
-            return render_template('user/payment.html', user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
+            return render_template('user/payment.html', title = title, user_info = user_info, bouquet = bouquet, quantity = quantity, bouquet_id = bouquet_id, price=price)
         elif request.method == 'POST':
             today = datetime.now()
             mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -356,7 +354,7 @@ def kirim_testimoni():
 
 ### collection.html ###
 # Endpoint untuk menampilkan halaman koleksi
-@app.route('/buket')
+@app.route('/koleksi')
 def collection():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
@@ -649,8 +647,9 @@ def admin_home():
         income = doc['total_price']
         break
     thread_count = db.chats.count_documents({})
+    faqs_count = db.faqs.count_documents({})
     contact_count = db.contact_us.count_documents({})
-    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, contact_count = contact_count)
+    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, faqs_count = faqs_count, contact_count = contact_count)
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
@@ -680,10 +679,9 @@ def add_bouquet():
     file = request.files['image']
     filename = secure_filename(file.filename)
     extension = filename.split('.')[-1]
-    file_path = f'admin/img/bouquet/{mytime}.{extension}'
+    file_path = f'admin/img/bouquet/{name}-{mytime}.{extension}'
     file.save('./static/' + file_path)
-    flower_color = request.form['flower_color']
-    paper_color = request.form['paper_color']
+    flower_and_paper_color = request.form['flower_and_paper_color']
     category = request.form['category']
     price = int(request.form['price'])
     stock = int(request.form['stock'])
@@ -692,8 +690,7 @@ def add_bouquet():
     doc = {
         'name': name,
         'image': file_path,
-        'flower_color': flower_color,
-        'paper_color': paper_color,
+        'flower_and_paper_color': flower_and_paper_color,
         'category': category,
         'price': price,
         'stock': stock,
@@ -712,8 +709,7 @@ def edit_bouquet():
     mytime = today.strftime('%Y-%m-%d_%H-%M-%S')
 
     name = request.form['name']
-    flower_color = request.form['flower_color']
-    paper_color = request.form['paper_color']
+    flower_and_paper_color = request.form['flower_and_paper_color']
     category = request.form['category']
     price = int(request.form['price'])
     stock = int(request.form['stock'])
@@ -721,8 +717,7 @@ def edit_bouquet():
     current_date = datetime.now().isoformat()
     new_doc = {
         'name': name,
-        'flower_color': flower_color,
-        'paper_color': paper_color,
+        'flower_and_paper_color': flower_and_paper_color,
         'category': category,
         'price': price,
         'stock': stock,
@@ -742,8 +737,7 @@ def edit_bouquet():
         file = request.files['image']
         filename = secure_filename(file.filename)
         extension = filename.split('.')[-1]
-        file_path = f'admin/img/bouquet/{mytime}.{extension}'
-        # file_path = f'admin/img/{mytime}.{extension}'
+        file_path = f'admin/img/bouquet/{name}-{mytime}.{extension}'
         file.save('./static/' + file_path)
         new_doc['image'] = file_path
     else:
@@ -838,6 +832,51 @@ def delete_thread_admin_side():
     db.chats.delete_one({'_id': ObjectId(id)})
     db.comments.delete_many({'thread_id': id})
     return redirect(url_for('admin_forum'))
+
+### admin/faq.html ###
+# menampilkan halaman admin untuk pertanyaan dan jawaban
+@app.route("/admin/pertanyaan-dan-jawaban")
+@admin_required
+def admin_faq():
+    faqs = db.faqs.find()
+    return render_template("admin/faq.html", faqs = faqs)
+
+# tambah pertanyaan dan jawaban
+@app.route('/tambah-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def add_faq():
+    question = request.form['question']
+    answer = request.form['answer']
+    current_date = datetime.now().isoformat()
+    doc = {
+        "question": question,
+        "answer": answer,
+        "date": current_date
+    }
+    db.faqs.insert_one(doc)
+    return redirect(url_for('admin_faq'))
+
+# edit pertanyaan dan jawaban
+@app.route('/edit-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def edit_faq():
+    id = request.form['id']
+    question = request.form['question']
+    answer = request.form['answer']
+    new_doc = {
+        "question": question,
+        "answer": answer
+    }
+    db.faqs.update_one({'_id': ObjectId(id)}, {"$set": new_doc})
+    return redirect(url_for('admin_faq'))
+
+# hapus pertanyaan dan jawaban
+@app.route('/hapus-pertanyaan-dan-jawaban', methods = ['POST'])
+@admin_required
+def delete_faq():
+    id = request.form['id']
+    db.faqs.delete_one({'_id': ObjectId(id)})
+    return redirect(url_for('admin_faq'))
 
 ### admin/contact_us.html ###
 # menampilkan halaman admin untuk hubungi kami

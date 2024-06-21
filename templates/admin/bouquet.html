@@ -7,7 +7,7 @@
                         <ul class="breadcrumbs">
                             <li class="nav-home">
                                 <a href="../admin/beranda">
-                                    <i class="flaticon-home"></i>
+                                    <i class="bi bi-archive"></i>
                                 </a>
                             </li>
                             <li class="separator">
@@ -24,7 +24,7 @@
                                 <div class="card-header">
                                     <div class="d-flex align-items-center">
                                         <h4 class="card-title">Data Buket</h4>
-                                        <button class="btn btn-primary btn-round ml-auto" data-toggle="modal" data-target="#addBouquet">
+                                        <button class="btn btn-primary ml-auto" data-toggle="modal" data-target="#addBouquet">
                                             <i class="fa fa-plus"></i>
                                             Tambah Data
                                         </button>
@@ -35,12 +35,11 @@
                                     <div class="table-responsive">
                                         <table id="add-row" class="display table table-striped table-hover">
                                             <thead>
-                                                <tr>
+                                                <tr class="text-center">
                                                     <th>No</th>
                                                     <th>Gambar</th>
                                                     <th>Nama</th>
-                                                    <th>Warna Bunga</th>
-                                                    <th>Warna Kertas</th>
+                                                    <th>Warna Bunga dan Kertas</th>
                                                     <th>Kategori</th>
                                                     <th>Harga</th>
                                                     <th>Stok</th>
@@ -51,18 +50,20 @@
                                             <tbody>
                                                 {% for bouquet in bouquets %}
                                                 <tr>
-                                                    <td>{{loop.index}}</td>
+                                                    <td class="text-center">{{loop.index}}</td>
                                                     <td class="text-center">
                                                         <img src="{{ url_for('static', filename=bouquet.image) }}" width="60" height="60">
                                                     </td>
                                                     <td>{{bouquet.name}}</td>
-                                                    <td>{{bouquet.flower_color}}</td>
-                                                    <td>{{bouquet.paper_color}}</td>
+                                                    <td>{{bouquet.flower_and_paper_color}}</td>
                                                     <td>{{bouquet.category}}</td>
-                                                    <td>Rp {{bouquet.price}}</td>
-                                                    <td>{{bouquet.stock}}</td>
-                                                    <td>
-                                                        <a href="#editBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-primary">
+                                                    <td class="text-end">Rp {{bouquet.price}}</td>
+                                                    <td class="text-end">{{bouquet.stock}}</td>
+                                                    <td class="text-center">
+                                                        <a href="#detailBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-success">
+                                                            <i class="fa fa-eye"></i> Detail
+                                                        </a>
+                                                        <a href="#editBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-warning">
                                                             <i class="fa fa-edit"></i> Edit
                                                         </a>
                                                         <a href="#deleteBouquet_{{bouquet['_id']}}" data-toggle="modal" class="btn btn-xs btn-danger">
@@ -71,6 +72,72 @@
                                                     </td>
                                                 </tr>
 
+                                                <!-- Modal Detail -->
+                                                <div class="modal fade" id="detailBouquet_{{bouquet['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header no-bd">
+                                                                <h5 class="modal-title">
+                                                                    <span class="fw-mediumbold">Detail Data</span>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form>
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" value="{{bouquet['_id']}}" class="form-control" name="id">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Nama</label>
+                                                                            <input type="text" readonly class="form-control mt-2" name="name" id="name" placeholder="Masukkan nama buket" value="{{bouquet.name}}">
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <div class="col-md-12 form-group mt-3 mt-md-0">
+                                                                                <label>Gambar</label>
+                                                                            </div>
+                                                                            <div class="col-md-12 form-group mt-3 mt-md-0">
+                                                                                <img src="{{ url_for('static', filename=bouquet.image)}}" width="70" height="70">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Warna Bunga dan Kertas</label>
+                                                                            <input type="text" readonly class="form-control mt-2" name="flower_and_paper_color" id="flower_and_paper_color" placeholder="Masukkan warna bunga dan kertas" value="{{bouquet.flower_and_paper_color}}">
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label for="editCategory"class="form-label">Kategori</label>
+                                                                            <select class="form-control" readonly id="editCategory" name="category">
+                                                                                {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
+                                                                                <option value="Artificial-Full-Flower-Hand-Bouquet" selected>Artificial Full Flower Hand Bouquet</option>
+                                                                                {% elif bouquet.category == 'Money-Hand-Bouquet' %}
+                                                                                <option value="Money-Hand-Bouquet" selected>Money Hand Bouquet</option>
+                                                                                {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
+                                                                                <option value="Hand-Bouquet-Snack" selected>Hand Bouquet Snack</option>
+                                                                                {% endif %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Harga</label>
+                                                                            <input type="number" readonly class="form-control mt-2" name="price" id="price" placeholder="Masukkan harga buket" value="{{bouquet.price}}">
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Stok</label>
+                                                                            <input type="number" readonly class="form-control mt-2" name="stock" id="stock" placeholder="Masukkan stok buket" value="{{bouquet.stock}}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer no-bd">
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"></i> Tutup</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <!-- Modal Edit -->
                                                 <div class="modal fade" id="editBouquet_{{bouquet['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog modal-lg" role="document">
@@ -78,7 +145,6 @@
                                                             <div class="modal-header no-bd">
                                                                 <h5 class="modal-title">
                                                                     <span class="fw-mediumbold">Edit Data</span>
-                                                                    <span class="fw-light">Buket</span>
                                                                 </h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
@@ -87,127 +153,93 @@
                                                             <form action="/edit-buket" method="POST" enctype="multipart/form-data">
                                                                 <div class="modal-body">
                                                                     <input type="hidden" value="{{bouquet['_id']}}" class="form-control" name="id">
-                                                                    <div class="form-group">
-                                                                        <label>Nama</label>
-                                                                        <input type="text" class="form-control mt-2"
-                                                                            name="name" id="name"
-                                                                            placeholder="Nama Produk ..." value="{{bouquet.name}}" required>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Nama</label>
+                                                                            <input type="text" class="form-control mt-2" name="name" id="name" placeholder="Masukkan nama buket" value="{{bouquet.name}}" required>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <div class="col-md-12 form-group mt-3 mt-md-0">
+                                                                                <img src="{{ url_for('static', filename=bouquet.image)}}" width="70" height="70">
+                                                                            </div>
+                                                                            <div class="col-md-12 form-group mt-3 mt-md-0">
+                                                                                <label>Gambar</label>
+                                                                                <input type="file" class="form-control mt-2" name="image" id="image" accept=".png, .jpg, .jpeg">
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <img src="{{ url_for('static', filename=bouquet.image)}}"
-                                                                            width="70" height="70">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Warna Bunga dan Kertas</label>
+                                                                            <input type="text" class="form-control mt-2" name="flower_and_paper_color" id="flower_and_paper_color" placeholder="Masukkan warna bunga dan kertas" value="{{bouquet.flower_and_paper_color}}" required>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label for="editCategory"class="form-label">Kategori</label>
+                                                                            <select class="form-control" id="editCategory" name="category" required>
+                                                                                {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
+                                                                                <option value="Artificial-Full-Flower-Hand-Bouquet" selected>Artificial Full Flower Hand Bouquet</option>
+                                                                                <option value="Money-Hand-Bouquet">Money Hand Bouquet</option>
+                                                                                <option value="Hand-Bouquet-Snack">Hand Bouquet Snack</option>
+                                                                                {% elif bouquet.category == 'Money-Hand-Bouquet' %}
+                                                                                <option value="Artificial-Full-Flower-Hand-Bouquet">Artificial Full Flower Hand Bouquet</option>
+                                                                                <option value="Money-Hand-Bouquet" selected>Money Hand Bouquet</option>
+                                                                                <option value="Hand-Bouquet-Snack">Hand Bouquet Snack</option>
+                                                                                {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
+                                                                                <option value="Artificial-Full-Flower-Hand-Bouquet">Artificial Full Flower Hand Bouquet</option>
+                                                                                <option value="Money-Hand-Bouquet">Money Hand Bouquet</option>
+                                                                                <option value="Hand-Bouquet-Snack" selected>Hand Bouquet Snack</option>
+                                                                                {% endif %}
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
-
-                                                                    <div class="form-group">
-                                                                        <label>Gambar</label>
-                                                                        <input type="file" class="form-control mt-2"
-                                                                            name="image" id="image"
-                                                                            accept=".png, .jpg, .jpeg">
-                                                                        <small>Format Gambar Harus JPG / PNG /
-                                                                            JPEG</small>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Warna Bunga</label>
-                                                                        <input type="text" class="form-control mt-2"
-                                                                            name="flower_color" id="flower_color"
-                                                                            placeholder="Warna Bunga"
-                                                                            value="{{bouquet.flower_color}}" required>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Warna Kertas</label>
-                                                                        <input type="text" class="form-control mt-2"
-                                                                            name="paper_color" id="paper_color"
-                                                                            placeholder="Warna Kertas"
-                                                                            value="{{bouquet.paper_color}}" required>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Kategori</label>
-                                                                        <input type="text" class="form-control mt-2"
-                                                                            name="category" id="category"
-                                                                            placeholder="Kategori"
-                                                                            value="{{bouquet.category}}" required>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label>Harga</label>
-                                                                        <input type="number" class="form-control mt-2"
-                                                                            name="price" id="price"
-                                                                            placeholder="Harga Produk..."
-                                                                            value="{{bouquet.price}}" required>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label>Stok</label>
-                                                                        <input type="number" class="form-control mt-2"
-                                                                            name="stock" id="stock"
-                                                                            placeholder="Stok Produk..."
-                                                                            value="{{bouquet.stock}}" required>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 form-group">
+                                                                            <label>Harga</label>
+                                                                            <input type="number" class="form-control mt-2" name="price" id="price" placeholder="Masukkan harga buket" value="{{bouquet.price}}" required>
+                                                                        </div>
+                                                                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                                            <label>Stok</label>
+                                                                            <input type="number" class="form-control mt-2" name="stock" id="stock" placeholder="Masukkan stok buket" value="{{bouquet.stock}}" required>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="ubah"
-                                                                        class="btn btn-primary"><i
-                                                                            class="fa fa-save"></i> Save
-                                                                        Changes</button>
-                                                                    <button type="button" class="btn btn-danger"
-                                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                                        Close</button>
+                                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i> Batal</button>
                                                                 </div>
-
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Modal Hapus -->
-                                                <div class="modal fade" id="deleteBouquet_{{bouquet['_id']}}"
-                                                    tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal fade" id="deleteBouquet_{{bouquet['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header no-bd">
                                                                 <h5 class="modal-title">
-                                                                    <span class="fw-mediumbold">
-                                                                        Hapus Data</span>
-                                                                    <span class="fw-light">
-                                                                        Buket
-                                                                    </span>
+                                                                    <span class="fw-mediumbold">Hapus Data</span>
                                                                 </h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
-                                                            <form method="POST" action="/hapus-buket"
-                                                                enctype="multipart/form-data">
-
+                                                            <form action="/hapus-buket" method="POST" enctype="multipart/form-data">
                                                                 <div class="modal-body">
-
-                                                                    <input type="hidden" value="{{bouquet['_id']}}"
-                                                                        class="form-control" name="id">
-
+                                                                    <input type="hidden" value="{{bouquet['_id']}}" class="form-control" name="id">
                                                                     <div class="form-group">
-                                                                        <h4>Apakah Anda ingin Menghapus Data ini ?</h4>
+                                                                        <h4>Apakah Anda yakin ingin menghapus data ini?</h4>
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="hapus"
-                                                                        class="btn btn-danger"><i
-                                                                            class="fa fa-trash"></i>
-                                                                        Hapus</button>
-                                                                    <button type="button" class="btn btn-primary"
-                                                                        data-dismiss="modal"><i class="fa fa-undo"></i>
-                                                                        Close</button>
+                                                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-undo"></i> Batal</button>
                                                                 </div>
-
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- end of modal delete -->
-
                                                 {% endfor %}
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -217,92 +249,68 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
+        <!-- Modal Tambah -->
         <div class="modal fade" id="addBouquet" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header no-bd">
                         <h5 class="modal-title">
-                            <span class="fw-mediumbold">
-                                Tambah Data</span>
-                            <span class="fw-light">
-                                Buket
-                            </span>
+                            <span class="fw-mediumbold">Tambah Data</span>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="POST" action="/tambah-buket" enctype="multipart/form-data">
-
+                    <form action="/tambah-buket" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label>Nama</label>
-                                <input type="text" class="form-control mt-2" name="name" id="name"
-                                    placeholder="Nama Produk ..." required>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>Nama</label>
+                                    <input type="text" class="form-control mt-2" name="name" id="name" placeholder="Masukkan nama buket" required>
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <label>Gambar</label>
+                                    <input type="file" class="form-control mt-2" name="image" id="image" accept=".png, .jpg, .jpeg" required>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label>Gambar</label>
-                                <input type="file" class="form-control mt-2" name="image" id="image"
-                                    accept=".png, .jpg, .jpeg" required>
-                                <small>Format Gambar Harus JPG / PNG / JPEG</small>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>Warna Bunga dan Kertas</label>
+                                    <input type="text" class="form-control mt-2" name="flower_and_paper_color" id="flower_and_paper_color" placeholder="Masukkan warna bunga dan kertas" required>
+                                    <small>Contoh: Bunga Merah dan Kertas Kuning</small>
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <label for="category" class="form-label">Kategori</label>
+                                    <select class="form-control" id="category" name="category" required>
+                                        <option value="Artificial-Full-Flower-Hand-Bouquet">Artificial Full Flower Hand Bouquet</option>
+                                        <option value="Money-Hand-Bouquet">Money Hand Bouquet</option>
+                                        <option value="Hand-Bouquet-Snack">Hand Bouquet Snack</option>
+                                    </select>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label>Warna Bunga</label>
-                                <input type="text" class="form-control mt-2" name="flower_color" id="flower_color"
-                                    placeholder="Warna Bunga" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Warna Kertas</label>
-                                <input type="text" class="form-control mt-2" name="paper_color" id="paper_color"
-                                    placeholder="Warna Kertas" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Kategori</label>
-                                <input type="text" class="form-control mt-2" name="category" id="category"
-                                    placeholder="Kategori" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Harga</label>
-                                <input type="number" class="form-control mt-2" name="price" id="price"
-                                    placeholder="Harga Produk..." required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Stok</label>
-                                <input type="number" class="form-control mt-2" name="stock" id="stock"
-                                    placeholder="Stok Produk..." required>
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label>Harga</label>
+                                    <input type="number" class="form-control mt-2" name="price" id="price" placeholder="Masukkan harga buket" required>
+                                </div>
+                                <div class="col-md-6 form-group mt-3 mt-md-0">
+                                    <label>Stok</label>
+                                    <input type="number" class="form-control mt-2" name="stock" id="stock" placeholder="Masukkan stok buket" required>
+                                </div>
                             </div>
                         </div>
-
                         <div class="modal-footer no-bd">
-                            <button type="submit" name="simpan" class="btn btn-primary"><i class="fa fa-save"></i> Save
-                                Changes</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i>
-                                Close</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-undo"></i> Close</button>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
     </div>
+
     <script>
         $(document).ready(function () {
             $('#add-row').DataTable({
