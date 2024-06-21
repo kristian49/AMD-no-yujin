@@ -12,7 +12,7 @@
 
             <div class="row mt-4 justify-content-md-center">
                 <div class="col-lg-8">
-                    <form method="POST" action="/bayar" enctype="multipart/form-data">
+                    <div action="/pembayaran" method="POST" enctype="multipart/form-data">
                         <div class="fillable-form">
                             <h5 class="mt-2 mb-4">Buket yang dibeli</h5>
                             <div class="row">
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@
                         </div>
                         <div class="text-center mt-5">
                             <button type="submit" onclick="pay()" id="order-button" data-id="{{bouquet['_id']}}">Pesan</button>
-                            <button type="submit" href="paketz">Batal</button>
+                            <a href="/koleksi" type="submit" >Batal</a>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
             form_data.append("proof_of_payment", proof_of_payment);
             $.ajax({
                 type: "POST",
-                url: "/bayar",
+                url: "/pembayaran",
                 data: form_data,
                 cache: false,
                 contentType: false,
@@ -213,7 +213,7 @@
                             title: "Pesanan Anda akan diproses. Silahkan tunggu validasi pesanan oleh Navirin's",
                         });
                         setTimeout(function () {
-                            window.location.replace("/paketz")
+                            window.location.replace("/koleksi")
                         }, 3000);
                     }
                 },

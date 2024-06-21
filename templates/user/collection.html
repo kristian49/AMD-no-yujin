@@ -80,7 +80,7 @@
     $('.purchase-button').click(function() {
         var id = $(this).data('id');
         var quantity = $('#quantity-' + id).val();
-        var url = '/bayar?quantity=' + 1 + '&bouquet_id=' + id;
+        var url = '/pembayaran?quantity=' + 1 + '&bouquet_id=' + id;
         window.location.href = url;
     });
 

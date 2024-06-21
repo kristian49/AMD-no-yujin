@@ -225,27 +225,27 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
-### bouquet atau collection.html ###
-# menampilkan halaman koleksi buket
-@app.route('/paketz')
-def bouquetPaketZ():
+### collection.html ###
+# Endpoint untuk menampilkan halaman koleksi
+@app.route('/koleksi')
+def bouquet_collection():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         title = 'Koleksi Buket'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
         bouquets = list(db.bouquets.find())
-        return render_template('user/paketZ.html', title = title, user_info = user_info, bouquets = bouquets)
+        return render_template('user/collection.html', title = title, user_info = user_info, bouquets = bouquets)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
 ### payment.html ###
 # menampilkan halaman pembayaran
-@app.route('/bayar', methods = ['GET', 'POST'])
+@app.route('/pembayaran', methods = ['GET', 'POST'])
 def pay():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        title = 'Pembayaran'
+        title = 'Pemesanan Buket'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
         if request.method == 'GET':
@@ -348,301 +348,6 @@ def kirim_testimoni():
         return redirect(url_for('order_history'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### collection.html ###
-# Endpoint untuk menampilkan halaman koleksi
-@app.route('/koleksi')
-def collection():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        title = 'Koleksi Buket'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        collections = list(db.collections.find())
-        return render_template('user/bouquet_nabila.html', title = title, collections = collections, user_info = user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-# untuk menambahkan koleksi
-@app.route('/tambah-koleksi', methods = ['POST'])
-def tambah_koleksi():
-    name_receive = request.form['name']
-    description_receive = request.form['description']
-    price_receive = request.form['price']
-    category_receive = request.form['category']
-
-    if 'image' in request.files:
-        image = request.files['image']
-        filename = secure_filename(image.filename)
-        extension = filename.split('.')[-1]
-        file_path = f'collection_pics/{name_receive}.{extension}'
-        image.save('./static/' + file_path)
-    else:
-        file_path = ''
-
-    doc = {
-        'name': name_receive,
-        'description': description_receive,
-        'price': price_receive,
-        'category': category_receive,
-        'image': file_path
-    }
-    db.collections.insert_one(doc)
-    return redirect(url_for('admin_show'))
-
-# untuk mengubah koleksi buket
-@app.route('/ubah-bucket', methods=['POST'])
-def edit_bucket():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        bucket_id = request.form['bucketId']
-        name = request.form['name']
-        description = request.form['description']
-        price = request.form['price']
-        category = request.form['category']
-
-        bucket_data = {
-            'name': name,
-            'description': description,
-            'price': price,
-            'category': category,
-        }
-
-        if 'image' in request.files and request.files['image'].filename != '':
-            buket = db.collections.find_one({'_id': ObjectId(bucket_id)})
-            old_photo = buket.get('image', '')
-
-            # Menghapus gambar lama
-            if old_photo:
-                old_file_path = os.path.abspath('./static/' + old_photo)
-                if os.path.exists(old_file_path):
-                    os.remove(old_file_path)
-
-            file = request.files['image']
-            filename = secure_filename(file.filename)
-            extension = filename.split('.')[-1]
-            # file_path = f'admin/img/bouquet/{name}-{mytime}.{extension}'
-            file_path = f'collection_pics/{name}.{extension}'
-            file.save('./static/' + file_path)
-            bucket_data['image'] = file_path
-        else:
-            pass
-
-        db.collections.update_one({'_id': ObjectId(bucket_id)}, {'$set': bucket_data})
-        return redirect(url_for('admin_show'))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-# menghapus bucket
-@app.route('/hapus-bucket', methods=['POST'])
-def delete_bucket():
-    bucket_id = request.form['bucketId']
-    db.collections.delete_one({'_id': ObjectId(bucket_id)})
-    return redirect(url_for('admin_show'))
-
-### order_form.html ###
-# menampilkan halaman formulir pemesanan
-@app.route('/order_form')
-def order():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        collection = db.collections.find_one()
-        if collection and 'image' in collection:
-            collection['image'] = f'static/{collection["image"]}'
-        
-        title = 'Formulir Pemesanan'
-        return render_template('user/order_form.html', title = title, collection = collection, user_info = user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-@app.route('/order_form/<collection_id>')
-def order_form(collection_id):
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        collection = db.collections.find_one({'_id': ObjectId(collection_id)})
-        if collection and 'image' in collection:
-            collection['image'] = f'/static/{collection["image"]}'
-        return render_template('user/order_form.html', collection=collection, user_info=user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-# Menyimpan informasi pemesanan produk
-@app.route('/process_order', methods=['POST'])
-def process_order():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        collection_id = request.form.get('collection_id')
-        quantity = request.form.get('quantity')  # Mengambil nilai quantity dari formulir
-        total_price = request.form.get('total_price')  # Mengambil total harga dari formulir
-        bucket_name = request.form.get('bucket_name')
-        order_date = request.form.get('order_date')
-        custom_note = request.form.get('custom_note')
-        greeting_card = request.form.get('greeting_card')
-        delivery_date = request.form.get('delivery_date')
-        delivery_time = request.form.get('delivery_time')
-        shipping_method = request.form.get('shippingMethod')
-        payment_method = request.form.get('paymentMethod')
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        address = request.form.get('address')
-
-        # Periksa apakah quantity ada dan tidak kosong
-        if quantity and quantity.isdigit():
-            quantity = int(quantity)  # Konversi quantity menjadi integer jika valid
-        else:
-            # Quantity tidak valid, kembalikan ke halaman sebelumnya atau lakukan penanganan yang sesuai
-            return redirect(url_for('home'))
-
-        # Periksa apakah total_price ada dan tidak kosong
-        if total_price:
-            total_price = float(total_price)  # Konversi total_price menjadi float jika valid
-        else:
-            # Jika total_price tidak valid, atur ke nilai default atau lakukan penanganan yang sesuai
-            total_price = 0.0  # Atur ke nilai default
-        # Menyimpan bukti pembayaran jika ada
-        if 'paymentProof' in request.files:
-            payment_proof = request.files['paymentProof']
-            filename = secure_filename(payment_proof.filename)
-            extension = filename.split('.')[-1]
-            file_path = f'payment/{filename}'  
-            payment_proof.save('./static/' + file_path)
-        else:
-            file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
-
-        # Ambil harga produk dari database
-        collection = db.collections.find_one({'_id': ObjectId(collection_id)})
-        if collection:
-            # Simpan informasi pemesanan produk ke dalam database
-            order_data = {
-                'bucket_name': bucket_name,
-                'quantity': quantity,
-                'total_price': total_price,
-                'order_date': order_date,
-                'custom_note': custom_note,
-                'greeting_card': greeting_card,
-                'delivery_date': delivery_date,
-                'delivery_time': delivery_time,
-                'shipping_method': shipping_method,
-                'payment_method': payment_method,
-                'payment_proof': file_path,
-                'name': name,
-                'useremail': email,
-                'phone': phone,
-                'address': address,
-                'status_order': 'pending',
-                'account_name': user_info['account_name']
-            }
-            # db.orders.insert_one(order_data)
-            result = db.orders.insert_one(order_data)
-
-            # Dapatkan order_id dari pesanan yang baru saja disimpan
-            order_id = result.inserted_id
-
-            # Redirect ke halaman purchase_form dengan order_id
-            return jsonify({'message': 'Pemesanan berhasil!'})
-            # return redirect(url_for('purchase_form', order_id=order_id))
-        else:
-            # Produk tidak ditemukan, redirect ke halaman yang sesuai
-            return redirect(url_for('home'))
-
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-### payment.html ###
-# menampilkan formulir pembayaran
-@app.route('/purchase_form/<order_id>')
-def purchase_form(order_id):
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-        order = db.orders.find_one({'_id': ObjectId(order_id)})
-        if order:
-            title = 'Formulir Pembayaran'
-            return render_template('user/purchase_form.html', title = title, user_info = user_info, order = order)
-        else:
-            return redirect(url_for('home'))
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
-# proses pembayaran
-@app.route('/pembayaran', methods=['POST'])
-def submit_purchase():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-
-        # Mengambil data dari formulir
-        order_id = request.form.get('order_id')
-        shipping_method = request.form.get('shippingMethod')
-        payment_method = request.form.get('paymentMethod')
-
-        # Mengambil data lain dari database
-        order = db.orders.find_one({'_id': ObjectId(order_id)})
-        bucket_name = order['bucket_name']
-        quantity = order['quantity']
-        total_price = order['total_price']
-        name = order['name']
-        email = order['useremail']
-        phone = order['phone']
-        address = order['address']
-
-        # Menyimpan bukti pembayaran jika ada
-        if 'paymentProof' in request.files:
-            payment_proof = request.files['paymentProof']
-            filename = secure_filename(payment_proof.filename)
-            extension = filename.split('.')[-1]
-            file_path = f'payment/{order_id}.{extension}'  
-            payment_proof.save('./static/' + file_path)
-        else:
-            file_path = ''  # Atau nilai default jika tidak ada gambar yang diupload
-
-        # Simpan detail pesanan dan bukti pembayaran ke database
-        doc = {
-            'order_id': order_id,
-            'bucket_name': bucket_name,
-            'quantity': quantity,
-            'total_price': total_price,
-            'name': name,
-            'useremail': email,
-            'phone': phone,
-            'address': address,
-            'shipping_method': shipping_method,
-            'payment_method': payment_method,
-            'payment_proof': file_path,
-            'status_order': 'processing',
-            'account_name': user_info['account_name']
-        }
-        db.payment.insert_one(doc)
-
-        # Mengirim respons JSON yang berisi pesan pembayaran berhasil
-        return jsonify({'message': 'Pembayaran berhasil!'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('home'))
-
 
 ### admin/dashboard.html ###
 # menampilkan halaman admin untuk beranda
