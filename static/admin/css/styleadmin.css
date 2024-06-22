@@ -301,7 +301,8 @@ body {
     margin-right: 5px;
     white-space: nowrap;
     font-weight: 600;
-    color: #00008b
+    /* color: #00008b; */
+    color: #d96c6d;
 }
 
 .sidebar .nav>.nav-item a .caret {
@@ -476,11 +477,13 @@ body {
 }
 
 .main-header[data-background-color=purple] {
-    background: #00008b!important
+    /* background: #00008b!important */
+    background: #d96c6d!important
 }
 
 .main-header[data-background-color=jabary] .navbar-header {
-    background: #00008b!important
+    /* background: #00008b!important */
+    background: #d96c6d!important
 }
 
 label {
@@ -1076,7 +1079,8 @@ body {
     margin-right: 5px;
     white-space: nowrap;
     font-weight: 600;
-    color: #00008b
+    /* color: #00008b; */
+    color: #d96c6d;
 }
 
 .sidebar .nav>.nav-item a .caret {
@@ -1467,7 +1471,8 @@ body {
 }
 
 .main-header[data-background-color=purple] {
-    background: #00008b!important
+    /* background: #00008b!important */
+    background: #d96c6d!important
 }
 
 .main-header[data-background-color=purple] .navbar-header {
@@ -1475,7 +1480,8 @@ body {
 }
 
 .main-header[data-background-color=jabary] .navbar-header {
-    background: #00008b!important
+    /* background: #00008b!important */
+    background: #d96c6d!important
 }
 
 .breadcrumbs {
@@ -1772,8 +1778,9 @@ label {
 }
 
 .card-primary {
-    /* background: #177dff */
-    background: #00008b
+    /* background: #177dff; */
+    /* background: #00008b; */
+    background: #d96c6d;
 }
 
 .card-secondary {
@@ -2342,14 +2349,18 @@ label.error {
 
 .btn-logincustom {
     color: #fff;
-    background-color: #00008b;
-    border-color: #00008b
+    /* background-color: #00008b; */
+    background-color: #d96c6d;
+    /* border-color: #00008b; */
+    border-color: #d96c6d;
 }
 
 .btn-logincustom:hover {
     color: #fff;
-    background-color: #00008b;
-    border-color: #00008b
+    /* background-color: #00008b; */
+    background-color: #d96c6d;
+    /* border-color: #00008b; */
+    border-color: #d96c6d;
 }
 
 .btn-logincustom:focus,
@@ -2360,16 +2371,20 @@ label.error {
 .btn-logincustom.disabled,
 .btn-logincustom:disabled {
     color: #fff;
-    background-color: #00008b;
-    border-color: #00008b
+    /* background-color: #00008b; */
+    background-color: #d96c6d;
+    /* border-color: #00008b; */
+    border-color: #d96c6d;
 }
 
 .btn-logincustom:not(:disabled):not(.disabled):active,
 .btn-logincustom:not(:disabled):not(.disabled).active,
 .show>.btn-logincustom.dropdown-toggle {
     color: #fff;
-    background-color: #00008b;
-    border-color: #00008b
+    /* background-color: #00008b; */
+    background-color: #d96c6d;
+    /* border-color: #00008b; */
+    border-color: #d96c6d;
 }
 
 .btn-logincustom:not(:disabled):not(.disabled):active:focus,
