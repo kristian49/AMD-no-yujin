@@ -1166,3 +1166,14 @@ section {
   height: 350px;
   object-fit: cover;
 } */
+
+
+#btn-batal {
+  background: #f3f2f2;
+  border: 0;
+  padding: 10px 30px;
+  border-radius: 4px;
+  /* color: #fff; */
+  color: #ed502e;
+  transition: 0.4s;
+}

@@ -57,10 +57,10 @@ def home():
         title = 'Beranda'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({'useremail': payload.get('id')})
-        account_name = user_info['account_name']
+        useremail = user_info['useremail']
 
-        # Menghitung total pembelian dan total bucket
-        payments = list(db.transactions.find({'account_name': account_name}))
+        # Menghitung total pembelian dan total bucket hanya jika statusnya "diterima"
+        payments = list(db.transactions.find({'useremail': useremail, 'status': 'selesai'}))
         total_pembelian = sum(payment['total_price'] for payment in payments)
         total_bucket = sum(payment['quantity'] for payment in payments)
         total_pembelian_rupiah = format_rupiah(total_pembelian)
