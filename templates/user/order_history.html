@@ -1,0 +1,587 @@
+{% include 'user/templates/header.html' %}
+<main id="main" class="mt-5">
+
+    <!-- Form Pembayaran -->
+    <section id="contact" class="contact section-bg">
+        <div class="container" data-aos="fade-up">
+  
+            <div class="section-title">
+                <h2>Riwayat Pemesanan</h2>
+                <p>Riwayat Pemesanan Buket</p>
+            </div>
+
+            <div class="row mt-4 justify-content-md-center">
+                <div class="col-lg-8">
+                    <div class="fillable-form">
+                        {% for transaction in transactions %}
+                        <div class="card mb-3 mx-auto pointer-cursor" style="max-width: 900px;">
+                            <div class="row g-0">
+                                <div class="col-6 col-md-6 col-lg-6">
+                                <!-- <div class="col-8 col-md-9 col-lg-10"> -->
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pemesanan #{{total_transactions - loop.index}} - {{transaction.name_of_the_bouquet}}</h5>
+                                        <p class="card-text">Dipesan oleh {{transaction.name_of_buyer}}</p>
+                                        <p class="card-text"><small class="form-text text-muted">Tanggal pemesanan: {{transaction.date}}</small></p>
+                                    </div>
+                                </div>
+                                <div class="col-2 col-md-3 col-lg-3 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <p class="card-text text-black-50" style="font-size:1.2em;">
+                                            <a class="text-dark" href="{{ url_for('bouquet_collection', id=transaction['_id']) }}">
+                                                <i class="far fa-comment"></i> {{transaction.quantity}}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-4 col-md-3 col-lg-3 d-flex align-items-center">
+                                <!-- <div class="col-4 col-md-3 col-lg-2 d-flex align-items-center"> -->
+                                    <div class="card-body">
+                                        {% if transaction.status == "pending" %}
+                                        <button class="btn btn-outline-warning shadow-sm">Pending</button>
+                                        {% elif transaction.status == "diterima" %}
+                                        <button class="btn btn-outline-success shadow-sm">Diterima</button>
+                                        {% elif transaction.status == "ditolak" %}
+                                        <button class="btn btn-outline-danger shadow-sm">Ditolak</button>
+                                        {% elif transaction.status == "dikirim" %}
+                                        <button class="btn btn-outline-info shadow-sm">Dikirim</button>
+                                        {% elif transaction.status == "selesai" %}
+                                        <button class="btn btn-outline-secondary shadow-sm">Selesai</button>
+                                        {% else %}
+                                        <button class="btn btn-secondary">Status Tidak Dikenali</button>
+                                        {% endif %}
+                                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bouquetOrder_{{transaction['_id']}}">Cek</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="bouquetOrder_{{transaction['_id']}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Pemesanan</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body px-4">
+                                        {% if transaction.status == "pending" %}
+                                        <div class="row">
+                                            <div class="col-md-4 form-group text-center">
+                                                <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                    <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                </a>
+                                                <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Jumlah</label>
+                                                <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Total Harga</label>
+                                                <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Nama Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Nomor Telepon Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Alamat Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Warna Bunga dan Kertas</label>
+                                                <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Catatan Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Tanggal Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Tanggal Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Waktu Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Waktu Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
+                                                <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <div class="col-md-12">
+                                                    <label>Bukti Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-12 mt-3 mt-md-0 text-center">
+                                                    <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Status</label>
+                                                <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                            </div>
+                                        </div>
+                                        {% elif transaction.status == "diterima" %}
+                                        <div class="row">
+                                            <div class="col-md-4 form-group text-center">
+                                                <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                    <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                </a>
+                                                <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Jumlah</label>
+                                                <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Total Harga</label>
+                                                <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Nama Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Nomor Telepon Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Alamat Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Warna Bunga dan Kertas</label>
+                                                <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Catatan Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Tanggal Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Tanggal Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Waktu Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Waktu Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
+                                                <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <div class="col-md-12">
+                                                    <label>Bukti Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-12 mt-3 mt-md-0 text-center">
+                                                    <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Status</label>
+                                                <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Catatan Navirin's</label>
+                                                <p class="form-control mt-2">{{transaction.note}}</p>
+                                            </div>
+                                        </div>
+                                        {% elif transaction.status == "ditolak" %}
+                                        <div class="row">
+                                            <div class="col-md-4 form-group text-center">
+                                                <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                    <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                </a>
+                                                <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Jumlah</label>
+                                                <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Total Harga</label>
+                                                <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Nama Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Nomor Telepon Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Alamat Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Warna Bunga dan Kertas</label>
+                                                <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Catatan Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Tanggal Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Tanggal Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Waktu Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Waktu Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
+                                                <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <div class="col-md-12">
+                                                    <label>Bukti Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-12 mt-3 mt-md-0 text-center">
+                                                    <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Status</label>
+                                                <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Catatan Navirin's</label>
+                                                <p class="form-control mt-2">{{transaction.note}}</p>
+                                            </div>
+                                        </div>
+                                        {% elif transaction.status == "dikirim" %}
+                                        <div class="row">
+                                            <div class="col-md-4 form-group text-center">
+                                                <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                    <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                </a>
+                                                <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Jumlah</label>
+                                                <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Total Harga</label>
+                                                <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Nama Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Nomor Telepon Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Alamat Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Warna Bunga dan Kertas</label>
+                                                <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Catatan Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Tanggal Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Tanggal Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Waktu Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Waktu Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
+                                                <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <div class="col-md-12">
+                                                    <label>Bukti Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-12 mt-3 mt-md-0 text-center">
+                                                    <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Status</label>
+                                                <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Nomor Resi & Catatan Navirin's</label>
+                                                <p class="form-control mt-2">{{transaction.note}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label for="exampleFormControlInput1" class="form-label">Sudah menerima buket? Silahkan berikan ulasan Anda</label>
+                                                <textarea class="form-control" id="bouquet_review_{{transaction['_id']}}" data-id="{{transaction['_id']}}" name="bouquet_review_{{transaction['_id']}}" rows="4" required></textarea>
+                                            </div>
+                                        </div>
+                                        {% elif transaction.status == "selesai" %}
+                                        <div class="row">
+                                            <div class="col-md-4 form-group text-center">
+                                                <a href="{{ url_for('static', filename=transaction.bouquet_image) }}" target="_blank">
+                                                    <img src="{{ url_for('static', filename=transaction.bouquet_image) }}" width="70" height="70">
+                                                </a>
+                                                <p class="mt-2">{{transaction.name_of_the_bouquet}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Jumlah</label>
+                                                <p class="form-control mt-2">{{transaction.quantity}}</p>
+                                            </div>
+                                            <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                <label>Total Harga</label>
+                                                <p class="form-control mt-2">Rp {{transaction.total_price}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Nama Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.name_of_buyer}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Nomor Telepon Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.phone_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Alamat Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.address_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Warna Bunga dan Kertas</label>
+                                                <p class="form-control mt-2">{{transaction.flower_and_paper_color}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Catatan Pembeli</label>
+                                                <p class="form-control mt-2">{{transaction.note_of_buyer}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Tanggal Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_date}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Tanggal Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_date}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Waktu Pemesanan</label>
+                                                <p class="form-control mt-2">{{transaction.order_time}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Waktu Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.delivery_time}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                <p class="form-control mt-2">{{transaction.shipping_method}}</p>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
+                                                <p class="form-control mt-2">{{transaction.greeting_card}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <div class="col-md-12">
+                                                    <label>Bukti Pembayaran</label>
+                                                </div>
+                                                <div class="col-md-12 mt-3 mt-md-0 text-center">
+                                                    <a href="{{ url_for('static', filename=transaction.proof_of_payment) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename=transaction.proof_of_payment) }}" width="70" height="70">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                                <label>Status</label>
+                                                <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label for="exampleFormControlTextarea1" class="form-label">Ulasan Anda</label>
+                                                <p class="form-control mt-2">{{transaction.bouquet_review}}</p>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                
+                                    <div class="modal-footer px-3 d-flex justify-content-center gap-2">
+                                        {% if transaction.status == "pending" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
+                                        {% elif transaction.status == "diterima" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
+                                        {% elif transaction.status == "ditolak" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
+                                        {% elif transaction.status == "dikirim" %}
+                                        <button type="button" class="btn btn-primary flex-fill" onclick="send_testimonials('{{transaction['_id']}}')">Kirim</button>
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
+                                        {% elif transaction.status == "selesai" %}
+                                        <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+{% include 'user/templates/footer.html' %}
+<script>
+    function send_testimonials(id){
+        let bouquet_review = $('#bouquet_review_' + id).val();
+    
+        $.ajax({
+            type: "POST",
+            url: "/kirim-testimoni",
+            data: {
+                id: id,
+                bouquet_review: bouquet_review
+            },
+            success: function (response) {
+                window.location.reload();
+            },
+        });
+    }
+</script>

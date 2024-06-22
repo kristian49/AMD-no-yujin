@@ -50,7 +50,7 @@
                                                     <td>{{transaction.phone_of_buyer}}</td>
                                                     <td>{{transaction.name_of_the_bouquet}}</td>
                                                     <td>{{transaction.quantity}}</td>
-                                                    <td>{{transaction.total_price}}</td>
+                                                    <td>Rp {{transaction.total_price}}</td>
                                                     <td><a href="{{ url_for('static', filename=transaction.proof_of_payment)}}" target="_blank">
                                                         <img src="{{ url_for('static', filename=transaction.proof_of_payment)}}" width="70" height="70" style="object-fit:contain">
                                                     </a></td>
@@ -71,7 +71,9 @@
                                                             <i class="fa fa-truck"></i> Kirim Barang
                                                         </a>
                                                         {% elif transaction.status == "ditolak" or "dikirim" or "selesai" %}
-                                                        <a href="#" class="btn btn-xs btn-secondary mb-2">Tidak ada aksi</a>
+                                                        <a class="btn btn-xs btn-secondary mb-2 text-white">
+                                                            <i class="fa fa-check"></i> Selesai
+                                                        </a>
                                                         {% endif %}
                                                     </td>
                                                 </tr>
@@ -159,7 +161,7 @@
                                                                             <p class="form-control mt-2">{{transaction.shipping_method}}</p>
                                                                         </div>
                                                                         <div class="col-md-6 form-group mt-3 mt-md-0">
-                                                                            <label for="editShippingMethod"class="form-label">Metode Pengiriman</label>
+                                                                            <label for="editShippingMethod"class="form-label">Kartu Ucapan</label>
                                                                             <p class="form-control mt-2">{{transaction.greeting_card}}</p>
                                                                         </div>
                                                                     </div>
@@ -177,6 +179,12 @@
                                                                         <div class="col-md-6 form-group mt-3 mt-md-0">
                                                                             <label>Status</label>
                                                                             <p class="form-control mt-2">{{transaction.status | capitalize}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 form-group">
+                                                                            <label>Catatan Navirin's</label>
+                                                                            <p class="form-control mt-2">{{transaction.note}}</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>

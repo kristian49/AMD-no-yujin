@@ -44,17 +44,16 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Beranda</a></li>
-                    <li><a class="nav-link scrollto" href="../admin/beranda">Admin</a></li>
-                    <li><a class="nav-link scrollto" href="../koleksi">Koleksi Buket</a></li>
+                    <li><a class="nav-link scrollto" href="admin-beranda">Admin</a></li>
+                    <li><a class="nav-link scrollto" href="koleksi">Koleksi Buket</a></li>
                     <li class="dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                             <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle profile-pic">
                             <span class="d-none d-md-block dropdown-toggle ps-2">{{ user_info.profile_name }}</span>
                         </a>
                         <ul>
-                            <li><a href="../profil/{{ user_info.account_name }}">Profil</a></li>
-                            <li><a href="../obrolan">Obrolan</a></li>
-                            <li><a href="../riwayat-pemesan">Riwayat Pemesanan</a></li>
+                            <li><a href="profil">Profil</a></li>
+                            <li><a href="riwayat-pemesanan">Riwayat Pemesanan</a></li>
                             <li><a href="#" onclick="logout()">Keluar</a></li>
                         </ul>
                     </li>
@@ -73,16 +72,15 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Beranda</a></li>
-                    <li><a class="nav-link scrollto" href="../koleksi">Koleksi Buket</a></li>
+                    <li><a class="nav-link scrollto" href="koleksi">Koleksi Buket</a></li>
                     <li class="dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                             <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle profile-pic">
                             <span class="d-none d-md-block dropdown-toggle ps-2">{{ user_info.profile_name }}</span>
                         </a>
                         <ul>
-                            <li><a href="../profil/{{ user_info.account_name }}">Profil</a></li>
-                            <li><a href="../obrolan">Obrolan</a></li>
-                            <li><a href="../riwayat-pemesanan">Riwayat Pemesanan</a></li>
+                            <li><a href="profil">Profil</a></li>
+                            <li><a href="riwayat-pemesanan">Riwayat Pemesanan</a></li>
                             <li><a href="#" onclick="logout()">Keluar</a></li>
                         </ul>
                     </li>

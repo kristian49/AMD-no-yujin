@@ -27,8 +27,8 @@ db = client[DB_NAME]
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
-app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
-app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
+# app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
+# app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 
 # fungsi untuk admin
 def admin_required(f):
@@ -177,13 +177,15 @@ def api_login():
 
 ### profile.html ###
 # menampilkan halaman profil
-@app.route('/profil/<account_name>')
-def profile(account_name):
+# @app.route('/profil/<account_name>')
+# def profile(account_name):
+@app.route('/profil')
+def profile():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         title = 'Profil'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'account_name': account_name}, {'_id': False})
+        user_info = db.users.find_one({'useremail': payload['id']})
         return render_template('user/profile.html', title = title, user_info = user_info)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
@@ -277,7 +279,7 @@ def pay():
             file = request.files['proof_of_payment']
             filename = secure_filename(file.filename)
             extension = filename.split('.')[-1]
-            file_path = f'admin/img/proof_of_payment/{useremail}-{mytime}.{extension}'
+            file_path = f'admin/img/proof_of_payment/{name_of_buyer}-{name_of_the_bouquet}-{mytime}.{extension}'
             file.save('./static/' + file_path)
             order_date = today.strftime('%Y-%m-%d')
             order_time = today.strftime('%H:%M')
@@ -311,27 +313,28 @@ def pay():
 
 ### order_history.html ###
 # menampilkan riwayat pemesanan
-@app.route('/riwayat-pemesan')
+@app.route('/riwayat-pemesanan')
 def order_history():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        title = 'Riwayat Pemesanan'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
-        payments = list(db.payment.find({'useremail': user_info['useremail']}).sort('order_date', -1)) 
-        total_payments = len(payments) + 1
-        for payment in payments:
-            # original_date = datetime.fromisoformat(pay['date']).date()
-            # pay['date'] = original_date.strftime('%d/%m/%Y')
-            payment['bucket_name'] = db.payment.find_one({'_id': ObjectId(payment['order_id'])})['bucket_name']
-            testimonial = db.testimoni_b.find_one({'payment_id': str(payment['_id'])})
-            pay['bouquet_review'] = testimonial['review'] if testimonial else None
-        return render_template('user/order_history.html', user_info = user_info, payments = payments, total_payments = total_payments)
+        transactions = list(db.transactions.find({'useremail': user_info['useremail']}).sort('date', -1)) 
+        total_transactions = len(transactions) + 1
+        for transaction in transactions:
+            original_date = datetime.fromisoformat(transaction['date']).date()
+            transaction['date'] = original_date.strftime('%d/%m/%Y')
+            transaction['name_of_the_bouquet'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
+            testimonial = db.testimonials.find_one({'transaction_id': str(transaction['_id'])})
+            transaction['bouquet_review'] = testimonial['review'] if testimonial else None
+        return render_template("user/order_history.html", title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
     
 # kirim testimoni
-@app.route('/kirim-testi', methods = ['POST'])
-def kirim_testimoni():
+@app.route('/kirim-testimoni', methods = ['POST'])
+def send_testimonials():
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
@@ -341,32 +344,31 @@ def kirim_testimoni():
         bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
         current_date = datetime.now().isoformat()
         doc = {
-            'transaction_id': str(transaction['_id']),
-            'useremail' : transaction['useremail'],
-            'name_of_buyer': transaction['name_of_buyer'],
-            'address_of_buyer': transaction['address_of_buyer'],
-            'phone_of_buyer': transaction['phone_of_buyer'],
-            'purchased_bouquet': bouquet,
-            'review': bouquet_review,
-            'date': current_date,
+            "transaction_id": str(transaction['_id']),
+            "useremail": transaction['useremail'],
+            "name_of_buyer": transaction['name_of_buyer'],
+            "phone_of_buyer": transaction['phone_of_buyer'],
+            "address_of_buyer": transaction['address_of_buyer'],
+            "purchased_bouquet": bouquet,
+            "review": bouquet_review,
+            "date": current_date
         }
-        
         db.testimonials.insert_one(doc)
         db.transactions.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
         return redirect(url_for('order_history'))
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
 
 ### admin/dashboard.html ###
 # menampilkan halaman admin untuk beranda
-@app.route('/admin/beranda')
+@app.route('/admin-beranda')
 @admin_required
 def admin_home():
     title = 'Admin'
     users_count = db.users.count_documents({})
     bouquets_count = db.bouquets.count_documents({})
     transactions_count = db.transactions.count_documents({})
-    testimonials_count = db.testimonialsals.count_documents({})
+    testimonials_count = db.testimonials.count_documents({})
     pipeline = [
         {
             '$match': {
@@ -392,7 +394,7 @@ def admin_home():
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
-@app.route('/admin/pengguna')
+@app.route('/admin-pengguna')
 @admin_required
 def admin_user():
     title = 'Data Pengguna'
@@ -401,7 +403,7 @@ def admin_user():
     
 ### admin/bouquet.html ###
 # menampilkan halaman admin untuk buket
-@app.route('/admin/buket')
+@app.route('/admin-buket')
 @admin_required
 def admin_bouquet():
     title = 'Data Buket'
@@ -504,7 +506,7 @@ def delete_bouquet():
 
 ### admin/transaction.html ###
 # menampilkan halaman admin untuk transaksi
-@app.route('/admin/transaksi')
+@app.route('/admin-transaksi')
 @admin_required
 def admin_transaction():
     title = 'Data Transaksi'
@@ -547,7 +549,7 @@ def send_order():
 
 ### admin/testimonial.html ###
 # menampilkan halaman admin untuk testimoni
-@app.route('/admin/testimoni')
+@app.route('/admin-testimoni')
 @admin_required
 def admin_testimonials():
     title = 'Data Testimoni'
@@ -556,7 +558,7 @@ def admin_testimonials():
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban
-@app.route("/admin/pertanyaan-dan-jawaban")
+@app.route("/admin-pertanyaan-dan-jawaban")
 @admin_required
 def admin_faq():
     faqs = db.faqs.find()
@@ -601,7 +603,7 @@ def delete_faq():
 
 ### admin/contact_us.html ###
 # menampilkan halaman admin untuk hubungi kami
-@app.route('/admin/hubungi-kami')
+@app.route('/admin-hubungi-kami')
 @admin_required
 def admin_contact_us():
     title = 'Data Hubungi Kami'

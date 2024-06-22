@@ -43,12 +43,12 @@
                                 <div class="col-md-4 form-group">
                                     <label for="flowerAndPaperColor" class="form-label">Warna Bunga dan Kertas</label>
                                     <textarea class="form-control" name="flower_and_paper_color" id="flower_and_paper_color" rows="3" placeholder="Masukkan warna bunga dan kertas untuk buket" required>{{bouquet.flower_and_paper_color}}</textarea>
-                                    <small>Contoh: Bunga Merah dan Kertas Kuning</small>
+                                    <small class="form-text text-muted">Contoh: Bunga Merah dan Kertas Kuning</small>
                                 </div>
                                 <div class="col-md-8 form-group mt-3 mt-md-0">
                                     <label for="noteOfBuyer" class="form-label">Catatan Pembeli</label>
                                     <textarea class="form-control" name="note_of_buyer" id="note_of_buyer" rows="5" placeholder="Masukkan catatan pembeli untuk Navirin's" required></textarea>
-                                    <small>Pembeli dapat menuliskan pilihan buket full flower atau custom. Apabila pilihan buket tersebut adalah custom, silahkan Anda dapat mengisi kebutuhan custom untuk buket yang dibeli</small>
+                                    <small class="form-text text-muted">Pembeli dapat menuliskan pilihan buket full flower atau custom. Apabila pilihan buket tersebut adalah custom, silahkan Anda dapat mengisi kebutuhan custom untuk buket yang dibeli</small>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                                         <div class="col-sm-12">
                                             <input type="date" class="form-control" name="delivery_date" id="delivery_date" required>
                                         </div>
-                                        <small>Tanggal pengiriman minimal H+3 pemesanan</small>
+                                        <small class="form-text text-muted">Tanggal pengiriman minimal H+3 pemesanan</small>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -110,7 +110,7 @@
                                     <option value="Kurir-Navirin's">Kurir Navirin's</option>
                                     <option value="Ojek-Online">Ojek Online</option>
                                 </select>
-                                <small>Pengiriman dapat dilakukan menggunakan kurir Navirin's, selama lokasi kurang dari 2 km</small>
+                                <small class="form-text text-muted">Pengiriman dapat dilakukan menggunakan kurir Navirin's, selama lokasi kurang dari 2 km</small>
                             </div>
                             <div class="col-md-6 form-group mt-3 mt-md-0">
                                 <label for="lastName" class="form-label">Metode Pembayaran</label>
@@ -136,7 +136,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
   
         </div>
     </section>
@@ -213,7 +213,7 @@
                             title: "Pesanan Anda akan diproses. Silahkan tunggu validasi pesanan oleh Navirin's",
                         });
                         setTimeout(function () {
-                            window.location.replace("/koleksi")
+                            window.location.replace("/riwayat-pemesanan")
                         }, 5000);
                     }
                 },
@@ -224,7 +224,7 @@
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 4000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
                     toast.onmouseenter = Swal.stopTimer;
@@ -233,7 +233,7 @@
             });
             Toast.fire({
                 icon: "warning",
-                title: "Salah satu atau beberapa kotak pengisian masih kosong, mohon untuk melengkapi semua kotak pengisian.",
+                title: "Salah satu atau beberapa kotak pengisian masih kosong, mohon untuk melengkapi semua kotak pengisian."
             });
         }
     }
