@@ -60,7 +60,7 @@ def home():
         account_name = user_info['account_name']
 
         # Menghitung total pembelian dan total bucket
-        payments = list(db.payment.find({'account_name': account_name}))
+        payments = list(db.transactions.find({'account_name': account_name}))
         total_pembelian = sum(payment['total_price'] for payment in payments)
         total_bucket = sum(payment['quantity'] for payment in payments)
         total_pembelian_rupiah = format_rupiah(total_pembelian)
