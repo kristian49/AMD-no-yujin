@@ -177,8 +177,6 @@ def api_login():
 
 ### profile.html ###
 # menampilkan halaman profil
-# @app.route('/profil/<account_name>')
-# def profile(account_name):
 @app.route('/profil')
 def profile():
     token_receive = request.cookies.get(TOKEN_KEY)
