@@ -1,196 +1,149 @@
 {% include 'user/templates/header.html' %}
-    <!-- Carousel -->
-    <section id="hero">
-        <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <main id="main" class="mt-5">
 
-            <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
-
-            <div class="carousel-inner" role="listbox">
-
-                <!-- Bagian 1 -->
-                <div class="carousel-item active" style="background-image: url(../static/user/img/carousel.png)">
-                    <div class="carousel-container">
-                        <div class="container">
-                            <h2 class="animate__animated animate__fadeInDown">Selamat datang di <span>Navirin's</span></h2>
-                            <p class="animate__animated animate__fadeInUp">Kirimkan hadiah ke orang yang Anda cintai dengan produk Navirin's.</p>
-                            <a href="/masuk" class="btn-get-started animate__animated animate__fadeInUp scrollto">Masuk</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bagian 2 -->
-                <div class="carousel-item" style="background-image: url(../static/user/img/carousel.png)">
-                    <div class="carousel-container">
-                        <div class="container">
-                            <h2 class="animate__animated animate__fadeInDown">Tentang Navirin's</h2>
-                            <p class="animate__animated animate__fadeInUp">Kami menyediakan opsi pengiriman dan layanan pesanan khusus (custom order) buket.</p>
-                            <a href="#tentang-kami" class="btn-get-started animate__animated animate__fadeInUp scrollto">Baca selengkapnya</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-            </a>
-
-            <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
-                <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-            </a>
-
-        </div>
-    </section>
-
-    <main id="main">
-
-        <!-- Tentang Kami -->
-        <section id="tentang-kami" class="about">
-            <div class="container" data-aos="fade-up">
-
-                <div class="section-title">
-                    <h2>Tentang Kami</h2>
-                    <p>Tentang Navirin's</p>
-                </div>
-
-                <div class="row content">
-                    <div class="col-lg-3">
-                        <p>
-                            Pelanggan dapat mengajukan permintaan buket seperti yang Anda inginkan, dan dapat memberikan ide kreatif yang Anda miliki pada layanan pesanan khusus (custom order). Puaskan diri Anda dengan memesan produk sesuai dengan keinginan hati.
-                        </p>
-                    </div>
-                    <div class="col-lg-5">
-                        <p>
-                            Syarat dan Ketentuan Custom Order:
-                        </p>
-                        <ul>
-                            <li><i class="ri-check-double-line"></i> Setelah custom form di submit, Navirin's akan menghubungi Anda melalui website Navirin's atau Email untuk konfirmasi pemesanan.</li>
-                            <li><i class="ri-check-double-line"></i> Ketersediaan barang dapat berubah sewaktu-waktu.</li>
-                            <li><i class="ri-check-double-line"></i> Pesanan tidak dapat diubah.</li>
-                            <li><i class="ri-check-double-line"></i> Silahkan hubungi kami lewat chat online untuk pertanyaan lebih lanjut.</li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-4 pt-4 pt-lg-0">
-                        <h5>Opsi Pengiriman</h5>
-                        <ol>
-                            <li>Pengiriman dapat dilakukan menggunakan kurir Navirin's, selama lokasi kurang dari 2 km.</li>
-                            <li>Pengiriman dapat dilakukan dengan ojek online, customer wajib melakukan pemesanan mandiri pada saat hari pengiriman.</li>
-                        </ol>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Koleksi Buket -->
-        <section id="koleksi-buket" class="portfolio">
-            <div class="container" data-aos="fade-up">
-
-                <div class="section-title">
-                    <h2>Buket</h2>
-                    <p>Koleksi Buket Navirin's</p>
-                </div>
-    
-                <div class="row" data-aos="fade-up" data-aos-delay="100">
-                    <div class="col-lg-12 d-flex justify-content-center">
-                        <ul id="portfolio-flters">
-                            <li data-filter="*" class="filter-active">Semua</li>
-                            <li data-filter=".Artificial-Full-Flower-Hand-Bouquet">Artificial Full Flower Hand Bouquet</li>
-                            <li data-filter=".Money-Hand-Bouquet">Money Hand Bouquet</li>
-                            <li data-filter=".Hand-Bouquet-Snack">Hand Bouquet Snack</li>
-                        </ul>
-                    </div>
-                </div>
-    
-                <!-- Deskripsi Filter -->
-                <div class="row" data-aos="fade-up" data-aos-delay="150">
-                    <div class="col-md-12 md-5 d-flex justify-content-center">
-                        <div id="filter-descriptions">
-                            <div class="filter-description" id="Artificial-Full-Flower-Hand-Bouquet-description">
-                                <p>
-                                    <small>Bunga artificial adalah bunga yang berbahan sintesis atau plastik.
-                                    Meskipun tidak hidup, bunga artificial memiliki daya tarik dan kegunaan yang tak kalah indah.Tidak heran kalau bunga artificial ini popular di berbagai macam acara.</small>
-                                </p>
-                                <hr>
-                            </div>
-                            <div class="filter-description" id="Money-Hand-Bouquet-description">
-                                <p>
-                                    <small>Bunga uang yang terdiri atas artificial flowers dan uang tunai. Merupakan pilihan yang praktis dan tepat untuk diberikan sebagai hadiah atau bentuk penghargaan, sangat cocok di berbagai acara dan kalangan.
-                                    Kamu bisa memilih pecahan uang berapa saja untuk ditambahkan di Money Bouquet. Harga untuk produk ini sudah termasuk artificial flowers dan belum termasuk uang tunai yang diinginkan.</small>
-                                </p>
-                                <hr>
-                            </div>
-                            <div class="filter-description" id="Hand-Bouquet-Snack-description">
-                                <p>
-                                    <small>Bunga snack yang berisi aneka macam snack. Isi snack dari buket ini dapat kamu request sesuai dengan keinginan kamu. 
-                                    Harga udah termasuk artificial flowers dan belum termasuk snack dan kartu ucapan.</small>
-                                </p>
-                                <hr>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    
-                <div class="row portfolio-container mt-3" data-aos="fade-up" data-aos-delay="200">
-                    {% for bouquet in bouquets %}
-                        {% if bouquet.category == 'Artificial-Full-Flower-Hand-Bouquet' %}
-                        <div class="col-lg-4 col-md-6 portfolio-item Artificial-Full-Flower-Hand-Bouquet">
-                        {% elif bouquet.category == 'Money-Hand-Bouquet' %}
-                        <div class="col-lg-4 col-md-6 portfolio-item Money-Hand-Bouquet">
-                        {% elif bouquet.category == 'Hand-Bouquet-Snack' %}
-                        <div class="col-lg-4 col-md-6 portfolio-item Hand-Bouquet-Snack">
-                        {% endif %}
-                            <img src="{{ url_for('static', filename=bouquet.image) }}" class="img-fluid portfolio-img" alt="{{ bouquet.name }}">
-                            <div class="portfolio-info">
-                                <h4>{{bouquet.name}}</h4>
-                                <p>{{bouquet.category}}</p>
-                                <p class="card-text"><strong>Rp {{ bouquet.price }}</strong></p><br>
-                                <a href="{{ url_for('static', filename=bouquet.image) }}" data-gallery="portfolioGallery" class="portfolio-lightbox preview-link" title="{{bouquet.name}}"><i class="bx bx-zoom-in"></i></a>
-                                <a data-id="{{bouquet['_id']}}" class="details-link purchase-button" title="More Details"><i class='bx bx-transfer-alt'></i></a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-    
-            </div>
-        </section>
-
-        <!-- Pertanyaan yang Sering Ditanyakan -->
-        <section id="faq" class="faq">
-            <div class="container" data-aos="fade-up">
-
-                <div class="section-title">
-                    <h2>F.A.Q</h2>
-                    <p>Pertanyaan yang Sering Ditanyakan</p>
-                </div>
-
-                <div class="row faq-item d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
-                    {% for faq in faqs %}
-                    <div class="col-lg-5 mt-3">
-                        <i class="bx bx-help-circle"></i>
-                        <h4>{{faq.question}}</h4>
-                    </div>
-                    <div class="col-lg-7 mt-3">
-                        <p>{{faq.answer}}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Kontak -->
+        <!-- Obrolan -->
         <section id="kontak" class="contact section-bg">
             <div class="container" data-aos="fade-up">
 
                 <div class="section-title">
-                    <h2>Kontak</h2>
-                    <p>Hubungi Kami</p>
+                    <h2>Obrolan</h2>
+                    <p>Obrolan Pemesanan</p>
                 </div>
 
                 <div class="row no-gutters justify-content-md-center">
 
-                    <div class="col-lg-6">
+                    <div class="container mt-5 mb-5">
+                        {% if chats %}
+                        {% for chat in chats %}
+                        <div id="wrapper-balasan">
+                            <div class="row mb-5">
+                                <div class="col-12 col-lg-3">
+                                    <div class="card py-5 mb-3 mb-lg-0">
+                                        <img class="card-img-top is-96x96 mx-auto rounded-circle" src="{{ url_for('static', filename=chat.profile_picture)}}">
+                                        <div class="card-body mx-auto">
+                                            <h5 class="card-title text-center">{{chat.nama_lengkap}}</h5>
+                                            <p class="card-text text-center">@{{comment.username}}</p>
+                                            <p class="card-text text-center">Role:
+                                                {% if comment.role.lower() == "admin" %}
+                                                <span class="badge bg-danger">{{comment.role | capitalize}}</span>
+                                                {% else %}
+                                                <span class="badge bg-primary">{{comment.role | capitalize}}</span>
+                                                {% endif %}
+                                            </p>
+            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-9">
+                                    <div class="card h-100">
+                                        <div class="card-header"> Posted {{comment.post_data}}</div>
+                                        <div class="card-body d-flex flex-column p-3">
+                                            <p class="card-text mb-3">{{comment.komen}}</p>
+                                            <div class="mt-auto">
+                                                {% if user_info.username == comment.username %}
+                                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#editComment_{{comment['_id']}}">Edit</button>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteComment_{{comment['_id']}}">Delete</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </div>
+            
+                        <!-- modal edit -->
+                        {% if user_info.username == comment.username %}
+                        <div class="modal fade" id="editComment_{{comment['_id']}}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Komen</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST" action="/edit_komen" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <input type="hidden" value="{{comment['_id']}}" class="form-control" name="id">
+                                                <input type="hidden" value="{{forum['_id']}}" class="form-control" name="url_id">
+                                                <label for="exampleFormControlTextarea1" class="form-label">Isi Komen</label>
+                                                <textarea class="form-control" id="komen" name="komen" rows="5"
+                                                    required>{{comment.komen}}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="simpan" class="btn btn-primary">Save
+                                                changes</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- end of modal edit -->
+                        <!-- modal delete -->
+                        {% if user_info.username == comment.username %}
+                        <div class="modal fade" id="deleteComment_{{comment['_id']}}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Komen</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST" action="/delete_komen" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <input type="hidden" value="{{comment['_id']}}" class="form-control" name="id">
+                                                <input type="hidden" value="{{forum['_id']}}" class="form-control" name="url_id">
+                                                <h5>Apakah Anda ingin Menghapus Pertanyaan ini ?</h5>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="simpan" class="btn btn-primary">Save
+                                                changes</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                       
+                        <!-- end of modal delete -->
+                        {% endfor %}
+                        {% if (user_info.username == forum.username or user_info.role.lower() == 'admin') and forum.isCompleted == "false" %}
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="hidden" value="{{forum['_id']}}" class="form-control" name="id">
+                                <button type="button" id="button_tutup_thread" class="btn btn-warning w-100 btn-lg" data-bs-toggle="modal" data-bs-target="#modalTutupThread">Tutup Thread</button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="d-flex justify-content-center">
+                            <h3 class="text-muted">Belum ada balasan</h3>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card fixed-bottom">
+                        <div class="card-body">
+                            <h5 class="card-title">Quill Editor Full</h5>
+                
+                            <!-- Quill Editor Full -->
+                            <div class="quill-editor-full">
+                                <p>Ketik pesan</p>
+                            </div>
+            
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-lg-6">
 
                         <div class="row">
                             <div class="col-md-12">
@@ -223,7 +176,7 @@
                             </div>
                             <div class="text-center my-3"><button type="submit" onclick="sendMessage()">Kirim Pesan</button></div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
 

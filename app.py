@@ -329,7 +329,86 @@ def order_history():
         return render_template("user/order_history.html", title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
-    
+
+### chat.html ###
+# menampilkan halaman obrolan
+@app.route('/riwayat-pemesanan/<id>')
+def chat_order(id):
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        title = 'Obrolan Pemesanan'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ["HS256"])
+        user_info = db.users.find_one({"useremail": payload["id"]})
+        transaction = db.transactions.find_one({'_id': ObjectId(id)})
+        user = db.users.find_one({"useremail": transaction["useremail"]})
+        transaction['name_of_buyer'] = user['profile_name']
+        transaction['profile_picture'] = user['profile_pic_real']
+        chats = list(db.chats.find({"thread_id": id}))
+        for chat in chats:
+            user = db.users.find_one({"useremail": chat["useremail"]})
+            chat['name_of_buyer'] = user['profile_name']
+            chat['profile_picture'] = user['profile_pic_real']
+        return render_template("user/chat_order.html", title = title, user_info = user_info, transaction = transaction, chats = chats)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
+# menampilkan obrolan dalam pemesanan buket
+@app.route('/obrolan-dalam-pemesanan', methods = ['POST'])
+def fill_in_the_chat():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ["HS256"])
+        user_info = db.users.find_one({"useremail": payload["id"]})
+        id = request.form['id']
+        fill_in_the_chat = request.form['fill_in_the_chat']
+        timezone = pytz.timezone('Asia/Jakarta')
+        current_datetime = datetime.now(timezone)
+        post_date = current_datetime.strftime('%d/%m/%y - %H:%M')
+        timestamp = current_datetime.timestamp()
+        doc = {
+            "useremail": user_info['useremail'],
+            "name_of_buyer": user_info['profile_name'],
+            "profile_picture": user_info['profile_pic_real'],
+            "role": user_info['role'],
+            "thread_id": id,
+            "fill_in_the_chat": fill_in_the_chat,
+            "post_date": post_date,
+            "timestamp": timestamp
+        }
+        db.chats.insert_one(doc)
+        return redirect(url_for("chat_order", id = id))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
+# edit isi obrolan
+@app.route('/edit-obrolan', methods = ['POST'])
+def edit_chat_content():
+    token_receive = request.cookies.get("mytoken")
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ["HS256"])
+        user_info = db.users.find_one({"useremail": payload["id"]})
+        id = request.form['id']
+        url_id = request.form['url_id']
+        fill_in_the_chat = request.form['fill_in_the_chat']
+        db.chats.update_one({"_id": ObjectId(id)}, {"$set": {"fill_in_the_chat": fill_in_the_chat}})
+        return redirect(url_for("fill_in_the_chat", id = url_id))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
+# hapus isi obrolan
+@app.route('/hapus-obrolan', methods = ['POST'])
+def delete_chat_content():
+    token_receive = request.cookies.get("mytoken")
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ["HS256"])
+        user_info = db.users.find_one({"useremail": payload["id"]})
+        id = request.form['id']
+        url_id = request.form['url_id']
+        db.chats.delete_one({'_id': ObjectId(id)})
+        return redirect(url_for("fill_in_the_chat", id = url_id))
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
 # kirim testimoni
 @app.route('/kirim-testimoni', methods = ['POST'])
 def send_testimonials():
@@ -353,7 +432,7 @@ def send_testimonials():
         }
         db.testimonials.insert_one(doc)
         db.transactions.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
-        return redirect(url_for('order_history'))
+        return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("login"))
 
