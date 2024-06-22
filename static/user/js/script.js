@@ -815,52 +815,28 @@ function updateTotalPrice() {
 // kode untuk logout
 function logout() {
     $.removeCookie("bouquet", { path: "/" });
-    Swal.fire({
-        title: "Keluar",
-        text: "Apakah Anda yakin ingin keluar dari website ini?",
-        icon: "warning",
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        },
         showClass: {
             popup: `
                 animate__animated
-                animate__fadeInDown
+                animate__zoomIn
             `,
         },
-        showCloseButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Yakin",
-        cancelButtonText: "Batal",
-        hideClass: {
-            popup: `
-                animate__animated
-                animate__fadeOut
-            `,
-        },
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const Toast = Swal.mixin({
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            },
-            showClass: {
-                popup: `
-                    animate__animated
-                    animate__zoomIn
-                `,
-            },
-            });
-            Toast.fire({
-                icon: "success",
-                title: "Berhasil keluar",
-            });
-            setTimeout(function () {
-                window.location.href = "/";
-            }, 3000);
-        }
     });
-}  
+    Toast.fire({
+        icon: "success",
+        title: "Berhasil keluar",
+    });
+    setTimeout(function () {
+        window.location.href = "/";
+    }, 3000);
+}
