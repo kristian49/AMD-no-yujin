@@ -4,7 +4,8 @@ body {
 }
 
 a {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
   text-decoration: none;
 }
 
@@ -39,7 +40,8 @@ h6 {
   position: fixed;
   top: calc(50% - 30px);
   left: calc(50% - 30px);
-  border: 6px solid #ed502e;
+  /* border: 6px solid #ed502e; */
+  border: 6px solid #f08080;
   border-top-color: white;
   border-radius: 50%;
   width: 60px;
@@ -65,7 +67,8 @@ h6 {
   right: 15px;
   bottom: 15px;
   z-index: 996;
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
   width: 40px;
   height: 40px;
   border-radius: 4px;
@@ -160,12 +163,23 @@ h6 {
 .navbar .active,
 .navbar .active:focus,
 .navbar li:hover > a {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .navbar .getstarted,
 .navbar .getstarted:focus {
-  background: #ed502e;
+  /* background: #ed502e; */
+  /* warna 1 */
+  /* background: #FFF0F5; */
+  /* warna 2 */
+  /* background: #FFE4E1; */
+  /* warna 3 */
+  /* background: #FFC0CB; */
+  /* warna 4 */
+  /* background: #FA8072; */
+  /* warna 5 */
+  background: #f08080;
   padding: 8px 20px;
   margin-left: 30px;
   border-radius: 4px;
@@ -175,7 +189,15 @@ h6 {
 .navbar .getstarted:hover,
 .navbar .getstarted:focus:hover {
   color: #fff;
-  background: #ef6445;
+  /* background: #ef6445; */
+  /* warna 1 */
+  /* background: #FFF0F5; */
+  /* warna 2 */
+  /* background: #FFE4E1; */
+  /* warna 3 */
+  /* background: #FFC0CB; */
+  /* warna 4 */
+  background: #FA8072;
 }
 
 .navbar .dropdown ul {
@@ -209,7 +231,8 @@ h6 {
 .navbar .dropdown ul a:hover,
 .navbar .dropdown ul .active:hover,
 .navbar .dropdown ul li:hover > a {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .navbar .dropdown:hover > ul {
@@ -306,7 +329,8 @@ h6 {
 .navbar-mobile a:hover,
 .navbar-mobile .active,
 .navbar-mobile li:hover > a {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .navbar-mobile .getstarted,
@@ -341,7 +365,8 @@ h6 {
 .navbar-mobile .dropdown ul a:hover,
 .navbar-mobile .dropdown ul .active:hover,
 .navbar-mobile .dropdown ul li:hover > a {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .navbar-mobile .dropdown > .dropdown-active {
@@ -473,7 +498,8 @@ h6 {
 
 #hero .carousel-indicators li.active {
   opacity: 1;
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
 }
 
 #hero .btn-get-started {
@@ -488,12 +514,14 @@ h6 {
   line-height: 1;
   color: #fff;
   animation-delay: 0.8s;
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
   margin-top: 15px;
 }
 
 #hero .btn-get-started:hover {
-  background: #ef6445;
+  /* background: #ef6445; */
+  background: #FA8072;
 }
 
 @media (max-width: 992px) {
@@ -595,7 +623,8 @@ section {
   left: 0;
   top: 2px;
   font-size: 20px;
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
   line-height: 1;
 }
 
@@ -613,14 +642,17 @@ section {
   border-radius: 5px;
   transition: 0.3s;
   line-height: 1;
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
   animation-delay: 0.8s;
   margin-top: 6px;
-  border: 2px solid #ed502e;
+  /* border: 2px solid #ed502e; */
+  border: 2px solid #f08080;
 }
 
 .about .content .btn-learn-more:hover {
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
   color: #fff;
   text-decoration: none;
 }
@@ -639,7 +671,8 @@ section {
 .counts .count-box i {
   display: block;
   font-size: 30px;
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
   float: left;
 }
 
@@ -748,11 +781,13 @@ section {
   height: 12px;
   background-color: #fff;
   opacity: 1;
-  border: 1px solid #ed502e;
+  /* border: 1px solid #ed502e; */
+  border: 1px solid #f08080;
 }
 
 .testimonials .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #ed502e;
+  /* background-color: #ed502e; */
+  background-color: #f08080;
 }
 
 /* Portfolio */
@@ -779,7 +814,8 @@ section {
 
 .portfolio #portfolio-flters li:hover,
 .portfolio #portfolio-flters li.filter-active {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .portfolio #portfolio-flters li:last-child {
@@ -826,7 +862,8 @@ section {
 
 .portfolio .portfolio-item .portfolio-info .preview-link:hover,
 .portfolio .portfolio-item .portfolio-info .details-link:hover {
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
 }
 
 .portfolio .portfolio-item .portfolio-info .details-link {
@@ -899,7 +936,8 @@ section {
 
 .contact .info-box i {
   font-size: 32px;
-  color: #ed502e;
+  /* color: #ed502e; */
+  color: #f08080;
   border-radius: 50%;
   padding: 8px;
   border: 2px dotted #fbdad2;
@@ -976,7 +1014,8 @@ section {
 
 .contact .fillable-form input:focus,
 .contact .fillable-form textarea:focus {
-  border-color: #ed502e;
+  /* border-color: #ed502e; */
+  border-color: #f08080;
 }
 
 .contact .fillable-form input {
@@ -988,7 +1027,8 @@ section {
 }
 
 .contact .fillable-form button[type="submit"] {
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
   border: 0;
   padding: 10px 30px;
   border-radius: 4px;
@@ -997,7 +1037,8 @@ section {
 }
 
 .contact .fillable-form button[type="submit"]:hover {
-  background: #ef6445;
+  /* background: #ef6445; */
+  background: #FA8072;
 }
 
 @keyframes animate-loading {
@@ -1081,7 +1122,8 @@ section {
 
 #footer .credits .social-links a:hover {
   color: #fff;
-  background: #ed502e;
+  /* background: #ed502e; */
+  background: #f08080;
   text-decoration: none;
 }
 
