@@ -810,6 +810,87 @@ function updateTotalPrice() {
     document.getElementById("quantity").value = quantity; // Simpan nilai quantity
     document.getElementById("total_price").value = totalPrice.toFixed(0); // Simpan nilai total harga
 }
+
+/* payment */
+// kode untuk pembayaran
+function pay() {
+    let quantity = $("#content_quantity").val();
+    let bouquet_id = $('#order-button').data('id');
+    let flower_and_paper_color = $("#flower_and_paper_color").val();
+    let note_of_buyer = $("#note_of_buyer").val();
+    let delivery_date = $("#delivery_date").val();
+    let delivery_time = $("#delivery_time").val();
+    let greeting_card = $("#greeting_card").val();
+    let name_of_buyer = $("#name_of_buyer").val();
+    let phone_of_buyer = $("#phone_of_buyer").val();
+    let address_of_buyer = $("#address_of_buyer").val();
+    let shipping_method = $("#shipping_method").val();
+    let proof_of_payment = $('#proof_of_payment')[0].files[0];
+
+    // Memeriksa apakah semua input telah diisi
+    if (quantity && bouquet_id && flower_and_paper_color && delivery_date && delivery_time && name_of_buyer && phone_of_buyer && address_of_buyer && shipping_method && proof_of_payment) {
+        let form_data = new FormData();
+        form_data.append("quantity", quantity);
+        form_data.append("bouquet_id", bouquet_id);
+        form_data.append("flower_and_paper_color", flower_and_paper_color);
+        form_data.append("note_of_buyer", note_of_buyer);
+        form_data.append("delivery_date", delivery_date);
+        form_data.append("delivery_time", delivery_time);
+        form_data.append("greeting_card", greeting_card);
+        form_data.append("name_of_buyer", name_of_buyer);
+        form_data.append("phone_of_buyer", phone_of_buyer);
+        form_data.append("address_of_buyer", address_of_buyer);
+        form_data.append("shipping_method", shipping_method);
+        form_data.append("proof_of_payment", proof_of_payment);
+        $.ajax({
+            type: "POST",
+            url: "/pembayaran",
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response["result"] === "success") {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top",
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        },
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Pesanan Anda akan diproses. Silahkan tunggu validasi pesanan oleh Navirin's",
+                    });
+                    setTimeout(function () {
+                        window.location.replace("/riwayat-pemesanan")
+                    }, 5000);
+                }
+            },
+        });
+    } else {
+        // Jika ada input yang belum diisi, berikan pesan kesalahan kepada pengguna
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            },
+        });
+        Toast.fire({
+            icon: "warning",
+            title: "Salah satu atau beberapa kotak pengisian masih kosong, mohon untuk melengkapi semua kotak pengisian."
+        });
+    }
+}
   
 /* logout */
 // kode untuk logout

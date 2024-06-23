@@ -27,8 +27,6 @@ db = client[DB_NAME]
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['UPLOAD_FOLDER'] = './static/profile_pics'
-# app.config['UPLOAD_COLLECTION_FOLDER'] = './static/collection_pics'
-# app.config['UPLOAD_PAYMENT_FOLDER'] = './static/payment'
 
 # fungsi untuk admin
 def admin_required(f):
@@ -37,7 +35,7 @@ def admin_required(f):
         token_receive = request.cookies.get(TOKEN_KEY)
         if token_receive is not None:
             try:
-                payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+                payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
                 if payload['role'] == 'admin':
                     return f(*args, **kwargs)
                 else:
@@ -59,7 +57,7 @@ def home():
         user_info = db.users.find_one({'useremail': payload.get('id')})
         useremail = user_info['useremail']
 
-        # Menghitung total pembelian dan total bucket hanya jika statusnya "diterima"
+        # Menghitung total pembelian dan total bucket hanya jika statusnya 'diterima'
         payments = list(db.transactions.find({'useremail': useremail, 'status': 'selesai'}))
         total_pembelian = sum(payment['total_price'] for payment in payments)
         total_bucket = sum(payment['quantity'] for payment in payments)
@@ -225,6 +223,90 @@ def update_profile():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 
+### collection.html ###
+# Endpoint untuk menampilkan halaman koleksi
+@app.route('/koleksi')
+def bouquet_collection():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        title = 'Koleksi Buket'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
+        bouquets = list(db.bouquets.find())
+        return render_template('user/collection.html', title = title, user_info = user_info, bouquets = bouquets)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+
+### payment.html ###
+# menampilkan halaman pembayaran
+@app.route('/pembayaran', methods = ['GET', 'POST'])
+def pay():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        title = 'Pemesanan Buket'
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
+        if request.method == 'GET':
+            quantity = request.args.get('quantity', default = 1, type = int)
+            bouquet_id = request.args.get('bouquet_id')
+            bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
+            price = int(bouquet['price'])
+            return render_template('user/payment.html', title = title, user_info = user_info, quantity = quantity, bouquet_id = bouquet_id, bouquet = bouquet, price = price)
+        elif request.method == 'POST':
+            today = datetime.now()
+            mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+            useremail = db.users.find_one({'useremail': payload['id']})['useremail']
+            quantity = int(request.form['quantity'])
+            bouquet_id = request.form['bouquet_id']
+            flower_and_paper_color = request.form['flower_and_paper_color']
+            note_of_buyer = request.form['note_of_buyer']
+            delivery_date = request.form['delivery_date']
+            delivery_time = request.form['delivery_time']
+            greeting_card = request.form['greeting_card']
+            name_of_buyer = request.form['name_of_buyer']
+            phone_of_buyer = request.form['phone_of_buyer']
+            address_of_buyer = request.form['address_of_buyer']
+            shipping_method = request.form['shipping_method']
+            bouquet = db.bouquets.find_one({'_id': ObjectId(bouquet_id)})
+            bouquet_image = bouquet['image']
+            name_of_the_bouquet = bouquet['name']
+            price_per_bouquet = int(bouquet['price'])
+            total_price = quantity * price_per_bouquet
+            file = request.files['proof_of_payment']
+            filename = secure_filename(file.filename)
+            extension = filename.split('.')[-1]
+            file_path = f'admin/img/proof_of_payment/{name_of_buyer}-{name_of_the_bouquet}-{mytime}.{extension}'
+            file.save('./static/' + file_path)
+            order_date = today.strftime('%Y-%m-%d')
+            order_time = today.strftime('%H:%M')
+            current_date = datetime.now().isoformat()
+            doc = {
+                'useremail': useremail,
+                'bouquet_id': bouquet_id,
+                'quantity': quantity,
+                'flower_and_paper_color': flower_and_paper_color,
+                'note_of_buyer': note_of_buyer,
+                'delivery_date': delivery_date,
+                'delivery_time': delivery_time,
+                'greeting_card': greeting_card,
+                'name_of_buyer': name_of_buyer,
+                'phone_of_buyer': phone_of_buyer,
+                'address_of_buyer': address_of_buyer,
+                'shipping_method': shipping_method,
+                'bouquet_image': bouquet_image,
+                'name_of_the_bouquet': name_of_the_bouquet,
+                'total_price': total_price,
+                'proof_of_payment': file_path,
+                'order_date': order_date,
+                'order_time': order_time,
+                'date': current_date,
+                'status': 'pending'
+            }
+            db.transactions.insert_one(doc)
+            return jsonify({'result': 'success'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('login'))
+
 ### order_history.html ###
 # menampilkan riwayat pemesanan
 @app.route('/riwayat-pemesanan')
@@ -242,7 +324,7 @@ def order_history():
             transaction['name_of_the_bouquet'] = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
             testimonial = db.testimonials.find_one({'transaction_id': str(transaction['_id'])})
             transaction['bouquet_review'] = testimonial['review'] if testimonial else None
-        return render_template("user/order_history.html", title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
+        return render_template('user/order_history.html', title = title, user_info = user_info, transactions = transactions, total_transactions = total_transactions)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('login'))
 
@@ -253,20 +335,12 @@ def chat_order(id):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
         title = 'Obrolan Pemesanan'
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ["HS256"])
-        user_info = db.users.find_one({"useremail": payload["id"]})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': payload['id']})
         transaction = db.transactions.find_one({'_id': ObjectId(id)})
-        user = db.users.find_one({"useremail": transaction["useremail"]})
-        transaction['name_of_buyer'] = user['profile_name']
-        transaction['profile_picture'] = user['profile_pic_real']
-        chats = list(db.chats.find({"thread_id": id}))
-        for chat in chats:
-            user = db.users.find_one({"useremail": chat["useremail"]})
-            chat['name_of_buyer'] = user['profile_name']
-            chat['profile_picture'] = user['profile_pic_real']
-        return render_template("user/chat_order.html", title = title, user_info = user_info, transaction = transaction, chats = chats)
+        return render_template('user/chat_order.html', title = title, user_info = user_info, transaction = transaction)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
 
 # kirim testimoni
 @app.route('/kirim-testimoni', methods = ['POST'])
@@ -280,20 +354,20 @@ def send_testimonials():
         bouquet = db.bouquets.find_one({'_id': ObjectId(transaction['bouquet_id'])})['name']
         current_date = datetime.now().isoformat()
         doc = {
-            "transaction_id": str(transaction['_id']),
-            "useremail": transaction['useremail'],
-            "name_of_buyer": transaction['name_of_buyer'],
-            "phone_of_buyer": transaction['phone_of_buyer'],
-            "address_of_buyer": transaction['address_of_buyer'],
-            "purchased_bouquet": bouquet,
-            "review": bouquet_review,
-            "date": current_date
+            'transaction_id': str(transaction['_id']),
+            'useremail': transaction['useremail'],
+            'name_of_buyer': transaction['name_of_buyer'],
+            'phone_of_buyer': transaction['phone_of_buyer'],
+            'address_of_buyer': transaction['address_of_buyer'],
+            'purchased_bouquet': bouquet,
+            'review': bouquet_review,
+            'date': current_date
         }
         db.testimonials.insert_one(doc)
         db.transactions.update_one({'_id': ObjectId(id)}, {'$set': {'status': 'selesai'}})
         return jsonify({'result': 'success'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for('login'))
 
 ### admin/dashboard.html ###
 # menampilkan halaman admin untuk beranda
@@ -349,6 +423,7 @@ def admin_bouquet():
 # tambah buket
 @app.route('/tambah-buket', methods = ['POST'])
 @admin_required
+
 def add_bouquet():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -379,6 +454,7 @@ def add_bouquet():
 # edit buket
 @app.route('/edit-buket', methods=['POST'])
 @admin_required
+
 def edit_bouquet():
     id = request.form['id']
 
@@ -426,6 +502,7 @@ def edit_bouquet():
 # hapus buket
 @app.route('/hapus-buket', methods=['POST'])
 @admin_required
+
 def delete_bouquet():
     id = request.form['id']
     bouquet = db.bouquets.find_one({'_id': ObjectId(id)})
@@ -444,6 +521,7 @@ def delete_bouquet():
 # menampilkan halaman admin untuk transaksi
 @app.route('/admin-transaksi')
 @admin_required
+
 def admin_transaction():
     title = 'Data Transaksi'
     transactions = list(db.transactions.find())
@@ -454,6 +532,7 @@ def admin_transaction():
 # terima pemesanan
 @app.route('/terima-pemesanan', methods=['POST'])
 @admin_required
+
 def receive_orders():
     id = request.form['id']
     note = request.form['note']
@@ -468,6 +547,7 @@ def receive_orders():
 # tolak pemesanan
 @app.route('/tolak-pemesanan', methods=['POST'])
 @admin_required
+
 def reject_order():
     id = request.form['id']
     note = request.form['note']
@@ -477,6 +557,7 @@ def reject_order():
 # kirim pemesanan
 @app.route('/kirim-pemesanan', methods=['POST'])
 @admin_required
+
 def send_order():
     id = request.form['id']
     note = request.form['note']
@@ -487,6 +568,7 @@ def send_order():
 # menampilkan halaman admin untuk testimoni
 @app.route('/admin-testimoni')
 @admin_required
+
 def admin_testimonials():
     title = 'Data Testimoni'
     testimonials = db.testimonials.find()
@@ -494,23 +576,25 @@ def admin_testimonials():
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban
-@app.route("/admin-pertanyaan-dan-jawaban")
+@app.route('/admin-pertanyaan-dan-jawaban')
 @admin_required
+
 def admin_faq():
     faqs = db.faqs.find()
-    return render_template("admin/faq.html", faqs = faqs)
+    return render_template('admin/faq.html', faqs = faqs)
 
 # tambah pertanyaan dan jawaban
 @app.route('/tambah-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
+
 def add_faq():
     question = request.form['question']
     answer = request.form['answer']
     current_date = datetime.now().isoformat()
     doc = {
-        "question": question,
-        "answer": answer,
-        "date": current_date
+        'question': question,
+        'answer': answer,
+        'date': current_date
     }
     db.faqs.insert_one(doc)
     return redirect(url_for('admin_faq'))
@@ -518,20 +602,22 @@ def add_faq():
 # edit pertanyaan dan jawaban
 @app.route('/edit-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
+
 def edit_faq():
     id = request.form['id']
     question = request.form['question']
     answer = request.form['answer']
     new_doc = {
-        "question": question,
-        "answer": answer
+        'question': question,
+        'answer': answer
     }
-    db.faqs.update_one({'_id': ObjectId(id)}, {"$set": new_doc})
+    db.faqs.update_one({'_id': ObjectId(id)}, {'$set': new_doc})
     return redirect(url_for('admin_faq'))
 
 # hapus pertanyaan dan jawaban
 @app.route('/hapus-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
+
 def delete_faq():
     id = request.form['id']
     db.faqs.delete_one({'_id': ObjectId(id)})
@@ -541,6 +627,7 @@ def delete_faq():
 # menampilkan halaman admin untuk hubungi kami
 @app.route('/admin-hubungi-kami')
 @admin_required
+
 def admin_contact_us():
     title = 'Data Hubungi Kami'
     contacts = db.contact_us.find()
@@ -549,24 +636,11 @@ def admin_contact_us():
 # menghapus hubungi kami
 @app.route('/hapus-hubungi-kami', methods = ['POST'])
 @admin_required
+
 def delete_contact_us():
     id = request.form['id']
     db.contact_us.delete_one({'_id': ObjectId(id)})
     return redirect(url_for('admin_contact_us'))
-
-# menampilkan data buket bagian admin
-@app.route('/admin/tampil-buket')
-@admin_required
-def admin_show():
-    token_receive = request.cookies.get(TOKEN_KEY)
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({'useremail': payload.get('id')})
-
-        collections = list(db.collections.find())
-        return render_template('admin/bouquet_nabila.html', collections=collections, user_info=user_info)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('user/home.html')
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port = 5000, debug = True)

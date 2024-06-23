@@ -17,7 +17,6 @@
                         <div class="card mb-3 mx-auto pointer-cursor" style="max-width: 900px;">
                             <div class="row g-0">
                                 <div class="col-6 col-md-6 col-lg-6">
-                                <!-- <div class="col-8 col-md-9 col-lg-10"> -->
                                     <div class="card-body">
                                         <h5 class="card-title">Pemesanan #{{total_transactions - loop.index}} - {{transaction.name_of_the_bouquet}}</h5>
                                         <p class="card-text">Dipesan oleh {{transaction.name_of_buyer}}</p>
@@ -28,14 +27,13 @@
                                     <div class="card-body">
                                         <p class="card-text text-black-50" style="font-size:1.2em;">
                                             <a class="text-dark" href="{{ url_for('chat_order', id=transaction['_id']) }}">
-                                                <i class="far fa-comment"></i> {{transaction.quantity}}
+                                                <i class="far fa-comment"></i> {{chats.number_of_chats}}
                                             </a>
                                         </p>
                                     </div>
                                 </div>
                                 <div class="col-4 col-md-3 col-lg-3 d-flex align-items-center">
-                                <!-- <div class="col-4 col-md-3 col-lg-2 d-flex align-items-center"> -->
-                                    <div class="card-body">
+                                    <div class="card-body text-center">
                                         {% if transaction.status == "pending" %}
                                         <button class="btn btn-warning shadow-sm">Pending</button>
                                         {% elif transaction.status == "diterima" %}
@@ -338,7 +336,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12 form-group">
-                                                <label>Catatan Navirin's</label>
+                                                <label>Alasan Penolakan</label>
                                                 <p class="form-control mt-2">{{transaction.note}}</p>
                                             </div>
                                         </div>
