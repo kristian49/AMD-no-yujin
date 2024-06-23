@@ -433,7 +433,7 @@ def admin_home():
     chat_count = db.chats.count_documents({})
     faqs_count = db.faqs.count_documents({})
     contact_count = db.contact_us.count_documents({})
-    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, chat_count = thread_count, faqs_count = faqs_count, contact_count = contact_count)
+    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, chat_count = chat_count, faqs_count = faqs_count, contact_count = contact_count)
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
@@ -603,8 +603,9 @@ def admin_testimonials():
 @app.route("/admin-obrolan")
 @admin_required
 def admin_forum():
+    title = 'Data Obrolan'
     chats = db.chats.find()
-    return render_template("admin/chat.html", chats = chats)
+    return render_template("admin/chat.html", title = title, chats = chats)
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban
