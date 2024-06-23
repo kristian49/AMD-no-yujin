@@ -27,8 +27,6 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel='stylesheet' />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='user/css/glightbox.min.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='user/css/quill.snow.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='user/css/quill.bubble.css') }}" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css" rel="stylesheet" />
     <link href="{{ url_for('static', filename='user/css/swiper-bundle.min.css') }}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='user/css/style.css') }}" rel="stylesheet" />
@@ -46,16 +44,16 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Beranda</a></li>
-                    <li><a class="nav-link scrollto" href="admin-beranda">Admin</a></li>
-                    <li><a class="nav-link scrollto" href="koleksi">Koleksi Buket</a></li>
+                    <li><a class="nav-link scrollto" href="../admin-beranda">Admin</a></li>
+                    <li><a class="nav-link scrollto" href="../koleksi">Koleksi Buket</a></li>
                     <li class="dropdown">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                             <img src="{{ url_for('static', filename=user_info.profile_pic_real) }}" alt="Profile" class="rounded-circle profile-pic">
                             <span class="d-none d-md-block dropdown-toggle ps-2">{{ user_info.profile_name }}</span>
                         </a>
                         <ul>
-                            <li><a href="profil">Profil</a></li>
-                            <li><a href="riwayat-pemesanan">Riwayat Pemesanan</a></li>
+                            <li><a href="../profil">Profil</a></li>
+                            <li><a href="../riwayat-pemesanan">Riwayat Pemesanan</a></li>
                             <li><a href="#" onclick="logout()">Keluar</a></li>
                         </ul>
                     </li>
