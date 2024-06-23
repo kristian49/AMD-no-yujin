@@ -430,10 +430,10 @@ def admin_home():
     for doc in result:
         income = doc['total_price']
         break
-    thread_count = db.chats.count_documents({})
+    chat_count = db.chats.count_documents({})
     faqs_count = db.faqs.count_documents({})
     contact_count = db.contact_us.count_documents({})
-    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, thread_count = thread_count, faqs_count = faqs_count, contact_count = contact_count)
+    return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, chat_count = thread_count, faqs_count = faqs_count, contact_count = contact_count)
 
 ### admin.user.html ###
 # menampilkan halaman admin untuk pengguna
@@ -456,7 +456,6 @@ def admin_bouquet():
 # tambah buket
 @app.route('/tambah-buket', methods = ['POST'])
 @admin_required
-
 def add_bouquet():
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
@@ -487,7 +486,6 @@ def add_bouquet():
 # edit buket
 @app.route('/edit-buket', methods=['POST'])
 @admin_required
-
 def edit_bouquet():
     id = request.form['id']
 
@@ -535,7 +533,6 @@ def edit_bouquet():
 # hapus buket
 @app.route('/hapus-buket', methods=['POST'])
 @admin_required
-
 def delete_bouquet():
     id = request.form['id']
     bouquet = db.bouquets.find_one({'_id': ObjectId(id)})
@@ -554,7 +551,6 @@ def delete_bouquet():
 # menampilkan halaman admin untuk transaksi
 @app.route('/admin-transaksi')
 @admin_required
-
 def admin_transaction():
     title = 'Data Transaksi'
     transactions = list(db.transactions.find())
@@ -580,7 +576,6 @@ def receive_orders():
 # tolak pemesanan
 @app.route('/tolak-pemesanan', methods=['POST'])
 @admin_required
-
 def reject_order():
     id = request.form['id']
     note = request.form['note']
@@ -590,7 +585,6 @@ def reject_order():
 # kirim pemesanan
 @app.route('/kirim-pemesanan', methods=['POST'])
 @admin_required
-
 def send_order():
     id = request.form['id']
     note = request.form['note']
@@ -601,17 +595,21 @@ def send_order():
 # menampilkan halaman admin untuk testimoni
 @app.route('/admin-testimoni')
 @admin_required
-
 def admin_testimonials():
     title = 'Data Testimoni'
     testimonials = db.testimonials.find()
     return render_template('admin/testimonial.html', title = title, testimonials = testimonials)
 
+@app.route("/admin-obrolan")
+@admin_required
+def admin_forum():
+    chats = db.chats.find()
+    return render_template("admin/chat.html", chats = chats)
+
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban
 @app.route('/admin-pertanyaan-dan-jawaban')
 @admin_required
-
 def admin_faq():
     faqs = db.faqs.find()
     return render_template('admin/faq.html', faqs = faqs)
@@ -619,7 +617,6 @@ def admin_faq():
 # tambah pertanyaan dan jawaban
 @app.route('/tambah-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
-
 def add_faq():
     question = request.form['question']
     answer = request.form['answer']
@@ -635,7 +632,6 @@ def add_faq():
 # edit pertanyaan dan jawaban
 @app.route('/edit-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
-
 def edit_faq():
     id = request.form['id']
     question = request.form['question']
@@ -650,7 +646,6 @@ def edit_faq():
 # hapus pertanyaan dan jawaban
 @app.route('/hapus-pertanyaan-dan-jawaban', methods = ['POST'])
 @admin_required
-
 def delete_faq():
     id = request.form['id']
     db.faqs.delete_one({'_id': ObjectId(id)})
@@ -660,7 +655,6 @@ def delete_faq():
 # menampilkan halaman admin untuk hubungi kami
 @app.route('/admin-hubungi-kami')
 @admin_required
-
 def admin_contact_us():
     title = 'Data Hubungi Kami'
     contacts = db.contact_us.find()
@@ -669,7 +663,6 @@ def admin_contact_us():
 # menghapus hubungi kami
 @app.route('/hapus-hubungi-kami', methods = ['POST'])
 @admin_required
-
 def delete_contact_us():
     id = request.form['id']
     db.contact_us.delete_one({'_id': ObjectId(id)})

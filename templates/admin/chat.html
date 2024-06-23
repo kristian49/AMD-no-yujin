@@ -3,7 +3,7 @@
             <div class="content">
                 <div class="page-inner">
                     <div class="page-header">
-                        <h4 class="page-title">Data Forum</h4>
+                        <h4 class="page-title">Data Obrolan</h4>
                         <ul class="breadcrumbs">
                             <li class="nav-home">
                                 <a href="#">
@@ -14,13 +14,7 @@
                                 <i class="flaticon-right-arrow"></i>
                             </li>
                             <li class="nav-item">
-                                <a href="#">Data</a>
-                            </li>
-                            <li class="separator">
-                                <i class="flaticon-right-arrow"></i>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">Forum</a>
+                                <a>Data Obrolan</a>
                             </li>
                         </ul>
                     </div>
@@ -29,7 +23,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="d-flex align-items-center">
-                                        <h4 class="card-title">Data Forum</h4>
+                                        <h4 class="card-title">Data Obrolan</h4>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -39,77 +33,18 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>Judul Thread</th>
-                                                    <th>Username Pembuat</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-
+                                                    <th>ID Transaksi</th>
+                                                    <th>Pesan</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                {% for forum in forums %}
+                                                {% for chat in chats %}
                                                 <tr>
                                                     <td>{{loop.index}}</td>
-                                                    <td>{{forum.judul}}</td>
-                                                    <td>{{forum.username}}</td>
-                                                    <td>
-                                                        {% if forum.isCompleted == "true" %}
-                                                            Selesai
-                                                        {% else %}
-                                                            Belum Selesai
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <a href="#hapusThread_{{forum['_id']}}" data-toggle="modal"
-                                                            class="btn btn-xs btn-danger">
-                                                            <i class="fa fa-trash"></i> Hapus
-                                                        </a>
-                                                        <a href="{{ url_for('isi_forum', id=forum['_id']) }}" target="_blank" class="btn btn-xs btn-primary">
-                                                            <i class="fa fa-edit"></i> Lihat
-                                                        </a>
-                                                        
-                                                    </td>
+                                                    <td>{{chat.transaction_id}}</td>
+                                                    <td>{{chat.message}}</td>
                                                 </tr>
-
-
-                                                <div class="modal fade" id="hapusThread_{{forum['_id']}}" tabindex="-1" role="dialog" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header no-bd">
-                                                                <h5 class="modal-title">
-                                                                    <span class="fw-mediumbold">
-                                                                        Hapus Data</span>
-                                                                    <span class="fw-light">
-                                                                        Forum
-                                                                    </span>
-                                                                </h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <form method="POST" action="/delete_thread_admin_side" enctype="multipart/form-data">
-                                        
-                                                                <div class="modal-body">
-                                        
-                                                                    <input type="hidden" value="{{forum['_id']}}" class="form-control" name="id">
-                                        
-                                                                    <div class="form-group">
-                                                                        <h4>Apakah Anda ingin Menghapus Data ini?</h4>
-                                                                    </div>
-                                                                </div>
-                                        
-                                                                <div class="modal-footer no-bd">
-                                                                    <button type="submit" name="hapus" class="btn btn-danger"><i class="fa fa-trash"></i>
-                                                                        Hapus</button>
-                                                                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i
-                                                                            class="fa fa-undo"></i> Close</button>
-                                                                </div>
-                                        
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
                                                 {% endfor %}
 
@@ -122,15 +57,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
     </div>
-    <script>
-        $(document).ready(function () {
-            $('#add-row').DataTable({
-                pageLength: 25
-            });
+{% include 'admin/templates/footer.html' %}
+<script>
+    $(document).ready(function () {
+        $('#add-row').DataTable({
+            pageLength: 25
         });
-    </script>
+    });
+</script>
