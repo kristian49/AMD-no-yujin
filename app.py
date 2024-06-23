@@ -605,7 +605,7 @@ def admin_testimonials():
 def admin_forum():
     title = 'Data Obrolan'
     chats = db.chats.find()
-    return render_template("admin/chat.html", title = title, chats = chats)
+    return render_template("admin/chat_order.html", title = title, chats = chats)
 
 ### admin/faq.html ###
 # menampilkan halaman admin untuk pertanyaan dan jawaban
