@@ -334,13 +334,48 @@ def order_history():
 def chat_order(id):
     token_receive = request.cookies.get(TOKEN_KEY)
     try:
-        title = 'Obrolan Pemesanan'
+        title = 'Obrolan dalam Pemesanan'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': payload['id']})
-        transaction = db.transactions.find_one({'_id': ObjectId(id)})
-        return render_template('user/chat_order.html', title = title, user_info = user_info, transaction = transaction)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for('login'))
+        user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
+        # transaction = db.transactions.find_one({'_id': ObjectId(id)})
+        # user = db.users.find_one({"useremail": transaction["useremail"]})
+        transaction_id = ObjectId(transaction_id)
+        transaction_info = db.transactions.find_one({'_id' : transaction_id})
+        transaction_id = str(transaction_id)
+        transaction_chat = list(db.chats.find({'transaction_id' : transaction_id}).sort('date', -1).limit(10))
+        for chat in transaction_chat:
+            chat['date'] = chat['date'].split('-')[0]
+        number_of_chats = len(transaction_chat)
+
+        return render_template('chat_order.html', title = title, transaction_info = transaction_info, transaction_chat = transaction_chat, number_of_chats = number_of_chats)
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
+    
+@app.route('/mengobrol', methods = ['POST'])
+def add_message():
+    token_receive = request.cookies.get(TOKEN_KEY)
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
+        user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
+
+        transaction_id = request.form['transaction_id_give']
+        useremail = user_info['useremail']
+        account_name = user_info['account_name']
+        profile_name = user_info['profile_name']
+        message_receive = request.form.get('message_give')
+
+        doc = {
+            'transaction_id': transaction_id,
+            'useremail': useremail,
+            'account_name': account_name,
+            'profile_name': profile_name,
+            'message': message_receive,
+            'date': datetime.now().strftime('%d/%m/%Y-%H:%M:%S')
+        }
+        db.chats.insert_one(doc)
+        return jsonify({'result': 'success', 'msg': 'Berhasil menambahkan komentar'})
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for('home'))
 
 # kirim testimoni
 @app.route('/kirim-testimoni', methods = ['POST'])
