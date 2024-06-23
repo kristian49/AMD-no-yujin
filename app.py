@@ -336,19 +336,19 @@ def chat_order(id):
     try:
         title = 'Obrolan dalam Pemesanan'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
-        user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
+        user_info = db.users.find_one({'useremail': payload['id']})
+        # user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
         transaction_id = db.transactions.find_one({'_id': ObjectId(id)})
         # forum = db.forums.find_one({'_id': ObjectId(id)})
         # user = db.users.find_one({"useremail": transaction["useremail"]})
         # transaction_id = ObjectId(transaction_id)
         transaction_info = db.transactions.find_one({'_id' : transaction_id})
-        transaction_id = str(transaction_id)
         transaction_chat = list(db.chats.find({'transaction_id' : transaction_id}).sort('date', -1).limit(10))
         for chat in transaction_chat:
             chat['date'] = chat['date'].split('-')[0]
         number_of_chats = len(transaction_chat)
 
-        return render_template('user/chat_order.html', title = title, transaction_info = transaction_info, transaction_chat = transaction_chat, number_of_chats = number_of_chats)
+        return render_template('user/chat_order.html', title = title, user_info = user_info, transaction_info = transaction_info, transaction_chat = transaction_chat, number_of_chats = number_of_chats)
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
     
