@@ -430,7 +430,7 @@ def admin_home():
     for doc in result:
         income = doc['total_price']
         break
-    chat_count = db.chats.count_documents({})
+    chats_count = db.chats.count_documents({})
     faqs_count = db.faqs.count_documents({})
     contact_count = db.contact_us.count_documents({})
     return render_template('admin/dashboard.html', title = title, users_count = users_count, bouquets_count = bouquets_count, transactions_count = transactions_count, testimonials_count = testimonials_count, income = income, chats_count = chats_count, faqs_count = faqs_count, contact_count = contact_count)
