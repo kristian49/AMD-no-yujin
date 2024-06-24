@@ -547,7 +547,7 @@
                                         {% elif transaction.status == "ditolak" %}
                                         <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
                                         {% elif transaction.status == "dikirim" %}
-                                        <button type="button" class="btn btn-primary flex-fill" onclick="send_testimonials('{{transaction['_id']}}')">Kirim</button>
+                                        <button type="button" class="btn btn-primary flex-fill" onclick="send_testimonials('{{transaction['_id']}}')">Terima Pesanan</button>
                                         <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
                                         {% elif transaction.status == "selesai" %}
                                         <button type="button" class="btn btn-secondary flex-fill" data-bs-dismiss="modal">Tutup</button>
