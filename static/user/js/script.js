@@ -902,8 +902,7 @@ function chatInOrdering() {
             type: "POST",
             url: '/mengobrol',
             data: {
-                message_give: message,
-                transaction_id_give: transaction_id,
+                message_give: message
             },
             success: function (response) {
                 const Toast = Swal.mixin({
