@@ -566,39 +566,3 @@
 
 </main>
 {% include 'user/templates/footer.html' %}
-<script>
-    function send_testimonials(id){
-        let bouquet_review = $('#bouquet_review_' + id).val();
-    
-        $.ajax({
-            type: "POST",
-            url: "/kirim-testimoni",
-            data: {
-                id: id,
-                bouquet_review: bouquet_review
-            },
-            success: function (response) {
-                if (response["result"] === "success") {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        },
-                    });
-                    Toast.fire({
-                        icon: "success",
-                        title: "Testimoni berhasil dikirim",
-                    });
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 3000);
-                }
-            },
-        });
-    }
-</script>

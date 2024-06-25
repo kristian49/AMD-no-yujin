@@ -867,7 +867,7 @@ function pay() {
                         title: "Pesanan Anda akan diproses. Silahkan tunggu validasi pesanan oleh Navirin's",
                     });
                     setTimeout(function () {
-                        window.location.replace("/riwayat-pemesanan")
+                        window.location.replace("/riwayat-pemesanan");
                     }, 5000);
                 }
             },
@@ -890,6 +890,80 @@ function pay() {
             title: "Salah satu atau beberapa kotak pengisian masih kosong, mohon untuk melengkapi semua kotak pengisian."
         });
     }
+}
+
+/* chat_order */
+// kode untuk chat order
+function chatInOrdering() {
+    let message = $("#message").val();
+
+    if (message) {
+        $.ajax({
+            type: "POST",
+            url: '/mengobrol',
+            data: {
+                message_give: message,
+                transaction_id_give: transaction_id,
+            },
+            success: function (response) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    },
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: `${response['msg']}`,
+                });
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            },
+        });
+    }
+}
+
+/* send_testimonial */
+// kode untuk mengirim testimoni
+function send_testimonials(id){
+    let bouquet_review = $('#bouquet_review_' + id).val();
+
+    $.ajax({
+        type: "POST",
+        url: "/kirim-testimoni",
+        data: {
+            id: id,
+            bouquet_review: bouquet_review
+        },
+        success: function (response) {
+            if (response["result"] === "success") {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    },
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Testimoni berhasil dikirim",
+                });
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }
+        },
+    });
 }
   
 /* logout */

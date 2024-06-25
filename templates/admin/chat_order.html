@@ -33,7 +33,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    <th>ID Transaksi</th>
+                                                    <th>Tanggal</th>
                                                     <th>Pesan</th>
                                                 </tr>
                                             </thead>
@@ -42,8 +42,9 @@
                                                 {% for chat in chats %}
                                                 <tr>
                                                     <td>{{loop.index}}</td>
-                                                    <td>{{chat.transaction_id}}</td>
+                                                    <td>{{chat.date}}</td>
                                                     <td>{{chat.message}}</td>
+                                                </tr>
                                                 </tr>
 
                                                 {% endfor %}

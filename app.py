@@ -337,11 +337,7 @@ def chat_order(id):
         title = 'Obrolan dalam Pemesanan'
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': payload['id']})
-        # user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
         transaction_id = db.transactions.find_one({'_id': ObjectId(id)})
-        # forum = db.forums.find_one({'_id': ObjectId(id)})
-        # user = db.users.find_one({"useremail": transaction["useremail"]})
-        # transaction_id = ObjectId(transaction_id)
         transaction_info = db.transactions.find_one({'_id' : transaction_id})
         transaction_chat = list(db.chats.find({'transaction_id' : transaction_id}).sort('date', -1).limit(10))
         for chat in transaction_chat:
@@ -359,19 +355,14 @@ def chat_in_ordering():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms = ['HS256'])
         user_info = db.users.find_one({'useremail': {'useremail': payload['id']}})
 
-        transaction_id = request.form['transaction_id_give']
         message_receive = request.form.get('message_give')
 
         doc = {
-            'transaction_id': transaction_id,
-            # 'useremail': useremail,
-            # 'account_name': account_name,
-            # 'profile_name': profile_name,
             'message': message_receive,
-            'date': datetime.now().strftime('%d/%m/%Y-%H:%M:%S')
+            'date': datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         }
         db.chats.insert_one(doc)
-        return jsonify({'result': 'success', 'msg': 'Berhasil menambahkan komentar'})
+        return jsonify({'result': 'success', 'msg': 'Pesan berhasil dikirim'})
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for('home'))
 

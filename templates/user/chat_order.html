@@ -25,31 +25,20 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="mb-5 mt-5">
-                            <h4 class="mb-4">{{ number_of_chats }} Obrolan</h4>
-        
-                            {% if number_of_chats > 0 %}
-                            {% for chat in transaction_chat %}
-                            <div class="card mb-4" style="border-radius: 1em;">
-                                <div class="card-body">
-                                    <div class="d-flex mb-1 mt-1">
-                                        <img src="{{ url_for('static', filename='user_info.profile_pic_real') }}" class="img-fluid" style="width: 45px; height: 45px;">
-                                        <div class="ps-3">
-                                            <h6>
-                                                <strong>{{chat.profile_name}}</strong>
-                                                <strong>{{chat.account_name}}</strong>
-                                                <small><i>{{chat.date}}</i></small>
-                                            </h6>
-                                            <p>{{chat.message}}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                        <!-- <div class="fillable-form">
+                            <h5 class="mt-2 mb-4">Apabila masih ada pertanyaan/informasi lebih lanjut, Anda dapat mengunjungi Instagram Navirin's</h5>
+                            <div class="form-group">
+                                <p class="card-text text-black-50" style="font-size:1.2em;">
+                                    <a class="text-dark" target="_blank" href="https://www.instagram.com/direct/t/17842963500070275">
+                                        <i class="fab fa-instagram"></i> Navirin's
+                                    </a>
+                                </hp>
                             </div>
-                            {% endfor %}
-                            {% else %}
-                            <p>Tidak ada obrolan.</p>
-                            {% endif %}
-                        </div>
+                        </div> -->
+                        <div class="info-box">
+                            <p class="ms-2 me-2 mt-4 mb-3">Apabila Anda masih ada pertanyaan atau ingin mengetahui informasi lebih lanjut, Navirin's siap melayani Anda melalui Instagram berikut (Anda dapat menekan icon di bawah ini).</p>
+                            <a target="_blank" href="https://www.instagram.com/direct/t/17842963500070275"><i class="bx bxl-instagram"></i></a>
+                          </div>
                     </div>
 
                 </div>
@@ -59,41 +48,3 @@
 
     </main>
 {% include 'user/templates/footer.html' %}
-<script>
-    function chatInOrdering() {
-        let message = $("#message").val();
-        let transaction_id = "{{ transaction_info['_id'] }}";
-
-        $.ajax({
-            type: "POST",
-            url: '/mengobrol',
-            data: {
-                message_give: message,
-                transaction_id_give: transaction_id,
-            },
-            success: function (response) {
-                Swal.fire({
-                    title: "Berhasil",
-                    text: `${response['msg']}`,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                // Menunda pengalihan halaman selama 3 detik
-                setTimeout(function () {
-                    window.location.reload()
-                }, 3000);
-            },
-            error: function (xhr, status, error) {
-                // Handle errors, show an alert, or update UI to indicate failure
-                console.error(xhr.responseText);
-                // Show an alert using SweetAlert
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Gagal mengirim komentar. Silakan coba lagi.',
-                });
-            }
-        });
-    }
-</script>
